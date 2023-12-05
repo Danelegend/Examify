@@ -8,7 +8,7 @@ const ExamDisplay = () => {
             <div className="bg-slate-900 rounded-lg py-8 px-4">
                 <div className="grid grid-cols-3 gap-x-4 gap-y-12">
                     {
-                        tempData.map((d) => <ExamCard />)
+                        tempData.map((d, index) => <ExamCard key={index} school="freshwater" type="trial" year={2032} difficulty={2}/>)
                     }
                 </div>
             </div>

@@ -1,0 +1,38 @@
+[
+    {
+        "model": "ExamModule.Exam",
+        "pk": 1,
+        "fields": {
+            "id": 1,
+            "school_name": "Abbotsleigh",
+            "exam_type": "TRI",
+            "year": 2021,
+            "file_location": "/Users/dane/HSC-Exam-Web-App/ExamifyApp/Backend/exams/Abbotsleigh-2021-4U-Trial.pdf",
+            "date_uploaded": "2024-01-14T16:54:00"
+        }
+    },
+    {
+        "model": "ExamModule.Exam",
+        "pk": 2,
+        "fields": {
+            "id": 2,
+            "school_name": "Ascham",
+            "exam_type": "TRI",
+            "year": 2021,
+            "file_location": "/Users/dane/HSC-Exam-Web-App/ExamifyApp/Backend/exams/Ascham-2021-4U-Trial.pdf",
+            "date_uploaded": "2024-01-14T16:54:00"
+        }
+    },
+    {
+        "model": "ExamModule.Exam",
+        "pk": 3,
+        "fields": {
+            "id": 3,
+            "school_name": "Ascham",
+            "exam_type": "TRI",
+            "year": 2022,
+            "file_location": "/Users/dane/HSC-Exam-Web-App/ExamifyApp/Backend/exams/Ascham-2022-4U-Trial.pdf",
+            "date_uploaded": "2024-01-14T16:54:00"
+        }
+    }
+]

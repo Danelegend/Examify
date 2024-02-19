@@ -27,11 +27,17 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-CORS_ORIGIN_WHITELIST = [
-     'http://localhost:5173',
-     'http://127.0.0.1:5173'
+X_FRAME_OPTIONS = 'ALLOW'
+
+CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:5173",
+    "http://localhost:5173",
 ]
 
+CORS_ALLOW_CREDENTIALS = True
+
+CSRF_COOKIE_SECURE = False
+CSRF_COOKIE_HTTPONLY = False
 
 # Application definition
 
@@ -44,7 +50,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'rest_framework',
-    'exam'
+    'ExamModule',
+    'UserModule',
 ]
 
 MIDDLEWARE = [

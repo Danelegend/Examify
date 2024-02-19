@@ -14,3 +14,9 @@ Not Logged In:
  - Exams | Login | Register
 Logged In: 
  - Exams | Todo | History (List of completed exams) | Logout
+
+
+Endpoints (prefix: /api)
+
+ - exam/exams: parameters: next_load, load_size, filter_config, sort_method -> Returns: List of Minimal Exam Information
+ - exam/exam: paramter: exam_id -> Returns: 

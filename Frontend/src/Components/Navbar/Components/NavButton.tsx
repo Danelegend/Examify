@@ -3,12 +3,12 @@ import { Link } from "react-router-dom";
 
 type NavButtonProps = {
     children: React.ReactNode,
-    onClick?: () => {},
+    onClick?: () => void,
 }
 
 type ButtonProps = {
     title: string,
-    onClick?: () => {},
+    onClick?: () => void,
 }
 
 type NavigationButtonProps = 
@@ -19,7 +19,7 @@ ButtonProps & {
 
 const ButtonStyling = ({ children, onClick } : NavButtonProps) => {
     return (
-        <div className="bg-lime-300 rounded-md text-lg cursor-pointer" onClick={onClick}>
+        <div className="bg-lime-300 rounded-md text-base cursor-pointer" onClick={onClick}>
             {children}
         </div>
     )

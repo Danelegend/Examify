@@ -25,15 +25,16 @@ def RegisterEndpoint(request):
 
     up = UserProfile()
 
-    up.username = body["username"]
     up.password = body["password"]
     up.first_name = body["first_name"]
     up.last_name = body["last_name"]
     up.email = body["email"]
     up.school_year = body["school_year"]
-    up.school = body["school"]
+    up.school_name = body["school"]
 
-    return
+    response = RegisterUser(up)
+
+    return HttpResponse(json.dumps(response), content_type="application/json")
 
 
 def LogoutEndpoint(request):

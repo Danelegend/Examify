@@ -1,6 +1,6 @@
 import Environment from "../../../constants"
 
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import ExamDisplay from "./Components/ExamDisplay"
 import ExamFullScreenDisplay from "./Components/ExamFullScreenDisplay"
 import { useLocation } from "react-router-dom"
@@ -66,6 +66,10 @@ const ExamPage = () => {
         SetFullscreen(true)
     }
 
+    const RenderedDisplay = useCallback(() => {
+        return <ExamDisplay link={ExamDetails.exam_link} />
+    }, [ExamDetails])
+
     useEffect(() => {
         const loadExam = async (exam_id: number) => {
             const exam_data = await (
@@ -109,7 +113,7 @@ const ExamPage = () => {
             
             <div className="flex items-center justify-center">
                 <div className="pb-2">
-                    <ExamDisplay link={ExamDetails.exam_link} />
+                    <RenderedDisplay />
                 </div>
             </div>
             

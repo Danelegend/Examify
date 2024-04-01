@@ -1,17 +1,14 @@
+import Environment from "../../../../constants";
 import PdfDisplay from "../../../Components/PdfDisplay/PdfDisplay";
 
 type ExamDisplayProps = {
-    link: string
+    examId: number
 }
 
-const ExamDisplay = ({ link }: ExamDisplayProps) => {
+const ExamDisplay = ({ examId }: ExamDisplayProps) => {
     return (
-        <div className="pt-5">
-            <div className="">
-                <PdfDisplay file={link} />
-            </div>
-        </div>
+        <PdfDisplay file={Environment.BACKEND_URL + "/api/exam/pdf/" + examId.toString()} />
     )
-}
+} 
 
 export default ExamDisplay;

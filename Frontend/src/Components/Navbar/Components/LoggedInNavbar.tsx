@@ -1,30 +1,81 @@
-import { ClickableButton, NavigationButton } from "./NavButton";
+import { useMutation } from "@tanstack/react-query";
+import { Link, useNavigate } from "react-router-dom";
+import Environment from "../../../../constants";
+import { readAccessToken, removeAccessToken } from "../../../util/utility";
+import { useContext } from "react";
+import { UserContext } from "../../../context/user-context";
 
 const LoggedInNavbar = () => {
-    const handleLogout = () => {
-        return
+    const { setAccessToken } = useContext(UserContext)
+
+    const navigate = useNavigate()
+
+    const handleLogoutClick = () => {
+        try {
+            LogoutMutation()
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
+    const { mutateAsync: LogoutMutation } = useMutation<Response>({
+        mutationFn: () => {
+            return fetch(Environment.BACKEND_URL + "/api/auth/logout", {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'bearer ' + readAccessToken()
+                },
+                method: "DELETE",
+                credentials: 'include'
+            })
+        },
+        onSuccess: () => {
+            removeAccessToken()
+            setAccessToken(null)
+            navigate("/")
+        },
+    })
+
+    const NavigationButton = ({ link, title }: { link: string, title: string}) => {
+        return (
+            <div className="">
+                <Link to={link}>
+                    <div className="text-center text-neutral-500 font-semibold  leading-normal tracking-tight cursor-pointer">
+                        {title}
+                    </div>
+                </Link>
+            </div>
+        )
     }
 
     return (
         <div>
-            <div className="pt-3 pb-4">
-                <div className="grid grid-cols-7 gap-4 justify-center pr-16 pl-10">
-                    <div className="col-span-2 text-xl">
-                        Examify
-                    </div>
-                    <div className="col-start-5">
-                        <NavigationButton title={"Exams"} link={"/exams"} />
-                    </div>
-                    <div className="col-start-6">
-                        <NavigationButton title={"Saved"} link={"/saved"} />
-                    </div>
-                    <div className="col-start-7">
-                        <ClickableButton title={"Logout"} onClick={handleLogout} />
+            <div className="flex w-full h-1/5 left-0 top-0 bg-zinc-300 justify-between items-center px-5">
+                <div className="pl-7 py-5 justify-start items-center inline-flex">
+                    <Link to="/">
+                        <div className="text-slate-800 text-2xl font-bold font-['Montserrat'] leading-loose tracking-tight cursor-pointer">
+                            Examify
+                        </div>
+                    </Link>
+                </div>
+
+                <div className="self-stretch justify-start items-center gap-[21px] inline-flex text-base font-['Montserrat']">
+                    <NavigationButton link="/dashboard" title="Home" />
+                    <NavigationButton link="/exams" title="Exams" />
+                    <NavigationButton link="/upload" title="Upload" />
+                    <NavigationButton link="/contact" title="Contact" />
+                </div>
+
+                <div className="justify-start items-center inline-flex">
+                    <div className="text-sky-500 text-sm font-bold font-['Montserrat'] leading-7 tracking-tight cursor-pointer pr-10 md:pr-12" onClick={handleLogoutClick}>
+                        Logout
                     </div>
                 </div>
             </div>
         </div>
     )
 }
+
+
 
 export default LoggedInNavbar;

@@ -1,0 +1,110 @@
+[
+    {
+        "model": "app.Exam",
+        "pk": 1,
+        "fields": {
+            "id": 1,
+            "school_name": "Abbotsleigh",
+            "exam_type": "TRI",
+            "year": 2021,
+            "file_location": "exams/Abbotsleigh-2021-4U-Trial.pdf",
+            "date_uploaded": "2024-01-14T16:54:00"
+        }
+    },
+    {
+        "model": "app.Exam",
+        "pk": 2,
+        "fields": {
+            "id": 2,
+            "school_name": "Ascham",
+            "exam_type": "TRI",
+            "year": 2021,
+            "file_location": "exams/Ascham-2021-4U-Trial.pdf",
+            "date_uploaded": "2024-01-14T16:54:00"
+        }
+    },
+    {
+        "model": "app.Exam",
+        "pk": 3,
+        "fields": {
+            "id": 3,
+            "school_name": "Ascham",
+            "exam_type": "TRI",
+            "year": 2022,
+            "file_location": "exams/Ascham-2022-4U-Trial.pdf",
+            "date_uploaded": "2024-01-14T16:54:00"
+        }
+    },
+    {
+        "model": "app.Exam",
+        "pk": 4,
+        "fields": {
+            "id": 4,
+            "school_name": "Barker",
+            "exam_type": "TRI",
+            "year": 2020,
+            "file_location": "exams/Barker-2020-4U-Trial.pdf",
+            "date_uploaded": "2024-01-14T16:54:00"
+        }
+    },
+    {
+        "model": "app.Exam",
+        "pk": 5,
+        "fields": {
+            "id": 5,
+            "school_name": "Baulkham Hills",
+            "exam_type": "TRI",
+            "year": 2022,
+            "file_location": "exams/Baulkham Hills-2022-4U-Trial.pdf",
+            "date_uploaded": "2024-01-14T16:54:00"
+        }
+    },
+    {
+        "model": "app.Exam",
+        "pk": 6,
+        "fields": {
+            "id": 6,
+            "school_name": "Blacktown Boys",
+            "exam_type": "TRI",
+            "year": 2022,
+            "file_location": "exams/Blacktown Boys-2022-4U-Trial.pdf",
+            "date_uploaded": "2024-01-14T16:54:00"
+        }
+    },
+    {
+        "model": "app.Exam",
+        "pk": 7,
+        "fields": {
+            "id": 7,
+            "school_name": "Caringbah",
+            "exam_type": "TRI",
+            "year": 2020,
+            "file_location": "exams/Caringbah-2020-4U-Trial.pdf",
+            "date_uploaded": "2024-01-14T16:54:00"
+        }
+    },
+    {
+        "model": "app.Exam",
+        "pk": 8,
+        "fields": {
+            "id": 8,
+            "school_name": "Caringbah",
+            "exam_type": "TRI",
+            "year": 2021,
+            "file_location": "exams/Caringbah-2021-4U-Trial.pdf",
+            "date_uploaded": "2024-01-14T16:54:00"
+        }
+    },
+    {
+        "model": "app.Exam",
+        "pk": 9,
+        "fields": {
+            "id": 9,
+            "school_name": "Caringbah",
+            "exam_type": "TRI",
+            "year": 2022,
+            "file_location": "exams/Caringbah-2022-4U-Trial.pdf",
+            "date_uploaded": "2024-01-14T16:54:00"
+        }
+    }
+]

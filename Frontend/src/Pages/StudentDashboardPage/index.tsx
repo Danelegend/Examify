@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../context/user-context";
 import Environment from "../../../constants";
 import { waveform } from 'ldrs'
-import { FetchError, handleAuthenticationError } from "../../util/utility";
+import { authClientMiddleWare, FetchError } from "../../util/utility";
 import ExamCard, { ExamCardProps } from "../../Components/ExamCards";
 import { MdArrowBackIos } from "react-icons/md";
 
@@ -23,8 +23,6 @@ const StudentDashboardPage = () => {
     const [RecentlyViewedPosition, SetRecentlyViewedPosition] = useState<number>(0)
 
     const { accessToken } = useContext(UserContext)
-
-    const RefreshTokenMutation = handleAuthenticationError()
 
     const handleLeftFavouriteClick = () => {
         if (FavouritePosition === 0) {
@@ -87,7 +85,7 @@ const StudentDashboardPage = () => {
 
     const { data: userProfileData, isPending: userProfileIsPending, error: userProfileError } = useQuery({
         queryKey: ["UserProfile"],
-        queryFn: fetchUserProfile,
+        queryFn: authClientMiddleWare(fetchUserProfile),
     })
 
     const fetchFavouriteExams = () => {
@@ -110,7 +108,7 @@ const StudentDashboardPage = () => {
 
     const { data: favouriteData, isPending: favouriteIsPending, error: favouriteError } = useQuery({
         queryKey: ["FavouriteExams"],
-        queryFn: fetchFavouriteExams,
+        queryFn: authClientMiddleWare(fetchFavouriteExams),
     })
 
     const fetchRecentExams = () => {
@@ -133,7 +131,7 @@ const StudentDashboardPage = () => {
 
     const { data: recentData, isPending: recentIsPending, error: recentError } = useQuery({
         queryKey: ["RecentExams"],
-        queryFn: fetchRecentExams,
+        queryFn: authClientMiddleWare(fetchRecentExams),
     })
 
     useEffect(() => {
@@ -145,7 +143,6 @@ const StudentDashboardPage = () => {
                     case 500:
                         break
                     case 403:
-                        RefreshTokenMutation()
                         break
                     default:
                         break
@@ -166,7 +163,6 @@ const StudentDashboardPage = () => {
                         case 500:
                             break
                         case 403:
-                            RefreshTokenMutation()
                             break
                         default:
                             break
@@ -195,7 +191,6 @@ const StudentDashboardPage = () => {
                         case 500:
                             break
                         case 403:
-                            RefreshTokenMutation()
                             break
                         default:
                             break

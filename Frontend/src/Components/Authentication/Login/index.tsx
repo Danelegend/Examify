@@ -6,7 +6,7 @@ import SignInWithFacebook from "../Components/FacebookButton";
 import { useMutation } from "@tanstack/react-query";
 import { validateEmail } from "../AuthUtil";
 import { SignInResponse } from "../../../api/types";
-import { storeAccessToken } from "../../../util/utility";
+import { storeAccessToken, storeExpiration } from "../../../util/utility";
 import { UserContext } from "../../../context/user-context";
 import { ModalContext } from "../../../context/modal-context";
 
@@ -57,6 +57,7 @@ const LoginPopup = ({ onExit }: LoginPopupProps) => {
                         break
                     case 200:
                         storeAccessToken(data.access_token)
+                        storeExpiration(data.expiration)
                         setAccessToken(data.access_token)
                         break
                     default:

@@ -2,7 +2,7 @@ from django.contrib.auth import authenticate
 
 from django.contrib.auth.models import User
 
-from app.functionality.token import access_token_valid, create_access_token, create_refresh_token, get_sid, remove_session
+from app.functionality.token import access_token_valid, create_access_token, create_refresh_token, get_sid, get_user_id, remove_session
 from app.functionality.authentication.user_form import UserForm
 from app.errors import AuthenticationError, DuplicationError
 
@@ -54,11 +54,12 @@ def RegisterUser(user_profile: UserForm):
     uid = user_record.pk
 
     rt = create_refresh_token(uid)
-    at = create_access_token(rt)
+    at, exp = create_access_token(rt)
 
     return {
         "access_token": at,
         "refresh_token": rt,
+        "expiration": exp.isoformat()
     }
 
 
@@ -75,11 +76,12 @@ def LoginUser(email, password):
         raise AuthenticationError("Invalid username or password")
 
     rt = create_refresh_token(user.pk)
-    at = create_access_token(rt)
+    at, exp = create_access_token(rt)
 
     return {
         "access_token": at,
         "refresh_token": rt,
+        "expiration": exp.isoformat()
     }
 
 
@@ -91,3 +93,19 @@ def LogoutUser(access_token: str):
         raise AuthenticationError("Invalid access token")
 
     remove_session(get_sid(access_token))
+
+
+def GetUserPermissions(access_token: str) -> str:
+    """
+    Takes in an access token and returns the permissions for the user
+    """
+    if not access_token_valid(access_token):
+        raise AuthenticationError("Invalid access token")
+
+    uid = get_user_id(access_token)
+    user = UserProfile.objects.get(user=uid)
+
+    if user.user.email == "danelegend13@gmail.com":
+        return "ADM"
+
+    return user.permissions

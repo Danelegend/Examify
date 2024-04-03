@@ -1,6 +1,6 @@
 from app.models import Exam
 from app.functionality.exams.FilterConfig import FilterConfig
-from app.exam_types import ExamType
+from app.types import ExamType
 
 
 class DatabaseAccessor(object):

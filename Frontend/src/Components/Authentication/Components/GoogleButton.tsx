@@ -1,7 +1,7 @@
 import { CodeResponse, useGoogleLogin } from "@react-oauth/google";
 import Environment from "../../../../constants";
 import { useMutation } from "@tanstack/react-query";
-import { storeAccessToken } from "../../../util/utility";
+import { storeAccessToken, storeExpiration } from "../../../util/utility";
 import { SignInResponse } from "../../../api/types";
 import { useContext } from "react";
 import { UserContext } from "../../../context/user-context";
@@ -38,6 +38,7 @@ const SignInWithGoogle = ({ title, SetResponseMessage, onSuccess }: { title: str
                         break
                     case 200:
                         storeAccessToken(data.access_token)
+                        storeExpiration(data.expiration)
                         setAccessToken(data.access_token)
                         onSuccess()
                         break

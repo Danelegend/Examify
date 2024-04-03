@@ -5,7 +5,7 @@ import SignInWithFacebook from "../../Components/FacebookButton"
 import { useMutation } from "@tanstack/react-query"
 import Environment from "../../../../../constants"
 import { SignUpResponse } from "../../../../api/types"
-import { storeAccessToken } from "../../../../util/utility"
+import { storeAccessToken, storeExpiration } from "../../../../util/utility"
 import { UserContext } from "../../../../context/user-context"
 import { ModalContext } from "../../../../context/modal-context"
 
@@ -108,6 +108,7 @@ const RegistrationScreen1 = ({ changeScreen } :
                         break
                     case 200:
                         storeAccessToken(data.access_token)
+                        storeExpiration(data.expiration)
                         setAccessToken(data.access_token)
                         changeScreen()
                         break

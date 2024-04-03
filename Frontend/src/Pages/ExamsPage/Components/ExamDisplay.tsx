@@ -4,14 +4,12 @@ import { useContext, useEffect, useState } from "react";
 import ExamCard, { ExamCardProps } from "../../../Components/ExamCards";
 import { useQuery } from "@tanstack/react-query";
 import { UserContext } from "../../../context/user-context";
-import { FetchError, handleAuthenticationError } from "../../../util/utility";
+import { authClientMiddleWare, FetchError } from "../../../util/utility";
 
 const ExamDisplay = () => {
     const [Exams, SetExams] = useState<ExamCardProps[]>([]);
 
     const { accessToken } = useContext(UserContext)
-
-    const RefreshTokenMutation = handleAuthenticationError()
 
     const fetchExams = () => {
         return fetch(Environment.BACKEND_URL + "/api/exams/", {
@@ -41,7 +39,7 @@ const ExamDisplay = () => {
 
     const { data, isPending, error } = useQuery({
         queryKey: ["Exams"],
-        queryFn: fetchExams,
+        queryFn: (accessToken === null) ? fetchExams : authClientMiddleWare(fetchExams),
     })
 
     useEffect(() =>  {
@@ -51,7 +49,6 @@ const ExamDisplay = () => {
                     case 500:
                         break
                     case 403:
-                        RefreshTokenMutation()
                         break
                     default:
                         break
@@ -64,7 +61,6 @@ const ExamDisplay = () => {
 
         if (!isPending) {
             SetExams(data.exams.map(exam => {
-                console.log(exam)
                 return {
                     id: exam.id,
                     school: exam.school_name,
@@ -86,7 +82,7 @@ const ExamDisplay = () => {
                 isPending ? <div>Loading</div> : 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-12">
                     {
-                        Exams.map((exam, index) => <ExamCard key={index} school={exam.school} type={exam.type} year={exam.year} difficulty={exam.difficulty} id={exam.id} favourite={exam.favourite}/>)
+                        Exams.map((exam, index) => <ExamCard key={index} school={exam.school} type={exam.type} year={exam.year} difficulty={exam.difficulty} id={exam.id} favourite={exam.favourite} likes={0} uploadDate={exam.uploadDate}/>)
                     }
                 </div>
             }

@@ -11,12 +11,15 @@ import UploadPage from './Pages/UploadPage';
 import ContactPage from './Pages/ContactPage';
 import AboutPage from './Pages/AboutPage';
 import StudentDashboardPage from './Pages/StudentDashboardPage';
-import ProtectedRoute from './util/ProtectedRoute';
+import { AdminProtectedRoute, ProtectedRoute } from './util/ProtectedRoute';
 import { useState } from 'react';
 import { readAccessToken } from './util/utility';
 import { UserContext } from './context/user-context';
 
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import AdminPage from './Pages/Admin';
+import AdminCurrentExamPage from './Pages/Admin/CurrentExamPage';
+import AdminReviewExamPage from './Pages/Admin/ReviewExamPage';
 
 const router = createBrowserRouter([
   {
@@ -24,29 +27,57 @@ const router = createBrowserRouter([
     children: [
       {
         element: <AboutPage />,
-        path: "/",
+        path: "",
       },
       {
         element: <ExamsPage />,
-        path: "/exams",
+        path: "exams",
       },
       {
         element: <UploadPage />,
-        path: "/upload",
+        path: "upload",
       },
       {
         element: <ContactPage />,
-        path: "/contact",
+        path: "contact",
       },
       {
         element: <ProtectedRoute />,
         children: [
           {
             element: <StudentDashboardPage />,
-            path: "/dashboard",
+            path: "dashboard",
           }
         ],
       },
+      {
+        element: <ProtectedRoute />,
+        children: [
+          {
+            path: "admin",
+            element: <AdminProtectedRoute />,
+            children: [
+              {
+                element: <AdminPage />,
+                path: "",
+              },
+              {
+                path: "exams",
+                children: [
+                  {
+                    element: <AdminCurrentExamPage />,
+                    path: "current"
+                  },
+                  {
+                    element: <AdminReviewExamPage />,
+                    path: "review"
+                  }
+                ]
+              }
+            ],
+          }
+        ]
+      }
     ],
   },
   {

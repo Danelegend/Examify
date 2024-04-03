@@ -46,7 +46,7 @@ def create_refresh_token(uid: int) -> str:
 
     return encoded_token
 
-def create_access_token(refresh_token: str) -> str:
+def create_access_token(refresh_token: str) -> tuple[str, datetime.datetime]:
     """
     A function to create an access token for a user
 
@@ -75,7 +75,7 @@ def create_access_token(refresh_token: str) -> str:
         new_payload,
         os.environ["ACCESS_TOKEN_SECRET"],
         algorithm='HS256'
-    )
+    ), new_payload['exp']
 
 def access_token_valid(access_token: str) -> bool:
     """

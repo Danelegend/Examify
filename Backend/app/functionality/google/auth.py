@@ -80,11 +80,12 @@ def register_third_party_profile(email: str, first_name: str, last_name: str, re
     uid = user_record.pk
 
     rt = create_refresh_token(uid)
-    at = create_access_token(rt)
+    at, exp = create_access_token(rt)
 
     return {
         "access_token": at,
         "refresh_token": rt,
+        "expiration": exp.isoformat()
     }
 
 def login_third_party_profile(email: str, registration_method: str):
@@ -100,9 +101,10 @@ def login_third_party_profile(email: str, registration_method: str):
     uid = user_record.pk
 
     rt = create_refresh_token(uid)
-    at = create_access_token(rt)
+    at, exp = create_access_token(rt)
 
     return {
         "access_token": at,
         "refresh_token": rt,
+        "expiration": exp.isoformat()
     }

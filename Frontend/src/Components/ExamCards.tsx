@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import FavouriteIcon from "../Pages/ExamsPage/Components/FavouriteIcon";
 import { useContext, useState } from "react";
 import Environment from "../../constants";
-import { handleAuthenticationError, readAccessToken } from "../util/utility";
+import { authClientMiddleWare, readAccessToken } from "../util/utility";
 import { useMutation } from "@tanstack/react-query";
 import { UserContext } from "../context/user-context";
 import { ModalContext } from "../context/modal-context";
@@ -35,30 +35,43 @@ const ExamCard = ({ school, year, type, difficulty, id, favourite, likes, upload
 
     const { accessToken } = useContext(UserContext)
     const { SetDisplayLogin } = useContext(ModalContext)
-
-    const RefreshTokenMutation = handleAuthenticationError()
     
+    const postFavourite = () => {
+        return fetch(Environment.BACKEND_URL + "/api/exam/" + id.toString() + "/favourite", {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'bearer ' + readAccessToken()
+            },
+            method: "POST",
+            body: JSON.stringify({
+                exam_id: id
+            }),
+            credentials: 'include'
+        }) 
+    }
+    
+    const deleteFavourite = () => {
+        return fetch(Environment.BACKEND_URL + "/api/exam/" + id.toString() + "/favourite", {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'bearer ' + readAccessToken()
+            },
+            body: JSON.stringify({
+                exam_id: id
+            }),
+            method: "DELETE",
+            credentials: 'include'
+        })
+    }
+
     const { mutateAsync: FavouriteMutation } = useMutation<Response>({
-        mutationFn: () => {
-            return fetch(Environment.BACKEND_URL + "/api/user/favourite", {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'bearer ' + readAccessToken()
-                },
-                method: "POST",
-                body: JSON.stringify({
-                    exam_id: id
-                }),
-                credentials: 'include'
-            })
-        },
+        mutationFn: authClientMiddleWare(postFavourite),
         onSuccess: (res) => {
             switch (res.status) {
                 case 200:
                     break
                 case 403:
                     setIsFavourite(!isFavourite)
-                    RefreshTokenMutation()
                     break
                 default:
                     setIsFavourite(!isFavourite)
@@ -72,26 +85,13 @@ const ExamCard = ({ school, year, type, difficulty, id, favourite, likes, upload
     })
 
     const { mutateAsync: UnfavouriteMutation } = useMutation<Response>({
-        mutationFn: () => {
-            return fetch(Environment.BACKEND_URL + "/api/user/favourite", {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'bearer ' + readAccessToken()
-                },
-                body: JSON.stringify({
-                    exam_id: id
-                }),
-                method: "DELETE",
-                credentials: 'include'
-            })
-        },
+        mutationFn: deleteFavourite,
         onSuccess: (res) => {
             switch (res.status) {
                 case 200:
                     break
                 case 403:
                     setIsFavourite(!isFavourite)
-                    RefreshTokenMutation()
                     break
                 default:
                     setIsFavourite(!isFavourite)
@@ -106,7 +106,11 @@ const ExamCard = ({ school, year, type, difficulty, id, favourite, likes, upload
 
     const FavouriteClick = (e: Event) => {
         e.preventDefault()
-        if (accessToken === null) SetDisplayLogin(true)
+        
+        if (accessToken === null) {
+            SetDisplayLogin(true)
+            return
+        }
 
         if (isFavourite) {
             UnfavouriteMutation()

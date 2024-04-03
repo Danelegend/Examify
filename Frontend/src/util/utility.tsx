@@ -22,20 +22,35 @@ export const storeAccessToken = (token: string) => {
     store("access_token", token)
 }
 
+export const storeExpiration = (exp: string) => {
+    store("expiration", exp)
+}
+
 export const readAccessToken = () => {
     return get("access_token")
 }
 
+export const readExpiration = () => {
+    return get("expiration")
+}
+
 export const haveAccessToken = () => {
-    return readAccessToken() !== null
+    const exp = readExpiration()
+
+    return readAccessToken() !== null && exp !== null && new Date(exp) <= new Date()
 }
 
 export const removeAccessToken = () => {
     localStorage.removeItem("access_token")
+    localStorage.removeItem("expiration")
 }
 
-export const handleAuthenticationError = () => {
-    // Attempt to get a new access token using the refresh token
+type AuthClientMiddleWareType = (done: () => Promise<Response>) => () => Promise<Response>
+
+export const authClientMiddleWare: AuthClientMiddleWareType = (done) => {
+    // Check if the user's token is expired
+    const exp = readExpiration()
+
     const { setAccessToken } = useContext(UserContext)
 
     const navigate = useNavigate()
@@ -44,7 +59,7 @@ export const handleAuthenticationError = () => {
         mutationFn: () => {
             return fetch(Environment.BACKEND_URL + "/api/auth/refresh", {
                 method: "GET",
-                credentials: 'include'
+                credentials: 'include'   
             })
         },
         onSuccess: (res) => {
@@ -55,13 +70,12 @@ export const handleAuthenticationError = () => {
                     case 403:
                         setAccessToken(null)
                         clear()
-                        // Reroute to home
                         navigate("/")
                         break
                     case 200:
                         storeAccessToken(data.access_token)
+                        storeExpiration(data.expiration)
                         setAccessToken(data.access_token)
-                        window.location.reload()
                         break
                     default:
                         break
@@ -70,10 +84,21 @@ export const handleAuthenticationError = () => {
         },
         onError: (e) => {
             console.log(e)
-        }
+        },
+        retry: false
     })
 
-    return RefreshTokenMutation
+    return () => {
+        if (exp === null || new Date(exp) <= new Date()) {
+            RefreshTokenMutation()
+        } 
+        
+        if (readAccessToken() === null) {
+            return new Promise<Response>(() => {})
+        } 
+
+        return done()
+    }
 }
 
 export class FetchError extends Error {

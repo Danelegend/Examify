@@ -3,7 +3,7 @@ from typing import List
 from app.functionality.token import get_user
 from app.models import FavouriteExam, RecentlyViewedExam
 from app.functionality.exams.FilterConfig import FilterConfig
-from app.exam_types import ExamType
+from app.types import ExamType
 from app.functionality.DatabaseAccessor import DatabaseAccessor
 from app.functionality.exam.exam import GetExamLikes, ExamFavouriteOfUser
 

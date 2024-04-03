@@ -2,7 +2,7 @@ from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth.models import User
 
-from app.exam_types import ExamType
+from app.types import ExamType, UserType
 
 # Create your models here.
 class Sessions(models.Model):
@@ -18,6 +18,7 @@ class Exam(models.Model):
     year = models.PositiveSmallIntegerField(null=False)
     file_location = models.FilePathField(null=False, unique=True)
     date_uploaded = models.DateTimeField(auto_now_add=True)
+    subject = models.CharField(max_length=128, null=False)
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
@@ -30,6 +31,7 @@ class UserProfile(models.Model):
     registration_method = models.CharField(choices=[("email", "Email"), ("google", "Google"), ("facebook", "Facebook")], 
                                             max_length=128,
                                               null=False)
+    permissions = models.CharField(choices=UserType.Choices(), max_length=3, null=False, default=UserType.REGULAR.value)
 
 class FavouriteExam(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

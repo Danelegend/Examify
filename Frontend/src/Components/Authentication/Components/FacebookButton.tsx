@@ -3,7 +3,7 @@ import SocialLogin from "react-social-login";
 import { UserContext } from "../../../context/user-context";
 import { useMutation } from "@tanstack/react-query";
 import Environment from "../../../../constants";
-import { storeAccessToken } from "../../../util/utility";
+import { storeAccessToken, storeExpiration } from "../../../util/utility";
 import { SignInResponse } from "../../../api/types";
 
 class SignInWithFacebookButton extends React.Component {
@@ -65,6 +65,7 @@ const SignInWithFacebook = ({ title, SetResponseMessage, onSuccess }: { title: s
                         break
                     case 200:
                         storeAccessToken(data.access_token)
+                        storeExpiration(data.expiration)
                         setAccessToken(data.access_token)
                         onSuccess()
                         break

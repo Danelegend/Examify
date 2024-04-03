@@ -8,7 +8,7 @@ from rest_framework.response import Response
 
 from app.functionality.google.auth import login_facebook_token, login_google_token
 from app.errors import AuthenticationError, DuplicationError, ValidationError
-from app.functionality.authentication.authentication import LoginUser, LogoutUser, RegisterUser
+from app.functionality.authentication.authentication import GetUserPermissions, LoginUser, LogoutUser, RegisterUser
 from app.functionality.authentication.user_form import UserForm
 from app.functionality.token import create_access_token
 from app.views.util import get_access_token
@@ -26,7 +26,8 @@ def LoginEndpoint(request):
         login_resp = LoginUser(email, password)
 
         response = JsonResponse({
-            "access_token": login_resp["access_token"]
+            "access_token": login_resp["access_token"],
+            "expiration": login_resp["expiration"]
         }, status=200)
 
         response.set_cookie(os.environ["REFRESH_TOKEN_COOKIE_KEY"], login_resp["refresh_token"], 
@@ -140,4 +141,17 @@ def LoginFacebookEndpoint(request):
         return JsonResponse({"message": v.message}, status=400)
     except Exception as e:
         print(e)
-        return JsonResponse({"message": "An error occurred"}, status=500)   
+        return JsonResponse({"message": "An error occurred"}, status=500)
+    
+@api_view(['GET'])
+def UserPermissionsEndpoint(request):
+    token = get_access_token(request)
+
+    try:
+        perm = GetUserPermissions(token)
+
+        return JsonResponse({
+            "permissions": perm
+        }, status=200)
+    except AuthenticationError as e:
+        return JsonResponse({"message": e.message}, status=403)

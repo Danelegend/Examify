@@ -1,7 +1,7 @@
 from app.errors import DuplicationError, ValidationError
 from app.models import Exam, FavouriteExam, RecentlyViewedExam
 from app.functionality.token import get_user
-from app.exam_types import ExamType
+from app.types import ExamType
 from app.security import FileLocationAccessible
 from app.functionality.DatabaseAccessor import DatabaseAccessor
 

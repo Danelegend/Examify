@@ -16,16 +16,26 @@ class ExamType(Enum):
         return tuple((i.value, i.name) for i in cls)
 
     @classmethod
-    def MapPrefixToName(cls, prefix):
+    def MapPrefixToName(cls, prefix: str):
         PREFIX_TO_NAME_MAPPING = {
             "TRI" : "Trial Exam",
             "HSC" : "HSC Exam",
             "TOP" : "Topic Test",
-            "HAF" : "Half Yearly Exam",
+            "HAE" : "Half Yearly Exam",
             "T_1" : "Term 1 Exam",
             "T_2" : "Term 2 Exam",
             "T_3" : "Term 3 Exam",
             "T_4" : "Term 4 Exam"
         }
+        
+        return PREFIX_TO_NAME_MAPPING.get(prefix, prefix)
 
-        return PREFIX_TO_NAME_MAPPING[prefix]
+    
+class UserType(Enum):
+    REGULAR = "REG"
+    PREMIUM = "PRE"
+    ADMIN = "ADM"
+
+    @classmethod
+    def Choices(cls):
+        return tuple((i.value, i.name) for i in cls)

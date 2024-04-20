@@ -21,10 +21,10 @@ def ExamEndpoint(request, school, year, type):
 
 @api_view(['GET'])
 def ExamPdfEndpoint(request, exam_id):
-    location = Exam.objects.get(id=exam_id).file_location
+    file_name = Exam.objects.get(id=exam_id).file_location
 
     try:
-        return FileResponse(GetExamPdf(location), content_type='application/pdf', status=200)
+        return FileResponse(GetExamPdf(file_name), content_type='application/pdf', status=200)
     except IOError:
         return JsonResponse({"message": "File not found"}, status=404)
     except ValueError:
@@ -75,11 +75,6 @@ def ExamFavouriteEndpoint(request, exam_id: int):
 @api_view(['POST'])
 def ExamRecentEndpoint(request, exam_id: int):
     token = get_access_token(request)
-
-    body_unicode = request.body.decode('utf-8')
-    body = json.loads(body_unicode)
-
-    exam_id = body["exam_id"]
 
     try:
         AddRecentlyViewedExam(token, exam_id)

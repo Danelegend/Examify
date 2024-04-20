@@ -1,5 +1,4 @@
 import { PDFDocumentProxy } from 'pdfjs-dist/types/src/display/api';
-//import '../../styles/PdfDisplay.css'
 
 import { pdfjs } from 'react-pdf';
 
@@ -42,7 +41,7 @@ const PdfDisplay = ({ file }: PdfDisplayProps) => {
 
     return (
         <div>
-            <div id='pdf-viewer' className='h-screen overflow-auto'></div>
+            <div id='pdf-viewer' className='h-screen overflow-y-auto'></div>
         </div>
     )
 }

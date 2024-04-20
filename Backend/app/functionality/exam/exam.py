@@ -1,3 +1,5 @@
+import os
+
 from app.errors import DuplicationError, ValidationError
 from app.models import Exam, FavouriteExam, RecentlyViewedExam, Schools
 from app.functionality.token import get_user
@@ -56,7 +58,9 @@ def GetExam(exam_id: int):
 
     return data
 
-def GetExamPdf(location: str):
+def GetExamPdf(file_name: str):
+    location = os.path.join(os.environ.get("CURRENT_EXAMS_DIRECTORY"), file_name)
+
     if not FileLocationAccessible(location):
         raise ValueError("Unaccessible location")
     

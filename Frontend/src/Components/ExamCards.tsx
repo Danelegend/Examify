@@ -11,6 +11,7 @@ export type ExamCardProps = {
     school: string,
     year: number,
     type: string,
+    subject: string,
     difficulty: number,
     id: number,
     favourite: boolean,
@@ -30,7 +31,7 @@ const ExamTypeMap = {
     "T_4" : "Term 4 Exam"
 }
 
-const ExamCard = ({ school, year, type, difficulty, id, favourite, likes, uploadDate, className }: ExamCardProps) => {
+const ExamCard = ({ school, year, type, difficulty, id, favourite, likes, uploadDate, className, subject }: ExamCardProps) => {
     const [isFavourite, setIsFavourite] = useState(favourite)
 
     const { accessToken } = useContext(UserContext)
@@ -121,6 +122,8 @@ const ExamCard = ({ school, year, type, difficulty, id, favourite, likes, upload
         setIsFavourite(!isFavourite)
     }
     
+    console.log(uploadDate)
+
     return (
         <div className={"flex justify-center " + className}> 
             <div className="w-5/6">
@@ -129,7 +132,7 @@ const ExamCard = ({ school, year, type, difficulty, id, favourite, likes, upload
                         <FavouriteIcon isFavourite={isFavourite} onClick={FavouriteClick} className="absolute bottom-3 right-2 md:right-5"/>
                         <div className="grid-rows-4 text-slate-300">
                             <div className="font-semibold text-xl">
-                                {school} {year} {ExamTypeMap[type]} 
+                                {school} {subject} {year} {ExamTypeMap[type]} 
                             </div>
                             <div className="ml-2">
                                 Uploaded: {uploadDate}

@@ -1,5 +1,4 @@
 import os
-import shutil
 from typing import List
 
 from app.functionality.google.gdrive import delete_file_from_review, get_files_in_review, move_file_from_review_to_current, upload_file_to_drive

@@ -162,11 +162,13 @@ const ExamDisplay = () => {
                     favourite: exam.favourite,
                     uploadDate: exam.upload_date,
                     likes: exam.likes,
+                    subject: exam.subject
                 }
             }))
         }
     },   [data, isPending, error])
 
+    
     return (
         schoolFilterPending || subjectFilterPending ? <div>Loading</div> : 
 
@@ -185,9 +187,12 @@ const ExamDisplay = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-12 bg-slate-800 pt-10 pb-16">
                         {
                             Exams.filter(exam => Filter.schools.length === 0 || Filter.schools.includes(exam.school))
-                                 .filter(exam => Filter.subjects.length === 0 || Filter.subjects.includes(exam.type))
+                                 .filter(exam => Filter.subjects.length === 0 || Filter.subjects.includes(exam.subject))
                                  .filter(exam => Filter.years.length === 0 || Filter.years.includes(exam.year))
-                                 .map((exam, index) => <ExamCard key={index} school={exam.school} type={exam.type} year={exam.year} difficulty={exam.difficulty} id={exam.id} favourite={exam.favourite} likes={0} uploadDate={exam.uploadDate}/>)
+                                 .map((exam, index) => <ExamCard key={index} school={exam.school} type={exam.type} 
+                                                                year={exam.year} difficulty={exam.difficulty} id={exam.id} 
+                                                                favourite={exam.favourite} likes={0} uploadDate={exam.uploadDate}
+                                                                subject={exam.subject}/>)
                         }
                     </div>
                 }

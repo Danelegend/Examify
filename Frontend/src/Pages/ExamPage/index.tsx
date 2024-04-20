@@ -18,27 +18,6 @@ function useSearch() {
     return React.useMemo(() => new URLSearchParams(search), [search]);    
 }
 
-function ParseNumberSafely(num: string | null): number {
-    if (num === null) return -1
-    
-    const parsed = parseInt(num)
-
-    if (Number.isNaN(parsed)) return -1
-    return parsed
-}
-
-function GetIdFromQueryParams(): number {
-    const query = useSearch()
-
-    if (!query.has("id")) {
-        return -1
-    }
-
-    const exam_id = query.get("id")
-
-    return ParseNumberSafely(exam_id)
-}
-
 const ExamPage = () => {
     const [Fullscreen, SetFullscreen] = useState(false)
 
@@ -47,10 +26,6 @@ const ExamPage = () => {
 
     const onFullScreenExit = () => {
         SetFullscreen(false);
-    }
-
-    const onFullScreenClick = () => {
-        SetFullscreen(true)
     }
 
     const fetchExam = () => {
@@ -72,8 +47,8 @@ const ExamPage = () => {
     }
 
     const { isPending, data, error } = useQuery({
-        queryKey: ["exam"],
-        queryFn: fetchExam,
+        queryKey: ["exam", school, year, exam_type],
+        queryFn: fetchExam
     })
 
     const RunRecentlyViewed = async () => {

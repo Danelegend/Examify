@@ -1,6 +1,6 @@
 import Environment from "../../../../constants"
 
-import { useContext, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import SignInWithGoogle from "../Components/GoogleButton";
 import SignInWithFacebook from "../Components/FacebookButton";
 import { useMutation } from "@tanstack/react-query";
@@ -9,6 +9,7 @@ import { SignInResponse } from "../../../api/types";
 import { storeAccessToken, storeExpiration } from "../../../util/utility";
 import { UserContext } from "../../../context/user-context";
 import { ModalContext } from "../../../context/modal-context";
+import { useOnClickOutside } from "usehooks-ts";
 
 type LoginPopupProps = {
     onExit: () => void,
@@ -22,6 +23,10 @@ const LoginPopup = ({ onExit }: LoginPopupProps) => {
 
     const { setAccessToken } = useContext(UserContext)
     const { SetDisplayLogin } = useContext(ModalContext)
+
+    const loginRef = useRef(null)
+
+    useOnClickOutside(loginRef, () => onExit())
 
     const handleEmailChange = (e) => {
         SetEmail(e.target.value);
@@ -47,7 +52,6 @@ const LoginPopup = ({ onExit }: LoginPopupProps) => {
         },
         onSuccess: (res) => {
             res.json().then((data: SignInResponse) => {
-                console.log(document.cookie)
                 switch (res.status) {
                     case 500:
                         SetResponseMessage("Internal Error")
@@ -101,7 +105,7 @@ const LoginPopup = ({ onExit }: LoginPopupProps) => {
 
     return (
         <div className="fixed flex z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-            <div className="relative w-full max-w-md max-h-full">
+            <div ref={loginRef} className="relative w-full max-w-md max-h-full">
                 <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
                     <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">

@@ -1,9 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { useContext, useEffect, useState } from "react";
-import { UserContext } from "../../context/user-context";
+import { useEffect, useState } from "react";
 import Environment from "../../../constants";
 import { waveform } from 'ldrs'
-import { authClientMiddleWare, FetchError } from "../../util/utility";
+import { authClientMiddleWare, FetchError, handle403, readAccessToken } from "../../util/utility";
 import ExamCard, { ExamCardProps } from "../../Components/ExamCards";
 import { MdArrowBackIos } from "react-icons/md";
 
@@ -22,7 +21,9 @@ const StudentDashboardPage = () => {
     const [FavouritePosition, SetFavouritePosition] = useState<number>(0)
     const [RecentlyViewedPosition, SetRecentlyViewedPosition] = useState<number>(0)
 
-    const { accessToken } = useContext(UserContext)
+   const accessToken = readAccessToken()
+
+    const handleAuthorizationError = handle403()
 
     const handleLeftFavouriteClick = () => {
         if (FavouritePosition === 0) {
@@ -143,6 +144,7 @@ const StudentDashboardPage = () => {
                     case 500:
                         break
                     case 403:
+                        handleAuthorizationError()
                         break
                     default:
                         break
@@ -163,6 +165,7 @@ const StudentDashboardPage = () => {
                         case 500:
                             break
                         case 403:
+                            handleAuthorizationError()
                             break
                         default:
                             break
@@ -191,6 +194,7 @@ const StudentDashboardPage = () => {
                         case 500:
                             break
                         case 403:
+                            handleAuthorizationError()
                             break
                         default:
                             break
@@ -323,9 +327,7 @@ const StudentDashboardPage = () => {
                     </div>
                 </div>
                 <div>
-                    <div className="text-white text-xl text-center">
-                        Average Difficulty: 3
-                    </div>
+
                 </div>
             </div>
         </div>

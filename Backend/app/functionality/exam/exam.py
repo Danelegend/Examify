@@ -1,5 +1,5 @@
 from app.errors import DuplicationError, ValidationError
-from app.models import Exam, FavouriteExam, RecentlyViewedExam
+from app.models import Exam, FavouriteExam, RecentlyViewedExam, Schools
 from app.functionality.token import get_user
 from app.types import ExamType
 from app.security import FileLocationAccessible
@@ -11,7 +11,7 @@ def GetExam2(school: str, year: int, type: str) -> dict:
     """
     Gets an exam given school, year and type
     """
-    exam = Exam.objects.filter(school_name=school, year=year, exam_type=type)
+    exam = Exam.objects.filter(school=Schools.objects.get(name=school), year=year, exam_type=type)
 
     if exam.exists():
         return {

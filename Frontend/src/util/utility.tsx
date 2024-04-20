@@ -96,7 +96,6 @@ export const authClientMiddleWare: AuthClientMiddleWareType = (done) => {
         if (readAccessToken() === null) {
             return new Promise<Response>(() => {})
         } 
-
         return done()
     }
 }
@@ -108,5 +107,17 @@ export class FetchError extends Error {
 
     get status() {
         return this.res.status
+    }
+}
+
+export const handle403 = () => {
+    const { setAccessToken } = useContext(UserContext)
+
+    const navigate = useNavigate()
+
+    return () => {
+        setAccessToken(null)
+        removeAccessToken()
+        navigate("/")
     }
 }

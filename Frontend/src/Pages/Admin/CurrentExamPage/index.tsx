@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Environment from "../../../../constants";
-import { FetchError, readAccessToken } from "../../../util/utility";
-import { useQuery } from "@tanstack/react-query";
+import { FetchError, handle403, readAccessToken } from "../../../util/utility";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { MdDelete } from "react-icons/md"
 
 type Exam = {
@@ -15,10 +15,53 @@ type Exam = {
 
 type DisplayExamComponentProps = {
     exam: Exam,
-    key: number
+    key: number,
+    onDelete: () => void
 }
 
-const DisplayExamComponent = ({ exam, key }: DisplayExamComponentProps) => {
+const DisplayExamComponent = ({ exam, key, onDelete }: DisplayExamComponentProps) => {
+    const handleAuthorizationError = handle403()
+
+    const fetchDeleteExam = () => {
+        return fetch(Environment.BACKEND_URL + "/api/admin/exam/current/" + exam.id.toString(), {
+            headers: {
+                "Authorization": `bearer ${readAccessToken()}`
+            },
+            method: "DELETE",
+            credentials: 'include'
+        }).then(async (res) => {
+            const data = await res.json()
+
+            if (res.ok) {
+                return data
+            } else {
+                throw new FetchError(res)
+            }
+        })
+    }
+
+    const { mutateAsync: DeleteExamMutation } = useMutation({
+        mutationFn: fetchDeleteExam,
+        onSuccess: (res) => {
+            switch (res.status) {
+                case 500:
+                    break
+                case 403:
+                    handleAuthorizationError()
+                    break
+                case 200:
+                    onDelete()
+                    break
+                default:
+                    break
+            }
+        }
+    })
+
+    const handleDelete = () => {
+        DeleteExamMutation()
+    }
+
     return (
         <div key={key} className={(key % 2 == 0 ? "bg-blue-100" : "bg-yellow-100") + " py-4 px-4"}>
             <div className="grid grid-cols-6">
@@ -38,7 +81,7 @@ const DisplayExamComponent = ({ exam, key }: DisplayExamComponentProps) => {
                     {exam.file_location}
                 </div>
                 <div className="flex m-auto">
-                    <div className="bg-red-200 cursor-pointer">
+                    <div className="bg-red-200 cursor-pointer" onClick={handleDelete}>
                         <MdDelete size={24} />
                     </div>
                 </div>
@@ -49,6 +92,8 @@ const DisplayExamComponent = ({ exam, key }: DisplayExamComponentProps) => {
 
 const AdminCurrentExamPage = () => {
     const [Exams, SetExams] = useState<Exam[]>([])
+
+    const handleAuthorizationError = handle403()
 
     const fetchExams = () => {
         return fetch(Environment.BACKEND_URL + "/api/admin/exams/current", {
@@ -78,6 +123,9 @@ const AdminCurrentExamPage = () => {
             if (error instanceof FetchError) {
                 switch((error as FetchError).status) {
                     case 500:
+                        break
+                    case 403:
+                        handleAuthorizationError()
                         break
                     default:
                         break
@@ -109,7 +157,9 @@ const AdminCurrentExamPage = () => {
                         Exams.map((exam, index) => {
                             return (
                                 <li key={index}>
-                                    <DisplayExamComponent exam={exam} key={index} />
+                                    <DisplayExamComponent exam={exam} key={index} onDelete={() => {
+                                        SetExams(Exams.filter((e) => e.id != exam.id))
+                                    }}/>
                                 </li>
                             )
                         })

@@ -8,7 +8,7 @@ from rest_framework.response import Response
 
 from app.functionality.google.auth import login_facebook_token, login_google_token
 from app.errors import AuthenticationError, DuplicationError, ValidationError
-from app.functionality.authentication.authentication import GetUserPermissions, LoginUser, LogoutUser, RegisterUser
+from app.functionality.authentication.authentication import EditUserInformation, GetUserPermissions, LoginUser, LogoutUser, RegisterUser
 from app.functionality.authentication.user_form import UserForm
 from app.functionality.token import create_access_token
 from app.views.util import get_access_token
@@ -155,3 +155,21 @@ def UserPermissionsEndpoint(request):
         }, status=200)
     except AuthenticationError as e:
         return JsonResponse({"message": e.message}, status=403)
+
+@api_view(['PUT'])
+def EditUserInformationEndpoint(request):
+    token = get_access_token(request)
+
+    body_unicode = request.body.decode('utf-8')
+    body = json.loads(body_unicode)
+
+    dob = body["dob"]
+    school = body["school"]
+    school_year = body["school_year"]
+
+    try:
+        EditUserInformation(token, dob, school, school_year)
+
+        return Response(status=200)
+    except Exception as e:
+        return Response(status=500)

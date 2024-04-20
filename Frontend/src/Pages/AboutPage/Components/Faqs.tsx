@@ -1,57 +1,28 @@
+import Accordion from '../../../Components/Accordion'
 import backgroundImage from '../../../images/background-faqs.jpg'
 
 const faqs = [
-    [
-      {
-        question: 'Does TaxPal handle VAT?',
-        answer:
-          'Well no, but if you move your company offshore you can probably ignore it.',
-      },
-      {
-        question: 'Can I pay for my subscription via purchase order?',
-        answer: 'Absolutely, we are happy to take your money in all forms.',
-      },
-      {
-        question: 'How do I apply for a job at TaxPal?',
-        answer:
-          'We only hire our customers, so subscribe for a minimum of 6 months and then let’s talk.',
-      },
-    ],
-    [
-      {
-        question: 'What was that testimonial about tax fraud all about?',
-        answer:
-          'TaxPal is just a software application, ultimately your books are your responsibility.',
-      },
-      {
-        question:
-          'TaxPal sounds horrible but why do I still feel compelled to purchase?',
-        answer:
-          'This is the power of excellent visual design. You just can’t resist it, no matter how poorly it actually functions.',
-      },
-      {
-        question:
-          'I found other companies called TaxPal, are you sure you can use this name?',
-        answer:
-          'Honestly not sure at all. We haven’t actually incorporated or anything, we just thought it sounded cool and made this website.',
-      },
-    ],
-    [
-      {
-        question: 'How do you generate reports?',
-        answer:
-          'You just tell us what data you need a report for, and we get our kids to create beautiful charts for you using only the finest crayons.',
-      },
-      {
-        question: 'Can we expect more inventory features?',
-        answer: 'In life it’s really better to never expect anything at all.',
-      },
-      {
-        question: 'I lost my password, how do I get into my account?',
-        answer:
-          'Send us an email and we will send you a copy of our latest password spreadsheet so you can find your information.',
-      },
-    ],
+    {
+      question: 'What is Examify?',
+      answer: [
+        'Examify is your all-in-one HSC solution. We provide the widest range of HSC exams to assist you with your studies.',
+        'We offer many other features to help you strive for success. This includes favouriting exams you may wish to review.'
+      ]
+    },
+    {
+      question: 'What makes you better than other platforms?',
+      answer: [ 
+        'Other platforms offer excellent services, however, they often have clunky interfaces. We strive to offer a user-friendly experience to make your study sessions as efficient as possible.',
+        'We also offer a variety of other features not seen else where. These include analytics on your study, recommendations that we think can help you improve, and our soon to be released tutoring platform.'
+      ]
+    },
+    {
+      question: 'How can I help out?',
+      answer: [
+        'At Examify, we\'re all about community. We believe that the best way to improve is to work together. As such, your feedback and suggestions are invaluable.',
+        'Additionally, we need your help to expand our exam database. Any resources you upload are greatly appreciated and assist both us and other students, both current and future.'
+      ]
+    },
   ]
 
 const Faqs = () => {
@@ -74,30 +45,17 @@ const Faqs = () => {
           </div>
           <div className="relative">
             <div className="mx-auto max-w-2xl lg:mx-0">
-              <p className="font-display text-3xl tracking-tight text-slate-900 sm:text-4xl">
+              <p className="font-display text-3xl tracking-tight text-slate-900 sm:text-4xl text-center">
                 Frequently asked questions
               </p>
-              <p className="mt-4 text-lg tracking-tight text-slate-700">
-                If you can’t find what you’re looking for, email our support team
-                and if you’re lucky someone will get back to you.
-              </p>
             </div>
-            <ul className="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-8 lg:max-w-none lg:grid-cols-3">
-              {faqs.map((column, columnIndex) => (
-                <li key={columnIndex}>
-                  <ul className="space-y-8">
-                    {column.map((faq, faqIndex) => (
-                      <li key={faqIndex}>
-                        <h3 className="font-display text-lg leading-7 text-slate-900">
-                          {faq.question}
-                        </h3>
-                        <p className="mt-4 text-sm text-slate-700">{faq.answer}</p>
-                      </li>
-                    ))}
-                  </ul>
-                </li>
-              ))}
-            </ul>
+            <Accordion className="mt-12 px-56"
+              data={
+                faqs.map(({ question, answer }) => ({
+                  title: question,
+                  content: answer,
+                }))
+            } />
           </div>
         </section>
       )

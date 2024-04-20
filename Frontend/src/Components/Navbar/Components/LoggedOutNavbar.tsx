@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { ModalContext } from "../../../context/modal-context";
+import { NavigationButton } from "./NavButton";
 
 const LoggedOutNavbar = () => {
     const { SetDisplayLogin, SetDisplayRegister } = useContext(ModalContext)
@@ -13,24 +14,12 @@ const LoggedOutNavbar = () => {
         SetDisplayRegister(true)
     }
 
-    const NavigationButton = ({ link, title }: { link: string, title: string}) => {
-        return (
-            <div className="">
-                <Link to={link}>
-                    <div className="text-center text-neutral-500 font-semibold  leading-normal tracking-tight cursor-pointer">
-                        {title}
-                    </div>
-                </Link>
-            </div>
-        )
-    }
-
     return (
         <div>
-            <div className="flex w-full h-1/5 left-0 top-0 bg-zinc-300 justify-between items-center px-5">
+            <div className="flex w-full h-1/5 left-0 top-0 bg-[#282828] justify-between items-center px-5 shadow-lg">
                 <div className="pl-7 py-5 justify-start items-center inline-flex">
                     <Link to="/">
-                        <div className="text-slate-800 text-2xl font-bold font-['Montserrat'] leading-loose tracking-tight cursor-pointer">
+                        <div className="text-neutral-200 text-2xl font-bold font-['Montserrat'] leading-loose tracking-tight cursor-pointer">
                             Examify
                         </div>
                     </Link>

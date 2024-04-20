@@ -11,9 +11,13 @@ class Sessions(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now_add=True)
 
+class Schools(models.Model):
+    name = models.CharField(max_length=128, primary_key=True)
+    logo_location = models.FilePathField(default="")
+
 class Exam(models.Model):
     id = models.BigAutoField(primary_key=True, null=False)
-    school_name = models.CharField(max_length=128, default="")
+    school = models.ForeignKey(Schools, on_delete=models.SET_DEFAULT, default="")
     exam_type = models.CharField(choices=ExamType.Choices(), max_length=3, null=False)
     year = models.PositiveSmallIntegerField(null=False)
     file_location = models.FilePathField(null=False, unique=True)
@@ -22,16 +26,17 @@ class Exam(models.Model):
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    school_year = models.PositiveIntegerField(null=True, blank=True, validators=[
+    school_year = models.PositiveIntegerField(default=None, null=True, blank=True, validators=[
         MaxValueValidator(12),
         MinValueValidator(1)
     ])
-    school_name = models.CharField(max_length=128, null=True, blank=True)
+    school = models.ForeignKey(Schools, on_delete=models.SET_NULL, default=None, null=True, blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
     registration_method = models.CharField(choices=[("email", "Email"), ("google", "Google"), ("facebook", "Facebook")], 
                                             max_length=128,
-                                              null=False)
+                                            null=False)
     permissions = models.CharField(choices=UserType.Choices(), max_length=3, null=False, default=UserType.REGULAR.value)
+    date_of_birth = models.DateField(default=None, null=True, blank=True)
 
 class FavouriteExam(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

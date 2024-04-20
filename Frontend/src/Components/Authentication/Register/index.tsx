@@ -13,6 +13,10 @@ const RegisterPopup = ({ onExit }: RegisterPopupProps) => {
         if (CurrentScreen === 1) {
             SetCurrentScreen(2)
         }
+
+        if (CurrentScreen === 2) {
+            onExit()
+        }
     }
 
     return (
@@ -32,9 +36,9 @@ const RegisterPopup = ({ onExit }: RegisterPopupProps) => {
 
                     {
                         (CurrentScreen === 1) ? 
-                        <RegistrationScreen1 changeScreen={ChangeScreen} />
+                        <RegistrationScreen1 changeScreen={ChangeScreen}/>
                         : 
-                        <RegistrationScreen2 />
+                        <RegistrationScreen2 changeScreen={ChangeScreen}/>
                     }
                 </div>
             </div>

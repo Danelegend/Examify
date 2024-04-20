@@ -1,7 +1,7 @@
 from typing import List
 
 from app.functionality.token import get_user
-from app.models import FavouriteExam, RecentlyViewedExam
+from app.models import FavouriteExam, RecentlyViewedExam, Schools
 from app.functionality.exams.FilterConfig import FilterConfig
 from app.types import ExamType
 from app.functionality.DatabaseAccessor import DatabaseAccessor
@@ -15,7 +15,7 @@ def GetExams(accessToken, filterConfig: FilterConfig, sortType="DEFAULT"):
     for item in queryset:
         exams.append({
             "id": item.id,
-            "school_name": item.school_name,
+            "school_name": item.school.name,
             "type": item.exam_type,
             "year": item.year,
             "favourite": False if accessToken is None else ExamFavouriteOfUser(accessToken, item.id),
@@ -40,7 +40,7 @@ def GetFavouriteExams(access_token: str) -> List[dict]:
     for exam in exams:
         favourites.append({
             "id": exam.exam.id,
-            "school_name": exam.exam.school_name,
+            "school_name": exam.exam.school.name,
             "type": ExamType.MapPrefixToName(exam.exam.exam_type),
             "year": exam.exam.year,
             "favourite": True,
@@ -63,7 +63,7 @@ def GetRecentlyViewedExams(access_token: str) -> List[dict]:
     for exam in exams:
         recents.append({
             "id": exam.exam.id,
-            "school_name": exam.exam.school_name,
+            "school_name": exam.exam.school.name,
             "type": ExamType.MapPrefixToName(exam.exam.exam_type),
             "year": exam.exam.year,
             "favourite": ExamFavouriteOfUser(access_token, exam.exam.id),
@@ -72,3 +72,18 @@ def GetRecentlyViewedExams(access_token: str) -> List[dict]:
         })
 
     return recents
+
+def GetPopularSchools(size: int) -> List[str]:
+    """
+    Returns a list of the most popular schools
+    """
+    res = []
+
+    # Get all the schools    
+    for school in Schools.objects.all():
+        res.append(school.name)
+
+        if len(res) == size:
+            return res
+        
+    return res

@@ -25,7 +25,8 @@
     "react-router-dom": "^6.20.1",
     "react-social-login": "^3.4.17",
     "sort-by": "^1.2.0",
-    "styled-components": "^6.1.8"
+    "styled-components": "^6.1.8",
+    "usehooks-ts": "^3.1.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.37",

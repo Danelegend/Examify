@@ -125,7 +125,7 @@ const ExamCard = ({ school, year, type, difficulty, id, favourite, likes, upload
         <div className={"flex justify-center " + className}> 
             <div className="w-5/6">
                 <Link to={"/exam/" + school + "/" + year + "/" + type}>
-                    <div className="relative truncate bg-green-500 rounded-2xl pl-12 py-10">
+                    <div className="relative truncate bg-green-600 rounded-2xl pl-12 py-10">
                         <FavouriteIcon isFavourite={isFavourite} onClick={FavouriteClick} className="absolute bottom-3 right-2 md:right-5"/>
                         <div className="grid-rows-4 text-slate-300">
                             <div className="font-semibold text-xl">

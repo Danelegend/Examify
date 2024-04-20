@@ -1,27 +1,125 @@
 import { useState } from "react";
 import useWindowSize from "../../hooks/useWindowSize";
 import FileUploader from "./Components/FileUploader";
+import { useMutation } from "@tanstack/react-query";
+import Environment from "../../../constants";
+
+const SUBJECTS = {
+    "Maths Extension 2": "MX2",
+    "Maths Extension 1": "MX1",
+    "Maths Advanced": "MA",
+    "Maths Standard 2": "MS2",
+    "Chemistry": "CHEM",
+    "Physics": "PHY",
+    "Biology": "BIO"
+}
+
+const EXAM_TYPE = {
+    "Trial Exam": "TRI",
+    "HSC Exam": "HSC",
+    "Topic Test": "TOP",
+    "Half Yearly Exam": "HAE",
+    "Term 1 Test": "T_1",
+    "Term 2 Test": "T_2",
+    "Term 3 Test": "T_3",
+    "Term 4 Test": "T_4"
+}
+
+type UploadFormType = {
+    school: string
+    year: number
+    type: string
+    grade: number
+    subject: string
+    file: File | null
+}
+
+const DEFAULT_UPLOAD_FORM: UploadFormType = {
+    school: "",
+    year: 2024,
+    type: "TRI",
+    grade: 12,
+    subject: "MX2",
+    file: null
+}
+
+const MAX_FILE_SIZE = 15 * 1000000 // 15 MB
 
 const UploadPage = () => {
     const size = useWindowSize()
 
-    const [school, setSchool] = useState<string>("")
-    const [year, setYear] = useState<number>(2024)
-    const [type, setType] = useState<string>("")
-    const [grade, setGrade] = useState<number>(12)
+    const [UploadForm, SetUploadForm] = useState<UploadFormType>(DEFAULT_UPLOAD_FORM)
 
-    const [file, setFile] = useState<File | null>(null)
+    const [error, SetError] = useState<string | null>(null)
+    const [success, SetSuccess] = useState<string | null>(null)
 
-    const [error, setError] = useState<string | null>(null)
+    const postExam = () => {
+        const formData = new FormData()
+
+        if (UploadForm.file === null) throw new Error("File is required")
+
+        formData.append("file", UploadForm.file)
+        formData.append("school", UploadForm.school)
+        formData.append("year", UploadForm.year.toString())
+        formData.append("type", UploadForm.type)
+        formData.append("grade", UploadForm.grade.toString())
+        formData.append("subject", UploadForm.subject)
+
+        return fetch(Environment.BACKEND_URL + "/api/admin/exam/upload", {
+            method: "POST",
+            credentials: 'include',
+            body: formData
+        })
+    }
+
+    const { mutateAsync: PostExam } = useMutation<Response>({
+        mutationFn: postExam,
+        onSuccess: (data) => {
+            SetError(null)
+            SetSuccess("Exam Uploaded Successfully")
+            SetUploadForm(DEFAULT_UPLOAD_FORM)
+
+        },
+        onError: (error) => {
+            SetSuccess(null)
+            SetError(error.message)
+        }
+    })
 
     const handleFileChange = (file: File) => {
-        setFile(file)
+        SetUploadForm({...UploadForm, file: file})
 
         if(file.type !== "application/pdf") {
-            setError("Not a PDF")
+            SetError("Not a PDF")
+        } else if (file.size > MAX_FILE_SIZE) {
+            SetError("File is too large")
         } else {
-            setError(null)
+            SetError(null)
         }
+    }
+
+    const handleUploadClick = () => {
+        if (UploadForm.school === "") {
+            SetError("School is required")
+            return
+        }
+
+        if (UploadForm.file === null) {
+            SetError("File is required")
+            return
+        }
+
+        if (UploadForm.file.type !== "application/pdf") {
+            SetError("Not a PDF")
+            return
+        }
+
+        if (UploadForm.file.size > MAX_FILE_SIZE) {
+            SetError("File is too large")
+            return
+        }
+
+        PostExam()
     }
 
     return (
@@ -60,21 +158,39 @@ const UploadPage = () => {
                     <div className="flex flex-row justify-center gap-2">
                         <div className="">
                             <label>School</label>
-                            <input type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="School" />
+                            <input type="text" onChange={(e) => SetUploadForm({...UploadForm, school: e.target.value})} className="mt-1 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="School" />
                         </div>
                         <div className="">
                             <label>Year</label>
-                            <input type="number" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Year" />
+                            <input type="number" onChange={(e) => SetUploadForm({...UploadForm, year: e.target.valueAsNumber})} className="mt-1 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Year" />
                         </div>
                     </div>
                     <div className="flex flex-row justify-center gap-2">
                         <div className="truncate">
                             <label>Exam Type</label>
-                            <input type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Type" />
+                            <select id="exam_type" onChange={(e) => SetUploadForm({...UploadForm, type: e.target.value})} className="mt-1 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                                {
+                                    Object.keys(EXAM_TYPE).map((exam_type, index) => {
+                                        return <option key={index} value={EXAM_TYPE[exam_type]}>{exam_type}</option>
+                                    })
+                                }
+                            </select>
                         </div>
                         <div className="">
                             <label>Grade</label>
-                            <input type="number" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Grade" />
+                            <input type="number" onChange={(e) => SetUploadForm({...UploadForm, year: e.target.valueAsNumber})} className="mt-1 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Grade" />
+                        </div>
+                    </div>
+                    <div className="flex flex-row justify-center">
+                        <div className="truncate">
+                            <label>Subject</label>
+                            <select id="subject" onChange={(e) => SetUploadForm({...UploadForm, subject: e.target.value})} className="mt-1 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block p-2 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                                {
+                                    Object.keys(SUBJECTS).map((subject, index) => {
+                                        return <option key={index} value={SUBJECTS[subject]}>{subject}</option>
+                                    })
+                                }
+                            </select>
                         </div>
                     </div>
                     <div className="flex flex-row justify-center gap-2 pt-4">
@@ -82,16 +198,16 @@ const UploadPage = () => {
                             <FileUploader handleFile={handleFileChange}/>
                         </div>
                         {
-                            file ? 
+                            UploadForm.file ? 
                             <div className="pt-2 text-white">
-                                {file.name}
+                                {UploadForm.file.name}
                             </div> : null
                         }
                     </div>
                     
                     
                     <div className="mt-2">
-                        <button className="text-black">
+                        <button className="text-black" onClick={handleUploadClick}>
                             Upload
                         </button>
                     </div>
@@ -101,6 +217,12 @@ const UploadPage = () => {
                             {error}
                         </div> : null
 
+                    }
+                    {
+                        success ?
+                        <div className="pt-2 text-green-400">
+                            {success}
+                        </div> : null
                     }
                 </div>
             </div>

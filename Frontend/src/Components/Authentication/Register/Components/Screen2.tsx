@@ -1,14 +1,48 @@
 import { useState } from "react"
+import Environment from "../../../../../constants"
+import { authClientMiddleWare, readAccessToken } from "../../../../util/utility"
+import { useMutation } from "@tanstack/react-query"
 
-const RegistrationScreen2 = () => {
+const RegistrationScreen2 = ({ changeScreen } : 
+    {
+        changeScreen: () => void
+    }) => {
     const [DOB, SetDOB] = useState<Date | null>(null)
 
-    const [SchoolYear, SetSchoolYear] = useState<number>(12)
+    const [SchoolYear, SetSchoolYear] = useState<number>(-1)
     const [SchoolName, SetSchoolName] = useState<string>("")
 
     const [Subjects, SetSubjects] = useState<String[]>([])
 
     const [ResponseMessage, SetResponseMessage] = useState<string | null>(null)
+
+    const accessToken = readAccessToken()
+
+    const putRegistrationData = async () => {
+        return fetch(Environment.BACKEND_URL + "/api/auth/profile", {
+            method: "PUT",
+            headers: {
+                "Authorization": "bearer " + accessToken, 
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                dob: DOB,
+                school_year: SchoolYear,
+                school: SchoolName,
+                subjects: Subjects
+            })
+        })
+    }
+
+    const { mutateAsync: postData } = useMutation({
+        mutationFn: authClientMiddleWare(putRegistrationData),
+        onSuccess: (data) => {
+            changeScreen()
+        },
+        onError: (error) => {
+            console.log(error)
+        },
+    })
 
     const handleDOBChange = (e) => {
         SetDOB(e.target.value)
@@ -25,7 +59,20 @@ const RegistrationScreen2 = () => {
     const handleSubmission = () => {
         if (DOB === null) {
             SetResponseMessage("Provide a date of birth")
+            return
         }
+
+        if (SchoolYear < 1 || SchoolYear > 12) {
+            SetResponseMessage("School Year must be between 1 and 12")
+            return
+        }
+
+        if (SchoolName === "") {
+            SetResponseMessage("Provide a school name")
+            return
+        }
+
+        postData()
     }
 
     return (

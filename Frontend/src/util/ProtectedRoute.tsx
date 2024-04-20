@@ -28,7 +28,6 @@ export const AdminProtectedRoute = () => {
             const data = await res.json()
 
             if (res.ok) {
-                console.log(data)
                 return data
             } else {
                 throw new FetchError(res)

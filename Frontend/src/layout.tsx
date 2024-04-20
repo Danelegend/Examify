@@ -25,12 +25,9 @@ const Layout = () => {
         })
     }
 
-    console.log("Hello")
-    console.log(Modal.login)
-
     return (
         <ModalContext.Provider value={{ Modal, SetDisplayLogin, SetDisplayRegister }}>
-            <div className="bg-[#242424] min-h-screen min-w-screen">
+            <div className="bg-[#212121] min-h-screen min-w-screen">
                 <Header />
 
                 <Outlet />

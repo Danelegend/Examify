@@ -32,7 +32,7 @@ class TestUserAuthFlow:
             "password": "ThisIsAGoodPassword123@"
         }
 
-        response1 = api_client.post("/api/user/register", data=payload, format="json")
+        response1 = api_client.post("/api/auth/register", data=payload, format="json")
 
         # Get the access token and cookie
         assert response1.status_code == 200
@@ -43,7 +43,7 @@ class TestUserAuthFlow:
         refresh_token = response1.cookies[os.environ["REFRESH_TOKEN_COOKIE_KEY"]]
         api_client.cookies = SimpleCookie({os.environ["REFRESH_TOKEN_COOKIE_KEY"]: refresh_token})
     
-        response2 = api_client.get("/api/user/refresh")
+        response2 = api_client.get("/api/auth/refresh")
 
         assert response2.status_code == 200
         assert "access_token" in response2.json()
@@ -60,7 +60,7 @@ class TestUserAuthFlow:
             "password": "ThisIsAGoodPassword123@"
         }
 
-        response1 = api_client.post("/api/user/register", data=payload, format="json")
+        response1 = api_client.post("/api/auth/register", data=payload, format="json")
 
         # Get the access token and cookie
         assert response1.status_code == 200
@@ -71,12 +71,14 @@ class TestUserAuthFlow:
         refresh_token = response1.cookies[os.environ["REFRESH_TOKEN_COOKIE_KEY"]]
         api_client.cookies = SimpleCookie({os.environ["REFRESH_TOKEN_COOKIE_KEY"]: refresh_token})
 
+        print(access_token1)
+
         # Logout
-        response2 = api_client.delete("/api/user/logout", headers={"Authorization": f"bearer {access_token1}"})
+        response2 = api_client.delete("/api/auth/logout", headers={"Authorization": f"bearer {access_token1}"})
         assert response2.status_code == 200
 
         # Attempt refresh, should fail
-        response3 = api_client.get("/api/user/refresh")
+        response3 = api_client.get("/api/auth/refresh")
         assert response3.status_code == 403
 
         # Sign in
@@ -85,12 +87,12 @@ class TestUserAuthFlow:
             "password": "ThisIsAGoodPassword123@"
         }
 
-        response4 = api_client.post("/api/user/login", data=payload, format="json")
+        response4 = api_client.post("/api/auth/login", data=payload, format="json")
 
         assert response4.status_code == 200
         refresh_token = response4.cookies[os.environ["REFRESH_TOKEN_COOKIE_KEY"]]
         api_client.cookies = SimpleCookie({os.environ["REFRESH_TOKEN_COOKIE_KEY"]: refresh_token})
 
         # Refresh
-        response5 = api_client.get("/api/user/refresh")
+        response5 = api_client.get("/api/auth/refresh")
         assert response5.status_code == 200

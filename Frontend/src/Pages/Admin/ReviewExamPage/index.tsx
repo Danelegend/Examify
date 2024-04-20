@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import Environment from "../../../../constants"
-import { FetchError, readAccessToken } from "../../../util/utility"
+import { FetchError, handle403, readAccessToken } from "../../../util/utility"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { TiTick } from "react-icons/ti"
 import { MdDelete } from "react-icons/md"
@@ -10,6 +10,7 @@ type ReviewDetails = {
     exam_type: string | null,
     year: number | null,
     subject: string | null,
+    file_location: string
 }
 
 const SUBJECTS = {
@@ -34,19 +35,22 @@ const EXAM_TYPE = {
 }
 
 type ReviewComponentProps = {
-    file_location: string, 
+    file_location: string,
+    index: number, 
     onSubmit: () => void,
-    onDelete: () => void,
-    key: number
+    onDelete: () => void
 }
 
-const ReviewComponent = ({ file_location, onSubmit, onDelete, key }: ReviewComponentProps) => {
+const ReviewComponent = ({ file_location, index, onSubmit, onDelete }: ReviewComponentProps) => {
     const [ReviewDetails, SetReviewDetails] = useState<ReviewDetails>({
         school_name: "",
-        exam_type: "",
+        exam_type: Object.keys(EXAM_TYPE)[0],
         year: 2024,
-        subject: Object.keys(SUBJECTS)[0]
+        subject: Object.keys(SUBJECTS)[0],
+        file_location: file_location
     })
+
+    const handleAuthorizationError = handle403()
 
     const handleSchoolNameChange = (e) => {
         SetReviewDetails({
@@ -56,6 +60,7 @@ const ReviewComponent = ({ file_location, onSubmit, onDelete, key }: ReviewCompo
     }
 
     const handleExamTypeChange = (e) => {
+        console.log(e.target.value)
         SetReviewDetails({
             ...ReviewDetails,
             exam_type: e.target.value
@@ -70,6 +75,7 @@ const ReviewComponent = ({ file_location, onSubmit, onDelete, key }: ReviewCompo
     }
 
     const handleSubjectChange = (e) => {
+        console.log(e.target.value)
         SetReviewDetails({
             ...ReviewDetails,
             subject: e.target.value
@@ -77,46 +83,58 @@ const ReviewComponent = ({ file_location, onSubmit, onDelete, key }: ReviewCompo
     }
 
     const fetchSubmitExam = () => {
-        return fetch(Environment.BACKEND_URL + "/api/admin/exam/submit", {
+        return fetch(Environment.BACKEND_URL + "/api/admin/exam/review/submit", {
             headers: {
                 "Authorization": `bearer ${readAccessToken()}`
             },
             method: "POST",
             credentials: 'include',
             body: JSON.stringify({
-                file_location: file_location,
+                file_location: ReviewDetails.file_location,
                 school_name: ReviewDetails.school_name,
                 exam_type: ReviewDetails.exam_type,
                 year: ReviewDetails.year,
-                subject: ReviewDetails.subject
+                subject: ReviewDetails!.subject
             
             })
         })
     }
 
     const fetchDeleteExam = () => {
-        return fetch(Environment.BACKEND_URL + "/api/admin/exam/delete", {
+        return fetch(Environment.BACKEND_URL + "/api/admin/exam/review/delete", {
             headers: {
                 "Authorization": `bearer ${readAccessToken()}`
             },
             method: "DELETE",
             credentials: 'include',
             body: JSON.stringify({
-                file_location: file_location
+                file_location: ReviewDetails.file_location
             })
         })
     }
 
+    const clear = () => {
+        SetReviewDetails({
+            school_name: "",
+            exam_type: Object.keys(EXAM_TYPE)[0],
+            year: 2024,
+            subject: Object.keys(SUBJECTS)[0],
+            file_location: file_location
+        })
+    }
+ 
     const { mutateAsync: SubmitExamMutation } = useMutation<Response>({
         mutationFn: fetchSubmitExam,
         onSuccess: (res) => {
             switch (res.status) {
                 case 500:
-                    console.log("Internal Server Error")
+                    break
+                case 403:
+                    handleAuthorizationError()
                     break
                 case 200:
-                    console.log("Success")
                     onSubmit()
+                    clear()
                     break
                 default:
                     break
@@ -132,11 +150,13 @@ const ReviewComponent = ({ file_location, onSubmit, onDelete, key }: ReviewCompo
         onSuccess: (res) => {
             switch (res.status) {
                 case 500:
-                    console.log("Internal Server Error")
+                    break
+                case 403:
+                    handleAuthorizationError()
                     break
                 case 200:
-                    console.log("Success")
                     onDelete()
+                    clear()
                     break
                 default:
                     break
@@ -156,35 +176,37 @@ const ReviewComponent = ({ file_location, onSubmit, onDelete, key }: ReviewCompo
     }
     
     return (
-        <div key={key} className={(key % 2 == 0 ? "bg-blue-100" : "bg-yellow-100") + " py-4 px-4"}>
+        <div key={index} className={(index % 2 == 0 ? "bg-blue-100" : "bg-yellow-100") + " py-4 px-4"}>
             <div className="grid grid-cols-6">
                 <div className="content-center">
                     {file_location}
                 </div>
                 <div className="col-span-1 space-x-4">
                     <label className="mb-2 text-sm font-medium text-gray-900 dark:text-white">School</label>
-                    <input type="text" onChange={handleSchoolNameChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+                    <input type="text" onChange={handleSchoolNameChange} value={ReviewDetails.school_name!} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
                 </div>
                 <div className="col-span-1 space-x-4">
                     <label className="mb-2 text-sm font-medium text-gray-900 dark:text-white">Exam Type</label>
-                    <select id="countries" onChange={handleExamTypeChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                    <select id="exam_type" onChange={handleExamTypeChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                         {
-                            Object.keys(EXAM_TYPE).map((exam_type) => {
-                                return <option value={EXAM_TYPE[exam_type]}>{exam_type}</option>
+                            Object.keys(EXAM_TYPE).map((exam_type, index) => {
+                                console.log(exam_type)
+                                console.log(index)
+                                return <option key={index} value={EXAM_TYPE[exam_type]}>{exam_type}</option>
                             })
                         }
                     </select>
                 </div>
                 <div className="col-span-1 space-x-4">
                 <label className="mb-2 text-sm font-medium text-gray-900 dark:text-white">Year</label>
-                    <input type="number" onChange={handleYearChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+                    <input type="number" onChange={handleYearChange} value={ReviewDetails.year!} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
                 </div>
                 <div className="col-span-1 space-x-4">
                     <label className="mb-2 text-sm font-medium text-gray-900 dark:text-white">Subject</label>
-                    <select id="countries" onChange={handleSubjectChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                    <select id="subject" onChange={handleSubjectChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                         {
-                            Object.keys(SUBJECTS).map((subject) => {
-                                return <option value={SUBJECTS[subject]}>{subject}</option>
+                            Object.keys(SUBJECTS).map((subject, index) => {
+                                return <option key={index} value={SUBJECTS[subject]}>{subject}</option>
                             })
                         }
                     </select>
@@ -204,6 +226,8 @@ const ReviewComponent = ({ file_location, onSubmit, onDelete, key }: ReviewCompo
 
 const AdminReviewExamPage = () => {
     const [ReviewExams, SetReviewExams] = useState<string[]>([])
+
+    const handleAuthorizationError = handle403()
 
     const fetchReviewExams = () => {
         return fetch(Environment.BACKEND_URL + "/api/admin/exams/review", {
@@ -235,7 +259,7 @@ const AdminReviewExamPage = () => {
                     case 500:
                         break
                     case 403:
-                        handleAuthenticationError()
+                        handleAuthorizationError()
                         break
                     default:
                         break
@@ -265,14 +289,14 @@ const AdminReviewExamPage = () => {
                             return (
                                 <li key={index}>
                                     <ReviewComponent file_location={reviewExam} 
-                                                        key={index}
-                                                        onSubmit={() => {
-                                                            SetReviewExams(ReviewExams.filter((exam) => exam !== reviewExam))
-                                                        }}
-                                                        onDelete={() => {
-                                                            SetReviewExams(ReviewExams.filter((exam) => exam !== reviewExam))
-                                                        }}
-                                                        />
+                                                    index={index}
+                                                    onSubmit={() => {
+                                                        SetReviewExams(ReviewExams.filter((exam) => exam !== reviewExam))
+                                                    }}
+                                                    onDelete={() => {
+                                                        SetReviewExams(ReviewExams.filter((exam) => exam !== reviewExam))
+                                                    }}
+                                    />
                                 </li>
                             )
                         })

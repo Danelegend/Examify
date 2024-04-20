@@ -4,7 +4,7 @@
         "pk": 1,
         "fields": {
             "id": 1,
-            "school_name": "Abbotsleigh",
+            "school": "Abbotsleigh",
             "exam_type": "TRI",
             "year": 2021,
             "file_location": "exams/Abbotsleigh-2021-4U-Trial.pdf",
@@ -16,7 +16,7 @@
         "pk": 2,
         "fields": {
             "id": 2,
-            "school_name": "Ascham",
+            "school": "Ascham",
             "exam_type": "TRI",
             "year": 2021,
             "file_location": "exams/Ascham-2021-4U-Trial.pdf",
@@ -28,7 +28,7 @@
         "pk": 3,
         "fields": {
             "id": 3,
-            "school_name": "Ascham",
+            "school": "Ascham",
             "exam_type": "TRI",
             "year": 2022,
             "file_location": "exams/Ascham-2022-4U-Trial.pdf",
@@ -40,7 +40,7 @@
         "pk": 4,
         "fields": {
             "id": 4,
-            "school_name": "Barker",
+            "school": "Barker",
             "exam_type": "TRI",
             "year": 2020,
             "file_location": "exams/Barker-2020-4U-Trial.pdf",
@@ -52,7 +52,7 @@
         "pk": 5,
         "fields": {
             "id": 5,
-            "school_name": "Baulkham Hills",
+            "school": "Baulkham Hills",
             "exam_type": "TRI",
             "year": 2022,
             "file_location": "exams/Baulkham Hills-2022-4U-Trial.pdf",
@@ -64,7 +64,7 @@
         "pk": 6,
         "fields": {
             "id": 6,
-            "school_name": "Blacktown Boys",
+            "school": "Blacktown Boys",
             "exam_type": "TRI",
             "year": 2022,
             "file_location": "exams/Blacktown Boys-2022-4U-Trial.pdf",
@@ -76,7 +76,7 @@
         "pk": 7,
         "fields": {
             "id": 7,
-            "school_name": "Caringbah",
+            "school": "Caringbah",
             "exam_type": "TRI",
             "year": 2020,
             "file_location": "exams/Caringbah-2020-4U-Trial.pdf",
@@ -88,7 +88,7 @@
         "pk": 8,
         "fields": {
             "id": 8,
-            "school_name": "Caringbah",
+            "school": "Caringbah",
             "exam_type": "TRI",
             "year": 2021,
             "file_location": "exams/Caringbah-2021-4U-Trial.pdf",
@@ -100,7 +100,7 @@
         "pk": 9,
         "fields": {
             "id": 9,
-            "school_name": "Caringbah",
+            "school": "Caringbah",
             "exam_type": "TRI",
             "year": 2022,
             "file_location": "exams/Caringbah-2022-4U-Trial.pdf",

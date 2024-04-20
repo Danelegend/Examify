@@ -10,4 +10,5 @@ urlpatterns = [
     path('login/google', auth_views.LoginGoogleEndpoint),
     path('login/facebook', auth_views.LoginFacebookEndpoint),
     path('permissions', auth_views.UserPermissionsEndpoint),
+    path('profile', auth_views.EditUserInformationEndpoint)
 ]

@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.contrib.auth import authenticate
 
 from django.contrib.auth.models import User
@@ -6,7 +8,7 @@ from app.functionality.token import access_token_valid, create_access_token, cre
 from app.functionality.authentication.user_form import UserForm
 from app.errors import AuthenticationError, DuplicationError
 
-from app.models import UserProfile
+from app.models import Schools, UserProfile
 
 
 def RegisterUser(user_profile: UserForm):
@@ -44,9 +46,7 @@ def RegisterUser(user_profile: UserForm):
     user_record.save() 
 
     # Create a new UserProfile
-    user_profile_record = UserProfile.objects.create(user=user_record, 
-                                                     school_year=user_profile.school_year, 
-                                                     school_name=user_profile.school_name,
+    user_profile_record = UserProfile.objects.create(user=user_record,
                                                      registration_method="email")
 
     user_profile_record.full_clean()
@@ -109,3 +109,19 @@ def GetUserPermissions(access_token: str) -> str:
         return "ADM"
 
     return user.permissions
+
+def EditUserInformation(access_token: str, dob: date, school: str, school_year: int):
+    """
+    Takes in an access token and edits the user's information
+    """
+    if not access_token_valid(access_token):
+        raise AuthenticationError("Invalid access token")
+
+    uid = get_user_id(access_token)
+
+    user = UserProfile.objects.get(user=uid)
+    user.date_of_birth = dob
+    user.school = Schools.objects.get_or_create(name=school)[0]
+    user.school_year = school_year
+
+    user.save()

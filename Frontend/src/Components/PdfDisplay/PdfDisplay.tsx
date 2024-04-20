@@ -42,7 +42,7 @@ const PdfDisplay = ({ file }: PdfDisplayProps) => {
 
     return (
         <div>
-            <div id='pdf-viewer' className='h-screen overflow-scroll overscroll-contain'></div>
+            <div id='pdf-viewer' className='h-screen overflow-auto'></div>
         </div>
     )
 }

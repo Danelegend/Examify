@@ -33,6 +33,10 @@ def login_google_token(google_token: str):
     given_name = response2.json()['given_name']
     family_name = response2.json()['family_name']
 
+    print("test")
+    print(email)
+    print(user_exists_with_email(email))
+
     try:
         if not user_exists_with_email(email):
             return register_third_party_profile(email, given_name, family_name, "google")
@@ -70,8 +74,6 @@ def register_third_party_profile(email: str, first_name: str, last_name: str, re
     user_record.save()
 
     user_profile_record = UserProfile.objects.create(user=user_record,
-                                                     school_year=None,
-                                                     school_name=None,
                                                      registration_method=registration_method)
         
     user_profile_record.full_clean()

@@ -3,6 +3,7 @@ import useWindowSize from "../../hooks/useWindowSize";
 import FileUploader from "./Components/FileUploader";
 import { useMutation } from "@tanstack/react-query";
 import Environment from "../../../constants";
+import { ring } from "ldrs";
 
 const SUBJECTS = {
     "Maths Extension 2": "MX2",
@@ -52,6 +53,7 @@ const UploadPage = () => {
 
     const [error, SetError] = useState<string | null>(null)
     const [success, SetSuccess] = useState<string | null>(null)
+    const [IsLoading, SetLoading] = useState<boolean>(false)
 
     const postExam = () => {
         const formData = new FormData()
@@ -78,11 +80,12 @@ const UploadPage = () => {
             SetError(null)
             SetSuccess("Exam Uploaded Successfully")
             SetUploadForm(DEFAULT_UPLOAD_FORM)
-
+            SetLoading(false)
         },
         onError: (error) => {
             SetSuccess(null)
             SetError(error.message)
+            SetLoading(false)
         }
     })
 
@@ -120,7 +123,10 @@ const UploadPage = () => {
         }
 
         PostExam()
+        SetLoading(true);
     }
+
+    ring.register()
 
     return (
         <div className="flex flex-col justify-between gap-y-10">
@@ -178,7 +184,7 @@ const UploadPage = () => {
                         </div>
                         <div className="">
                             <label>Grade</label>
-                            <input type="number" onChange={(e) => SetUploadForm({...UploadForm, year: e.target.valueAsNumber})} className="mt-1 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Grade" />
+                            <input type="number" onChange={(e) => SetUploadForm({...UploadForm, grade: e.target.valueAsNumber})} className="mt-1 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Grade" />
                         </div>
                     </div>
                     <div className="flex flex-row justify-center">
@@ -207,9 +213,20 @@ const UploadPage = () => {
                     
                     
                     <div className="mt-2">
-                        <button className="text-black" onClick={handleUploadClick}>
-                            Upload
-                        </button>
+                        {
+                            IsLoading ? 
+                            <l-ring
+                              size="40"
+                              stroke="5"
+                              bg-opacity="0"
+                              speed="2" 
+                              color="black" 
+                            />
+                            :
+                            <button className="text-black" onClick={handleUploadClick}>
+                                Upload
+                            </button>
+                        }
                     </div>
                     {
                         error ?

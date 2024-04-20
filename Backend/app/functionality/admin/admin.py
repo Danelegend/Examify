@@ -40,17 +40,13 @@ def SubmitReviewExam(school: str, exam_type: str, year: int, subject: str, file_
     # Generate name for the file
     new_file_name = f"{school}-{year}_{subject}_{exam_type}.pdf"
 
+    print(new_file_name)
+
     # Down the file from google drive
     move_file_from_review_to_current(file_location, new_file_name)
 
-    print("T0")
-    print("School")
-
-
     # Get or create the school object
     school, _ = Schools.objects.get_or_create(name=school)
-
-    print("T1")
 
     # Create the exam object
     new_exam_record = Exam.objects.create(school=school, 
@@ -58,8 +54,6 @@ def SubmitReviewExam(school: str, exam_type: str, year: int, subject: str, file_
                         year=year, 
                         subject=subject, 
                         file_location=new_file_name)
-    
-    print("T2")
 
     new_exam_record.save()
 

@@ -33,10 +33,6 @@ def login_google_token(google_token: str):
     given_name = response2.json()['given_name']
     family_name = response2.json()['family_name']
 
-    print("test")
-    print(email)
-    print(user_exists_with_email(email))
-
     try:
         if not user_exists_with_email(email):
             return register_third_party_profile(email, given_name, family_name, "google")

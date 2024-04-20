@@ -50,7 +50,7 @@ class TestAdminFlow:
     def test_admin_get_current_exams(self, api_client, register_admin):
         token = register_admin
 
-        response = api_client.get("/api/admin/exams/current", headers={"Authorization": f"bearer {token}"})
+        response = api_client.get("/api/admin/exams/current", HTTP_AUTHORIZATION=f"bearer {token}")
 
         assert response.status_code == 200
         assert "exams" in response.json()
@@ -72,7 +72,7 @@ class TestAdminFlow:
         token = register_admin
 
         # Check exams in review
-        response2 = api_client.get("/api/admin/exams/review", headers={"Authorization": f"bearer {token}"})
+        response2 = api_client.get("/api/admin/exams/review", HTTP_AUTHORIZATION=f"bearer {token}")
 
         assert response2.status_code == 200
         assert "exams" in response2.json()
@@ -80,7 +80,7 @@ class TestAdminFlow:
         assert response2.json()["exams"] == ["Test School-2021_Test Subject_Trial.pdf"]
 
         # Check that there are currently no exams in the exams database
-        response3 = api_client.get("/api/admin/exams/current", headers={"Authorization": f"bearer {token}"})
+        response3 = api_client.get("/api/admin/exams/current", HTTP_AUTHORIZATION=f"bearer {token}")
 
         assert response3.status_code == 200
         assert response3.json()["exams"] == []
@@ -97,18 +97,18 @@ class TestAdminFlow:
             "file_location": "Test School-2021_Test Subject_Trial.pdf"
         }
 
-        response4 = api_client.post("/api/admin/exam/review/submit", data=json.dumps(payload), headers={"Authorization": f"bearer {token}"}, content_type='application/json')
+        response4 = api_client.post("/api/admin/exam/review/submit", data=json.dumps(payload), HTTP_AUTHORIZATION=f"bearer {token}", content_type='application/json')
 
         assert response4.status_code == 200
 
         # Check that the exam is now in the current exams
-        response5 = api_client.get("/api/admin/exams/current", headers={"Authorization": f"bearer {token}"})
+        response5 = api_client.get("/api/admin/exams/current", HTTP_AUTHORIZATION=f"bearer {token}")
         
         assert response5.status_code == 200
         assert len(response5.json()["exams"]) == 1
 
         # Check that the exam is no longer in the review exams
-        response6 = api_client.get("/api/admin/exams/review", headers={"Authorization": f"bearer {token}"})
+        response6 = api_client.get("/api/admin/exams/review", HTTP_AUTHORIZATION=f"bearer {token}")
 
         assert response6.status_code == 200
         assert response6.json()["exams"] == []

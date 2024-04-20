@@ -74,7 +74,7 @@ class TestUserAuthFlow:
         print(access_token1)
 
         # Logout
-        response2 = api_client.delete("/api/auth/logout", headers={"Authorization": f"bearer {access_token1}"})
+        response2 = api_client.delete("/api/auth/logout", HTTP_AUTHORIZATION=f"bearer {access_token1}")
         assert response2.status_code == 200
 
         # Attempt refresh, should fail

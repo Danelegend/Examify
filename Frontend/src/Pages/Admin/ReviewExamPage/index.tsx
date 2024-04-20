@@ -133,8 +133,6 @@ const ReviewComponent = ({ file_location, index, onSubmit, onDelete }: ReviewCom
                     handleAuthorizationError()
                     break
                 case 200:
-                    onSubmit()
-                    clear()
                     break
                 default:
                     break
@@ -169,6 +167,8 @@ const ReviewComponent = ({ file_location, index, onSubmit, onDelete }: ReviewCom
 
     const handleSubmit = () => {
         SubmitExamMutation()
+        onSubmit()
+        clear()
     }
 
     const handleDelete = () => {
@@ -177,7 +177,7 @@ const ReviewComponent = ({ file_location, index, onSubmit, onDelete }: ReviewCom
     
     return (
         <div key={index} className={(index % 2 == 0 ? "bg-blue-100" : "bg-yellow-100") + " py-4 px-4"}>
-            <div className="grid grid-cols-6">
+            <div className="grid md:grid-cols-6">
                 <div className="content-center">
                     {file_location}
                 </div>
@@ -190,8 +190,6 @@ const ReviewComponent = ({ file_location, index, onSubmit, onDelete }: ReviewCom
                     <select id="exam_type" onChange={handleExamTypeChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                         {
                             Object.keys(EXAM_TYPE).map((exam_type, index) => {
-                                console.log(exam_type)
-                                console.log(index)
                                 return <option key={index} value={EXAM_TYPE[exam_type]}>{exam_type}</option>
                             })
                         }

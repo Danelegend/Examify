@@ -22,8 +22,10 @@ type DisplayExamComponentProps = {
 const DisplayExamComponent = ({ exam, key, onDelete }: DisplayExamComponentProps) => {
     const handleAuthorizationError = handle403()
 
+    const [Exam] = useState(exam)
+
     const fetchDeleteExam = () => {
-        return fetch(Environment.BACKEND_URL + "/api/admin/exam/current/" + exam.id.toString(), {
+        return fetch(Environment.BACKEND_URL + "/api/admin/exam/current/" + Exam.id.toString(), {
             headers: {
                 "Authorization": `bearer ${readAccessToken()}`
             },
@@ -50,7 +52,6 @@ const DisplayExamComponent = ({ exam, key, onDelete }: DisplayExamComponentProps
                     handleAuthorizationError()
                     break
                 case 200:
-                    onDelete()
                     break
                 default:
                     break
@@ -60,11 +61,12 @@ const DisplayExamComponent = ({ exam, key, onDelete }: DisplayExamComponentProps
 
     const handleDelete = () => {
         DeleteExamMutation()
+        onDelete()
     }
 
     return (
         <div key={key} className={(key % 2 == 0 ? "bg-blue-100" : "bg-yellow-100") + " py-4 px-4"}>
-            <div className="grid grid-cols-6">
+            <div className="grid md:grid-cols-6">
                 <div className="content-center">
                     {exam.school}
                 </div>

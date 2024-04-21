@@ -172,7 +172,7 @@ const ExamDisplay = () => {
     return (
         schoolFilterPending || subjectFilterPending ? <div>Loading</div> : 
 
-        <div className="px-40 pt-5">
+        <div className="px-4 pt-5">
             <div className="bg-slate-800 rounded-lg pt-8">
                 <div className="border-b mb-6 mx-8">
                     <h1 className="text-3xl font-bold text-white text-center">Exams</h1>
@@ -184,7 +184,7 @@ const ExamDisplay = () => {
                 </div>
                 {
                     isPending ? <div>Loading</div> : 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-12 bg-slate-800 pt-10 pb-16">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-x-4 gap-y-12 bg-slate-800 pt-10 pb-16">
                         {
                             Exams.filter(exam => Filter.schools.length === 0 || Filter.schools.includes(exam.school))
                                  .filter(exam => Filter.subjects.length === 0 || Filter.subjects.includes(exam.subject))

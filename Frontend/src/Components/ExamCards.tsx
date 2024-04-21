@@ -121,14 +121,12 @@ const ExamCard = ({ school, year, type, difficulty, id, favourite, likes, upload
         
         setIsFavourite(!isFavourite)
     }
-    
-    console.log(uploadDate)
 
     return (
         <div className={"flex justify-center " + className}> 
-            <div className="w-5/6">
+            <div className="w-4/5">
                 <Link to={"/exam/" + school + "/" + year + "/" + type}>
-                    <div className="relative truncate bg-green-600 rounded-2xl pl-12 py-10">
+                    <div className="relative truncate bg-green-600 rounded-2xl pl-12 pr-7 py-10 break-words">
                         <FavouriteIcon isFavourite={isFavourite} onClick={FavouriteClick} className="absolute bottom-3 right-2 md:right-5"/>
                         <div className="grid-rows-4 text-slate-300">
                             <div className="font-semibold text-xl">

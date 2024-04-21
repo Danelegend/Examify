@@ -4,9 +4,8 @@ WORKDIR /app
 
 COPY requirements.txt ./
 RUN pip3 install --no-cache-dir -r requirements.txt
+RUN pip3 install pyright
 
 COPY . .
 
-EXPOSE 8080
-
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080", "--reload"]
+CMD ["bash", "run_test.sh"]

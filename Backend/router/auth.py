@@ -87,7 +87,7 @@ async def refresh(request: Request, response: Response) -> RefreshResponse:
     except (ValueError, AuthenticationError, jwt.exceptions.PyJWTError) as e:
         response.delete_cookie(os.environ.get("REFRESH_TOKEN_COOKIE_KEY", "refresh_token"))
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
+            status_code=status.HTTP_403_FORBIDDEN,
             detail=str(e),
             headers={"set-cookie": response.headers["set-cookie"]}
         ) from e

@@ -13,7 +13,7 @@ REVIEW_FOLDER_ID = os.environ.get("REVIEW_FOLDER_ID", "1hwSEHvdE4tbUUEp6jrN786lX
 
 REVIEW_FILES_TO_ID = {}
 
-CURRENT_EXAMS_DIRECTORY = os.environ.get("CURRENT_EXAMS_DIRECTORY", "D:\Examify\Examify\exams")
+CURRENT_EXAMS_DIRECTORY = os.environ.get("CURRENT_EXAMS_DIRECTORY", "D:\\Examify\\Examify\\exams")
 
 def _authenticate():
     creds = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)

@@ -70,7 +70,7 @@ def get_session(session_id: int) -> Optional[SessionDetailResponse]:
     try:
         conn = connect()
         with conn.cursor() as cur:
-            cur.execute("SELECT refresh_id, user FROM sessions WHERE id = %(id)s;", {"id": session_id})
+            cur.execute("SELECT refresh_id, account FROM sessions WHERE id = %(id)s;", {"id": session_id})
             res = cur.fetchone()
 
             if res is None:

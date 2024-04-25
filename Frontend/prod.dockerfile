@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 node:lts-slim
+FROM --platform=linux/amd64 node:20.12.2-slim
 
 WORKDIR /client
 

@@ -9,5 +9,5 @@ COPY . .
 
 EXPOSE 3000
 
-# Run the server
-ENTRYPOINT [ "npm", "start" ]
+CMD ["bash", "run_test.sh"]
+

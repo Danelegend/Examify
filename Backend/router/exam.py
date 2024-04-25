@@ -12,7 +12,7 @@ from router.api_types.api_response import ExamResponse
 
 router = APIRouter()
 
-@router.get("/{school}/{year}/{type}", status_code=status.HTTP_200_OK, response_class=ExamResponse)
+@router.get("/{school}/{year}/{type}", status_code=status.HTTP_200_OK, response_model=ExamResponse)
 async def get_exam(school: str, year: int, type: str) -> ExamResponse:
     try:
         exam_id = GetExamId(school, year, type)
@@ -23,7 +23,7 @@ async def get_exam(school: str, year: int, type: str) -> ExamResponse:
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="An error occurred") from e
     
-@router.get("/pdf/{exam_id}", status_code=status.HTTP_200_OK, response_class=FileResponse)
+@router.get("/pdf/{exam_id}", status_code=status.HTTP_200_OK)
 async def get_exam_pdf(exam_id: int) -> FileResponse:
     try:
         buffer = GetExamPdf(exam_id)

@@ -1,4 +1,5 @@
-from google.auth.transport import requests
+import os
+import requests
 
 from database.db_types.db_request import UserCreationRequest
 from database.helpers.user import get_user_by_email_and_registration, insert_user
@@ -8,10 +9,8 @@ from errors import AuthenticationError, ValidationError
 from functionality.token import create_access_token, create_refresh_token
 from functionality.authentication.user_accessor import user_exists_with_email
 
-import requests
-
-CLIENT_ID = "623177653931-inec93uqarv00qs0gvtdd1lrvbekic62.apps.googleusercontent.com"
-CLIENT_SECRET = "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"
+CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", None)
+CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET", None)
 
 def login_google_token(google_token: str):
     data = {

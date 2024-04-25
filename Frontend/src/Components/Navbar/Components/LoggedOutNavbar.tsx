@@ -25,7 +25,7 @@ const LoggedOutNavbar = () => {
                     </Link>
                 </div>
 
-                <div className="self-stretch justify-start items-center gap-[21px] inline-flex text-base font-['Montserrat']">
+                <div className="self-stretch justify-start items-center gap-5 inline-flex text-base font-['Montserrat']">
                     <NavigationButton link="/" title="About" />
                     <NavigationButton link="/exams" title="Exams" />
                     <NavigationButton link="/upload" title="Upload" />

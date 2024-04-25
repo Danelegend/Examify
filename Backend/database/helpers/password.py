@@ -23,6 +23,7 @@ def insert_password(password: PasswordCreationRequest):
                     'password': password.password
                 })
 
+        conn.commit()
         log_green("Finished inserting the Password into Database")
     except psycopg2.Error as e:
         log_red(f"Error inserting the Password: {e}")

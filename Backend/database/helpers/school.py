@@ -26,6 +26,7 @@ def insert_school(school: SchoolCreationRequest) -> int:
 
             school_id = cur.fetchone()
 
+        conn.commit()
         log_green("Finished inserting the School into Database")
     except psycopg2.Error as e:
         log_red(f"Error inserting the School: {e}")
@@ -109,46 +110,6 @@ def get_schools() -> List[SchoolDetailsResponse]:
         ) for _, name, logo_location in schools
     ]
 
-def get_or_create_school(school: str) -> int:
-    """
-    Gets or creates a school in the database
-    """
-    try:
-        conn = connect()
-        with conn.cursor() as cur:
-            cur.execute("SELECT id FROM schools WHERE name = %(name)s;", {"name": school})
-            school = cur.fetchone()
-
-            if not school:
-                cur.execute(
-                    """
-                    INSERT INTO schools (name) 
-                    VALUES (%(name)s) RETURNING id;
-                    """, {
-                        'name': school
-                    })
-
-                school_id = cur.fetchone()
-            else:
-                school_id = school[0]
-
-        log_green("Finished getting or creating the School from Database")
-    except psycopg2.Error as e:
-        log_red(f"Error getting or creating the School: {e}")
-        raise e
-    finally:
-        disconnect(conn)
-    
-    if not school:
-        return SchoolDetailsResponse(
-            name=school, 
-            logo_location=None
-        )
-    
-    return SchoolDetailsResponse(
-        name=school[1], 
-        logo_location=school[2]
-    )
 
 def get_or_create_school(school: str) -> int:
     """
@@ -170,6 +131,7 @@ def get_or_create_school(school: str) -> int:
                     })
 
                 school_id = cur.fetchone()
+                conn.commit()
             else:
                 school_id = school[0]
 

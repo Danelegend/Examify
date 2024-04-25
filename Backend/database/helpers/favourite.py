@@ -22,6 +22,7 @@ def insert_user_favourite_exam(user_id: int, exam_id: int):
                     'exam': exam_id
                 })
 
+        conn.commit()
         log_green("Finished inserting the User Favourite Exam into Database")
     except psycopg2.Error as e:
         log_red(f"Error inserting the User Favourite Exam: {e}")
@@ -45,6 +46,7 @@ def delete_user_favourite_exam(user_id: int, exam_id: int):
                     'exam': exam_id
                 })
 
+        conn.commit()
         log_green("Finished deleting the User Favourite Exam from Database")
     except psycopg2.Error as e:
         log_red(f"Error deleting the User Favourite Exam: {e}")

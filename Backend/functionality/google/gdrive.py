@@ -1,13 +1,14 @@
 import io
+import os
+
 from typing import List
+
 from googleapiclient.discovery import build, MediaFileUpload
 from googleapiclient.http import MediaIoBaseDownload
 from google.oauth2 import service_account
 
-import os
-
 SCOPES = ['https://www.googleapis.com/auth/drive']
-SERVICE_ACCOUNT_FILE = 'D:\Examify\Examify\Backend\service_account.json'
+SERVICE_ACCOUNT_FILE = os.environ.get("GOOGLE_SERVICE_ACCOUNT_FILE", "service_account.json")
 REVIEW_FOLDER_ID = os.environ.get("REVIEW_FOLDER_ID", "1hwSEHvdE4tbUUEp6jrN786lX4sp7H_tr")
 
 REVIEW_FILES_TO_ID = {}

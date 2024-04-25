@@ -1,8 +1,8 @@
 from typing import Annotated
 from fastapi import APIRouter, HTTPException, Security, status, UploadFile
 
-from app.functionality.admin.admin import DeleteCurrentExam, DeleteReviewExam, GetCurrentExams, GetExamsToReview, SubmitReviewExam, UploadExam, ValidateToken
-from app.functionality.authentication.authentication import GetUserPermissions
+from functionality.admin.admin import DeleteCurrentExam, DeleteReviewExam, GetCurrentExams, GetExamsToReview, SubmitReviewExam, UploadExam, ValidateToken
+from functionality.authentication.authentication import GetUserPermissions
 
 from router import HTTPBearer401
 from router.api_types.api_request import DeleteReviewExamRequest, SubmitReviewExamRequest, UploadExamRequest

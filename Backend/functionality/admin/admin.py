@@ -15,8 +15,8 @@ from database.helpers.school import get_or_create_school
 
 from router.api_types.api_response import CurrentExamResponse, ReviewExamResponse
 
-REVIEW_EXAMS_DIRECTORY = "D:\Examify\Examify\\review_exams"
-CURRENT_EXAMS_DIRECTORY = "D:\Examify\Examify\exams"
+REVIEW_EXAMS_DIRECTORY = os.environ.get("REVIEW_EXAMS_DIRECTORY", "review_exams")
+CURRENT_EXAMS_DIRECTORY = os.environ.get("CURRENT_EXAMS_DIRECTORY", "exams")
 
 def ValidateToken(token: str):
     # Check that the token is valid

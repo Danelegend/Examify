@@ -29,6 +29,7 @@ def insert_exam(exam: ExamCreationRequest) -> int:
 
             exam_id = cur.fetchone()
 
+        conn.commit()
         log_green("Finished inserting the Exam into Database")
     except psycopg2.Error as e:
         log_red(f"Error inserting the Exam: {e}")
@@ -136,6 +137,7 @@ def delete_exam(exam_id: int):
         with conn.cursor() as cur:
             cur.execute("DELETE FROM exams WHERE id = %(id)s;", {"id": exam_id})
 
+        conn.commit()
         log_green("Finished deleting the Exam from Database")
     except psycopg2.Error as e:
         log_red(f"Error deleting the Exam: {e}")

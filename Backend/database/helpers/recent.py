@@ -22,6 +22,7 @@ def insert_user_recently_viewed_exam(user_id: int, exam_id: int):
                     'exam': exam_id
                 })
 
+        conn.commit()
         log_green("Finished inserting the User Recently Viewed Exam into Database")
     except psycopg2.Error as e:
         log_red(f"Error inserting the User Recently Viewed Exam: {e}")

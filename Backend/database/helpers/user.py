@@ -30,6 +30,7 @@ def insert_user(user: UserCreationRequest) -> int:
 
             user_id = cur.fetchone()
 
+        conn.commit()
         log_green("Finished inserting the User into Database")
     except psycopg2.Error as e:
         log_red(f"Error inserting the User: {e}")
@@ -127,6 +128,7 @@ def update_user(user_update_request: UserUpdateRequest):
                 construct_query(user_update_request)
             )
 
+        conn.commit()
         log_green("Finished updating the User in Database")
     except psycopg2.Error as e:
         log_red(f"Error updating the User: {e}")

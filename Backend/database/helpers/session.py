@@ -26,8 +26,8 @@ def create_session(session: SessionCreationRequest) -> Optional[int]:
             )
             
             session_id = cur.fetchone()
-        conn.commit()
 
+        conn.commit()
         log_green("Finished inserting the Session in Database")
     except psycopg2.Error as e:
         log_red(f"Error inserting the Session in Database: {e}")
@@ -99,8 +99,8 @@ def delete_session(session_id: int):
         conn = connect()
         with conn.cursor() as cur:
             cur.execute("DELETE FROM sessions WHERE id = %(id)s;", {"id": session_id})
-        conn.commit()
 
+        conn.commit()
         log_green("Finished deleting the Session from Database")
     except psycopg2.Error as e:
         log_red(f"Error deleting the Session from Database: {e}")

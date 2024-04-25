@@ -51,7 +51,8 @@ async def register_user(response: Response, register_request: RegistrationReques
         )
 
         return RegistrationResponse(
-            access_token=registration_result["access_token"]
+            access_token=registration_result["access_token"],
+            expiration=registration_result["expiration"]
         )
     except ValidationError as v:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=v.message) from v

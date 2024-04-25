@@ -3,8 +3,8 @@ import argparse
 from typing import List, Tuple, Optional, Any
 from psycopg2 import Error, sql
 
+from database.helpers import connect, disconnect
 from logger import log_red, log_green
-from db.helpers import connect, disconnect
 
 class DatabaseSetup:
     def __init__(self):

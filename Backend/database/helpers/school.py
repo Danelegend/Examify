@@ -1,5 +1,7 @@
 import psycopg2
 
+from typing import List
+
 from logger import log_green, log_red
 
 from database.helpers import connect, disconnect
@@ -83,7 +85,7 @@ def get_school_by_name(school: str) -> SchoolDetailsResponse:
         logo_location=logo_location
     )
 
-def get_schools() -> list[SchoolDetailsResponse]:
+def get_schools() -> List[SchoolDetailsResponse]:
     """
     Gets all schools from the database
     """

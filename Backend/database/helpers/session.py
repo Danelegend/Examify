@@ -18,10 +18,10 @@ def create_session(session: SessionCreationRequest) -> Optional[int]:
         with conn.cursor() as cur:
             cur.execute(
                 """
-                INSERT INTO sessions (refresh_id, user) VALUES (%(refresh_id)s, %(user)s) RETURNING id;
+                INSERT INTO sessions (refresh_id, account) VALUES (%(refresh_id)s, %(account)s) RETURNING id;
                 """, {
                     'refresh_id': session.refresh_id,
-                    'user': session.user
+                    'account': session.user
                 }
             )
             

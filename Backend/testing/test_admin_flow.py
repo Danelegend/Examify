@@ -25,9 +25,9 @@ class TestAdminFlow:
 
         assert current_exams_resp_1["exams"] == []
 
-    def test_admin_flow_from_review_to_current(self, api_client, register_admin):
+    def test_admin_flow_from_review_to_current(self, register_admin):
         # Start by uploading an exam
-        admin_upload_exam(open("D:\Examify\Examify\Backend\\app\Tests\\test.pdf", "rb"), 
+        admin_upload_exam(open("testing\\test.pdf", "rb"), 
                           "Test School", "Trial", 2021, "Test Subject")
 
         # Register the admin

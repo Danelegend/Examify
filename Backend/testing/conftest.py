@@ -17,5 +17,5 @@ def setup():
     os.environ["REFRESH_TOKEN_EXPIRY_DAYS"] = "7"
     os.environ["ACCESS_TOKEN_SECRET"] = "ThisIsADummyKey"
     os.environ["ACCESS_TOKEN_EXPIRY_MINUTES"] = "15"
-    os.environ["CURRENT_EXAMS_DIRECTORY"] = "D:\Examify\Examify\Backend\\app\Tests\\test_current_exams"
+    os.environ["CURRENT_EXAMS_DIRECTORY"] = "testing/test_current_exams"
     os.environ["REVIEW_FOLDER_ID"] = "1C8m3UTJ63iPxQZettgGo3ARaPxhAhCDz"

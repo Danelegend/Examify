@@ -25,8 +25,6 @@ def registered_user_ids():
 
     return [get_user_id(response["access_token"])]
 
-
-@pytest.mark.django_db
 class TestUserLoginSuccess:
     def test_basic_user_login(self, registered_user_ids):
         expected_user_id = registered_user_ids[0]

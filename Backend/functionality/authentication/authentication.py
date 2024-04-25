@@ -43,7 +43,6 @@ def RegisterUser(user_profile: UserForm):
         first_name=user_profile.first_name,
         last_name=user_profile.last_name,
         email=user_profile.email,
-        phone=user_profile.phone,
         registration_method="email",
         permissions="REG"
     ))
@@ -51,7 +50,6 @@ def RegisterUser(user_profile: UserForm):
     insert_password(PasswordCreationRequest(
         user_id=user_id,
         password=user_profile.password
-    
     ))
 
     rt = create_refresh_token(user_id)

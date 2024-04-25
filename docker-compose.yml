@@ -4,7 +4,7 @@ services:
   database:
     image: "examify-database:0.0.1"
     container_name: examify-db
-    build: ./backend/db
+    build: ./backend/database
     restart: unless-stopped
     environment:
       - POSTGRES_DB
@@ -104,7 +104,7 @@ services:
   test-database:
     image: "examify-test-database:0.0.1"
     container_name: test-database
-    build: ./backend/db
+    build: ./backend/database
     restart: unless-stopped
     environment:
       - POSTGRES_DB

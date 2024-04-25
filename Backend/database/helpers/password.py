@@ -16,10 +16,10 @@ def insert_password(password: PasswordCreationRequest):
         with conn.cursor() as cur:
             cur.execute(
                 """
-                INSERT INTO passwords (user_id, password) 
-                VALUES (%(user_id)s, %(password)s);
+                INSERT INTO passwords (account, password) 
+                VALUES (%(account)s, %(password)s);
                 """, {
-                    'user_id': password.user_id,
+                    'account': password.user_id,
                     'password': password.password
                 })
 
@@ -38,7 +38,7 @@ def check_user_id_and_password_match(user: int, password: str) -> bool:
     try:
         conn = connect()
         with conn.cursor() as cur:
-            cur.execute("SELECT EXISTS(SELECT 1 FROM passwords WHERE user_id = %(user_id)s AND password = %(password)s);", {"user_id": user, "password": password})
+            cur.execute("SELECT EXISTS(SELECT 1 FROM passwords WHERE account = %(account)s AND password = %(password)s);", {"account": user, "password": password})
             exists = cur.fetchone()
 
         log_green("Finished checking if the User and Password match in Database")
@@ -57,7 +57,7 @@ def get_user_from_email_and_password(email: str, password: str) -> Optional[int]
     try:
         conn = connect()
         with conn.cursor() as cur:
-            cur.execute("SELECT user_id FROM passwords WHERE user_id = (SELECT id FROM users WHERE email = %(email)s) AND password = %(password)s;", {"email": email, "password": password})
+            cur.execute("SELECT account FROM passwords WHERE account = (SELECT id FROM accounts WHERE email = %(email)s) AND password = %(password)s;", {"email": email, "password": password})
             user_id = cur.fetchone()
 
         log_green("Finished getting the User from Email and Password in Database")

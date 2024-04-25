@@ -17,7 +17,7 @@ def insert_user(user: UserCreationRequest) -> int:
         with conn.cursor() as cur:
             cur.execute(
                 """
-                INSERT INTO users (first_name, last_name, email, phone, registeration_method, permission) 
+                INSERT INTO accounts (first_name, last_name, email, phone, registeration_method, permission) 
                 VALUES (%(first_name)s, %(last_name)s, %(email)s, %(phone)s, %(registration_method)s, %(permissions)s) RETURNING id;
                 """, {
                     'first_name': user.first_name,
@@ -47,7 +47,7 @@ def check_if_user_exists(user_id: int) -> bool:
     try:
         conn = connect()
         with conn.cursor() as cur:
-            cur.execute("SELECT EXISTS(SELECT 1 FROM users WHERE id = %(id)s);", {"id": user_id})
+            cur.execute("SELECT EXISTS(SELECT 1 FROM accounts WHERE id = %(id)s);", {"id": user_id})
             exists = cur.fetchone()
 
         log_green("Finished checking if the User exists in Database")
@@ -66,7 +66,7 @@ def get_user_id(email: str) -> int:
     try:
         conn = connect()
         with conn.cursor() as cur:
-            cur.execute("SELECT id FROM users WHERE email = %(email)s;", {"email": email})
+            cur.execute("SELECT id FROM accounts WHERE email = %(email)s;", {"email": email})
             user_id = cur.fetchone()
 
         log_green("Finished getting the User ID from Database")
@@ -85,7 +85,7 @@ def get_user_permissions(user_id: int) -> str:
     try:
         conn = connect()
         with conn.cursor() as cur:
-            cur.execute("SELECT permission FROM users WHERE id = %(id)s;", {"id": user_id})
+            cur.execute("SELECT permission FROM accounts WHERE id = %(id)s;", {"id": user_id})
             permissions = cur.fetchone()
 
         log_green("Finished getting the User Permissions from Database")
@@ -105,7 +105,7 @@ def update_user(user_update_request: UserUpdateRequest):
         """
         Constructs the query for updating the user in the database
         """
-        query = "UPDATE users SET "
+        query = "UPDATE accounts SET "
         if user_update_request.phone is not None:
             query += f"phone = '{user_update_request.phone}', "
         if user_update_request.dob is not None:
@@ -142,7 +142,7 @@ def check_user_email_exists(email: str) -> bool:
     try:
         conn = connect()
         with conn.cursor() as cur:
-            cur.execute("SELECT EXISTS(SELECT 1 FROM users WHERE email = %(email)s);", {"email": email})
+            cur.execute("SELECT EXISTS(SELECT 1 FROM accounts WHERE email = %(email)s);", {"email": email})
             exists = cur.fetchone()
 
         log_green("Finished checking if the User email exists in Database")
@@ -164,7 +164,7 @@ def get_user_details(user_id: int) -> UserDetailsResponse:
             cur.execute(
                 """
                 SELECT first_name, last_name, email, phone, registeration_method, permission, school, grade 
-                FROM users 
+                FROM accounts 
                 WHERE id = %(id)s;
                 """, {"id": user_id})
             first_name, last_name, email, phone, registration, permissions, school, grade = cur.fetchone()
@@ -194,7 +194,7 @@ def get_user_by_email_and_registration(email: str, registration_method: Registra
     try:
         conn = connect()
         with conn.cursor() as cur:
-            cur.execute("SELECT id FROM users WHERE email = %(email)s AND registeration_method = %(registration_method)s;", {"email": email, "registration_method": registration_method})
+            cur.execute("SELECT id FROM accounts WHERE email = %(email)s AND registeration_method = %(registration_method)s;", {"email": email, "registration_method": registration_method})
             user_id = cur.fetchone()
 
         log_green("Finished getting the User from Email and Registration Method in Database")

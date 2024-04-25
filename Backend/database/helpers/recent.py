@@ -15,11 +15,11 @@ def insert_user_recently_viewed_exam(user_id: int, exam_id: int):
         with conn.cursor() as cur:
             cur.execute(
                 """
-                INSERT INTO recently_viewed_exams (user_id, exam_id) 
-                VALUES (%(user_id)s, %(exam_id)s);
+                INSERT INTO recently_viewed_exams (account, exam) 
+                VALUES (%(account)s, %(exam)s);
                 """, {
-                    'user_id': user_id,
-                    'exam_id': exam_id
+                    'account': user_id,
+                    'exam': exam_id
                 })
 
         log_green("Finished inserting the User Recently Viewed Exam into Database")
@@ -39,12 +39,12 @@ def get_user_recently_viewed_exams(user_id: int, size=10) -> List[int]:
         with conn.cursor() as cur:
             cur.execute(
                 """
-                SELECT exam_id FROM recently_viewed_exams 
-                WHERE user_id = %(user_id)s
+                SELECT exam FROM recently_viewed_exams 
+                WHERE account = %(account)s
                 LIMIT %(size)s
                 ORDERBY date_viewed desc;
                 """, {
-                    "user_id": user_id,
+                    "account": user_id,
                     "size": size
                     })
             exams = cur.fetchall()

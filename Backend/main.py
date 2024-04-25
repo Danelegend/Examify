@@ -67,7 +67,7 @@ async def root():
 ################################################################################
 
 AllTables = Literal[
-  "users",
+  "accounts",
   "schools",
   "passwords",
   "exams",

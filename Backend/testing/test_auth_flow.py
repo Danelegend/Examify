@@ -1,5 +1,3 @@
-import os
-
 from testing import client
 from testing.util import register, login, logout, refresh
 
@@ -17,7 +15,7 @@ class TestUserAuthFlow:
 
         assert access_token1 != access_token2
 
-    def test_user_signup_then_logout_then_signin(self, api_client):
+    def test_user_signup_then_logout_then_signin(self):
         # Signup
         response1 = register("Dane", "Urban", "danelegend13@gmail.com", "ThisIsAGoodPassword123@")
         access_token1 = response1["access_token"]

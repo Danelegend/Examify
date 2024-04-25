@@ -123,8 +123,6 @@ class TestUserRegistrationSuccess:
 
         assert len(set) == 5
 
-
-@pytest.mark.django_db
 class TestUserAlreadyExists:
     def test_2_users_same_everything(self):
         user1 = UserForm()

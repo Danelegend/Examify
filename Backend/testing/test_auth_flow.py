@@ -1,3 +1,5 @@
+import os
+
 from testing import client
 from testing.util import register, login, logout, refresh
 
@@ -25,7 +27,7 @@ class TestUserAuthFlow:
         logout(access_token1)
 
         # Attempt refresh, should fail
-        response3 = client.get("/api/auth/refresh", cookies={"refresh_token": refresh_token1})
+        response3 = client.get("/api/auth/refresh", cookies={os.environ.get("REFRESH_TOKEN_COOKIE_KEY", "refresh"): refresh_token1})
 
         assert response3.status_code == 403
 

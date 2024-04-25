@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from pydantic import BaseModel
 
 class SessionDetailResponse(BaseModel):
@@ -22,8 +22,8 @@ class UserDetailsResponse(BaseModel):
     first_name: str
     last_name: str
     email: str
-    phone: str
+    phone: Optional[str] = None
     registration_method: str
     permissions: str
-    school: str
-    grade: int
+    school: Optional[str] = None
+    grade: Optional[int] = None

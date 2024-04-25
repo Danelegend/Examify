@@ -53,7 +53,9 @@ def logout(token: str):
     assert response.status_code == 200
 
 def refresh(refresh_token: str):
-    response = client.get("/api/auth/refresh", cookies={"refresh_token": refresh_token})
+    response = client.get("/api/auth/refresh", cookies={os.environ.get("REFRESH_TOKEN_COOKIE_KEY", "refresh"): refresh_token})
+
+    print(response.status_code)
 
     assert response.status_code == 200
 
@@ -92,14 +94,17 @@ def admin_submit_review_exam(token: str, school: str, exam_type: str, year: int,
 
 def admin_upload_exam(file: BufferedReader, school: str, exam_type: str, year: int, subject: str):
     payload = {
-        "file": file,
         "school": school,
-        "type": exam_type,
+        "exam_type": exam_type,
         "year": year,
         "subject": subject
     }
 
-    response = client.post("/api/admin/exam/upload", files=payload)
+    file = {
+        'file': file
+    }
+
+    response = client.post("/api/admin/exam/upload", data=payload, files=file)
 
     assert response.status_code == 200
 

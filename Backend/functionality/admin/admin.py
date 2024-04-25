@@ -94,14 +94,21 @@ def DeleteCurrentExam(exam_id: int) -> None:
 
 async def UploadExam(school: str, year: int, exam_type: str, subject: str, file: UploadFile) -> None:
     # Generate name for the file
+
+    print("Testing")
     new_file_name = f"{school}-{year}_{subject}_{exam_type}.pdf"
 
     new_path = os.path.join(REVIEW_EXAMS_DIRECTORY, new_file_name)
 
+    print("OMG")
     # Write the file to the new location
     await file.write(new_path)
 
+    print("HMM")
+
     # Upload the exam to google drive
     upload_file_to_drive(new_path, "review")
+
+    print("YOYO")
 
     os.remove(new_path)

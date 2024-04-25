@@ -1,29 +1,13 @@
-import asyncio
-import os
 from typing import Literal, List, Tuple, Optional
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from psycopg2 import Error
+ 
+from database.helpers import connect, disconnect
+from database.linker import DatabaseSetup
 
-from db.helpers import connect, disconnect
-from db.linker import DatabaseSetup
-from functionality.voucher_scheduler import VoucherScheduler
-from router import customer, eatery, voucher, auth, other
-
-async def trigger_voucher_creation():
-    """
-    Triggers the voucher creation operation in the voucher schedular
-    """
-    VoucherScheduler().trigger_voucher_creation()
-
-async def voucher_creation_task():
-    """
-    Schedules the voucher creation operation to occur every 30 seconds
-    """
-    while True:
-        asyncio.create_task(trigger_voucher_creation())
-        await asyncio.sleep(int(os.getenv("SCHEDULER_REPEAT_SECONDS", "30")))
+from router import admin, auth, exam, exams, logo, user
 
 @asynccontextmanager
 async def lifespan(app: FastAPI): # pylint: disable=W0621
@@ -31,12 +15,12 @@ async def lifespan(app: FastAPI): # pylint: disable=W0621
     Runs startup and shutdown logic of the app
     """
     # Preload
-    asyncio.create_task(voucher_creation_task())
+    
     yield
     # Clean Up
 
 app = FastAPI(
-    title="Chowdown App",
+    title="Examify API",
     version="3.0.0",
     lifespan=lifespan
 )
@@ -63,43 +47,33 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(auth.router, prefix="/auth", tags=["auth"])
-app.include_router(eatery.router, prefix="/eatery", tags=["eatery"])
-app.include_router(voucher.router, prefix="/voucher", tags=["voucher"])
-app.include_router(customer.router, prefix="/customer", tags=["customer"])
-app.include_router(other.router, prefix="/other", tags=["other"])
+
+app.include_router(admin.router, prefix="/api/admin", tags=["admin"])
+app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
+app.include_router(exam.router, prefix="/api/exam", tags=["exam"])
+app.include_router(exams.router, prefix="/api/exams", tags=["exams"])
+app.include_router(logo.router, prefix="/api/logo", tags=["logo"])
+app.include_router(user.router, prefix="/api/user", tags=["user"])
 
 @app.get("/")
 async def root():
     """
     Root api, currently used for example and testing
     """
-    return {"message": "Hello, welcome to Chowdown"}
+    return {"message": "Hello, welcome to Examify"}
 
 ################################################################################
 #############################   Debugging Routes   #############################
 ################################################################################
 
 AllTables = Literal[
-  "eateries",
-  "eatery_details",
-  "addresses",
-  "keywords",
-  "eatery_atoms",
-  "customers",
-  "preferences",
-  "customer_likes",
-  "voucher_templates",
-  "vouchers",
-  "voucher_instances",
-  "favourite_eateries",
-  "blocked_eateries",
-  "favourite_customers",
-  "blocked_customers",
+  "users",
+  "schools",
   "passwords",
-  "all_sessions",
-  "reviews",
-  "reports"
+  "exams",
+  "sessions",
+  "favourite_exams",
+  "recently_viewed_exams"
 ]
 
 @app.get("/db/test")

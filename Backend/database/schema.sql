@@ -14,10 +14,11 @@ CREATE TABLE users (
     first_name              VARCHAR(50) NOT NULL,
     last_name               VARCHAR(50) NOT NULL,
     email                   VARCHAR(255) NOT NULL,
-    phone                   VARCHAR(15),
-    dob                     DATE NOT NULL,
-    grade                   INT NOT NULL,
-    school                  BIGINT NOT NULL,
+    phone                   VARCHAR(15) DEFAULT NULL,
+    dob                     DATE DEFAULT NULL,
+    grade                   INT DEFAULT NULL,
+    school                  BIGINT DEFAULT NULL,
+    registeration_method    REGISTERATION_METHOD NOT NULL,
     permission              PERMISSIONS NOT NULL DEFAULT 'REG',
     PRIMARY KEY             (id),
     FOREIGN KEY             (school) REFERENCES schools(id)
@@ -63,6 +64,7 @@ CREATE TABLE exams (
 CREATE TABLE favourite_exams (
     user                    BIGINT NOT NULL,
     exam                    BIGINT NOT NULL,
+    date_favourite          TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY             (user, exam),
     FOREIGN KEY             (user) REFERENCES users(id),
     FOREIGN KEY             (exam) REFERENCES exams(id)
@@ -71,7 +73,8 @@ CREATE TABLE favourite_exams (
 CREATE TABLE recently_viewed_exams (
     user                    BIGINT NOT NULL,
     exam                    BIGINT NOT NULL,
-    PRIMARY KEY             (user, exam),
+    date_viewed             TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY             (user, exam, date_viewed),
     FOREIGN KEY             (user) REFERENCES users(id),
     FOREIGN KEY             (exam) REFERENCES exams(id)
 );

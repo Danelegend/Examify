@@ -78,9 +78,7 @@ async def refresh(request: Request, response: Response) -> RefreshResponse:
         if not refresh_token or not refresh_token_valid(refresh_token):
             raise AuthenticationError("Invalid refresh token")
 
-        sid = get_sid_from_refresh_token(refresh_token)
-
-        new_access_token, exp = create_access_token(sid)
+        new_access_token, exp = create_access_token(refresh_token)
 
         return RefreshResponse(
             access_token=new_access_token,
@@ -90,8 +88,7 @@ async def refresh(request: Request, response: Response) -> RefreshResponse:
         response.delete_cookie(os.environ.get("REFRESH_TOKEN_COOKIE_KEY", "refresh_token"))
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail=str(e),
-            headers={"set-cookie": response.headers["set-cookie"]}
+            detail=str(e)
         ) from e
     
 @router.post("/login/google", status_code=status.HTTP_200_OK, response_model=LoginResponse)

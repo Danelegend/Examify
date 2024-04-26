@@ -59,7 +59,9 @@ def refresh(refresh_token: str):
 
     assert response.status_code == 200
 
-    return check_cookies(response)
+    assert "access_token" in response.json(), "missing: access token"
+
+    return response.json()
 
 def admin_get_current_exams(token: str):
     response = client.get("/api/admin/exams/current", headers={"Authorization": f"bearer {token}"})

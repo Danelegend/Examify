@@ -2,6 +2,7 @@ import datetime
 import os
 import secrets
 import string
+from typing import Tuple
 import jwt
 
 from errors import AuthenticationError
@@ -47,7 +48,7 @@ def create_refresh_token(uid: int) -> str:
 
     return encoded_token
 
-def create_access_token(refresh_token: str) -> tuple[str, datetime.datetime]:
+def create_access_token(refresh_token: str) -> Tuple[str, datetime.datetime]:
     """
     A function to create an access token for a user
 
@@ -56,14 +57,11 @@ def create_access_token(refresh_token: str) -> tuple[str, datetime.datetime]:
 
     Returns: The access token
     """
-    payload = decrypt_refresh_token(refresh_token)
-
     # Check if the sid is valid
-    sid = payload['sid']
+    sid = get_sid_from_refresh_token(refresh_token)
 
     if not check_if_session_exists(sid):
         raise AuthenticationError("Session does not exist")
-
     new_payload = {
         'exp': datetime.datetime.now(tz=datetime.timezone.utc) + \
             datetime.timedelta(days=0, minutes=float(os.environ["ACCESS_TOKEN_EXPIRY_MINUTES"])),
@@ -106,9 +104,7 @@ def refresh_token_valid(refresh_token: str) -> bool:
     Returns: True if the refresh token is valid, False otherwise
     """
     try:
-        decoded = decrypt_refresh_token(refresh_token)
-        
-        sid = decoded['sid']
+        sid = get_sid_from_refresh_token(refresh_token)
 
         return check_if_session_exists(sid)
     except Exception:
@@ -172,6 +168,7 @@ def decrypt_refresh_token(refresh_token: str) -> dict:
 
     Returns: The decrypted refresh token
     """
+
     try:
         return jwt.decode(refresh_token, os.environ["REFRESH_TOKEN_SECRET"], algorithms=['HS256'])
     except Exception as e:

@@ -9,7 +9,7 @@ from database.db_types.db_response import SessionDetailResponse
 from database.db_types.db_request import SessionCreationRequest
 
 
-def create_session(session: SessionCreationRequest) -> Optional[int]:
+def create_session(session: SessionCreationRequest) -> int:
     """
     Creates a session in the database.
     """
@@ -35,13 +35,10 @@ def create_session(session: SessionCreationRequest) -> Optional[int]:
         raise e
     finally:
         disconnect(conn)
-    
-    if session_id:
-        return session_id[0]
-    
-    return None
 
-def check_if_session_exists(session_id: int) -> Optional[bool]:
+    return session_id[0]
+
+def check_if_session_exists(session_id: int) -> bool:
     """
     Checks if the session exists in DB
     """
@@ -58,10 +55,7 @@ def check_if_session_exists(session_id: int) -> Optional[bool]:
     finally:
         disconnect(conn)
 
-    if exists:
-        return exists[0]
-
-    return None
+    return exists[0]
 
 def get_session(session_id: int) -> Optional[SessionDetailResponse]:
     """

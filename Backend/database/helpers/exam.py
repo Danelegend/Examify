@@ -5,6 +5,7 @@ import psycopg2
 from logger import log_green, log_red
 
 from database.helpers import connect, disconnect
+from database.helpers.school import get_school_by_id
 from database.db_types.db_request import ExamCreationRequest, ExamFilterRequest
 from database.db_types.db_response import ExamDetailsResponse
 
@@ -84,9 +85,9 @@ def get_exams() -> List[ExamDetailsResponse]:
         raise e
     finally:
         disconnect(conn)
-    
+
     return [ExamDetailsResponse(id=id,
-                                school=school, 
+                                school=get_school_by_id(school).name, 
                                 exam_type=exam_type, 
                                 year=year, 
                                 file_location=file_location, 

@@ -28,7 +28,7 @@ class TestAdminFlow:
     def test_admin_flow_from_review_to_current(self, register_admin):
         # Start by uploading an exam
         admin_upload_exam(open(os.path.join(os.getcwd(), "testing/test.pdf"), "rb"), 
-                          "Test School", "Trial", 2021, "Test Subject")
+                          "Test School", "Trial", 2021, "Test Subject", 12)
 
         # Register the admin
         token = register_admin
@@ -36,7 +36,8 @@ class TestAdminFlow:
         # Check exams in review
         get_review_exams_1 = admin_get_review_exams(token)
 
-        assert get_review_exams_1["exams"] == ["Test School-2021_Test Subject_Trial.pdf"]
+        assert len(get_review_exams_1) == 1
+        assert get_review_exams_1["exams"][0]["file_location"] == "Test School-2021_Test Subject_Trial.pdf"
 
         # Check that there are currently no exams in the exams database
         get_current_exams_1 = admin_get_current_exams(token)

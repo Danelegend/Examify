@@ -27,7 +27,7 @@ class UserUpdateRequest(BaseModel):
 
 class SchoolCreationRequest(BaseModel):
     name: str
-    logo_location: str
+    logo_location: Optional[str] = None
 
 class PasswordCreationRequest(BaseModel):
     user_id: int

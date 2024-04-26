@@ -119,21 +119,11 @@ def get_or_create_school(school: str) -> int:
         conn = connect()
         with conn.cursor() as cur:
             cur.execute("SELECT id FROM schools WHERE name = %(name)s;", {"name": school})
-            school = cur.fetchone()
+            res = cur.fetchone()
 
-            if not school:
-                cur.execute(
-                    """
-                    INSERT INTO schools (name) 
-                    VALUES (%(name)s) RETURNING id;
-                    """, {
-                        'name': school
-                    })
-
-                school_id = cur.fetchone()
-                conn.commit()
-            else:
-                school_id = school[0]
+            school_id = insert_school(SchoolCreationRequest(
+                    name=school
+                )) if not res else res[0]
 
         log_green("Finished getting or creating the School from Database")
     except psycopg2.Error as e:

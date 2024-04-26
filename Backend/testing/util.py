@@ -88,24 +88,24 @@ def admin_submit_review_exam(token: str, school: str, exam_type: str, year: int,
         "file_location": file_location
     }
 
-    response = client.post("/api/admin/exam/submit", json=payload, headers={"Authorization": f"bearer {token}"})
+    response = client.post("/api/admin/exam/review/submit", json=payload, headers={"Authorization": f"bearer {token}"})
 
+    print(response.status_code)
     assert response.status_code == 200
 
-    return response.json()
-
-def admin_upload_exam(file: BufferedReader, school: str, exam_type: str, year: int, subject: str):
+def admin_upload_exam(file: BufferedReader, school: str, exam_type: str, year: int, subject: str, grade: int):
     payload = {
         "school": school,
-        "type": exam_type,
         "year": year,
+        "type": exam_type,
         "subject": subject,
-        "grade": 12,
+        "grade": grade
+    }
+    
+    files = {
         "file": file
     }
 
-    response = client.post("/api/admin/exam/upload", files=payload)
+    response = client.post("/api/admin/exam/upload", data=payload, files=files)
 
     assert response.status_code == 200
-
-    return response.json()

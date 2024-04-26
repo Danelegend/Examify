@@ -8,21 +8,17 @@ from googleapiclient.http import MediaIoBaseDownload
 from google.oauth2 import service_account
 
 SCOPES = ['https://www.googleapis.com/auth/drive']
-SERVICE_ACCOUNT_FILE = os.environ.get("GOOGLE_SERVICE_ACCOUNT_FILE", "service_account.json")
-REVIEW_FOLDER_ID = os.environ.get("REVIEW_FOLDER_ID", "1hwSEHvdE4tbUUEp6jrN786lX4sp7H_tr")
 
 REVIEW_FILES_TO_ID = {}
 
-CURRENT_EXAMS_DIRECTORY = os.environ.get("CURRENT_EXAMS_DIRECTORY", "D:\\Examify\\Examify\\exams")
-
 def _authenticate():
-    creds = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+    creds = service_account.Credentials.from_service_account_file(os.environ.get("GOOGLE_SERVICE_ACCOUNT_FILE", "service_account.json"), scopes=SCOPES)
 
     return creds
 
 def _get_drive_folder_id(type: str) -> str:
     if type == "review":
-        return REVIEW_FOLDER_ID
+        return os.environ.get("REVIEW_FOLDER_ID", "1C8m3UTJ63iPxQZettgGo3ARaPxhAhCDz")
     
     raise Exception("Invalid type")
 
@@ -106,6 +102,6 @@ def _download_file(file_id: str, file_name: str):
 
     fh.seek(0)
 
-    with open(os.path.join(CURRENT_EXAMS_DIRECTORY, file_name), "wb") as f:
+    with open(os.path.join(os.environ.get("CURRENT_EXAMS_DIRECTORY", "D:\\Examify\\Examify\\exams"), file_name), "wb") as f:
         f.write(fh.read())
         f.close()

@@ -34,7 +34,7 @@ async def get_review_exams(token: Annotated[str, Security(HTTPBearer401())]) -> 
 async def submit_review_exam(exam_submit: SubmitReviewExamRequest, token: Annotated[str, Security(HTTPBearer401())]) -> None:
     TokenValidation(token)
 
-    submit_review_exam(exam_submit.school, 
+    SubmitReviewExam(exam_submit.school, 
                        exam_submit.exam_type, 
                        exam_submit.year, 
                        exam_submit.subject, 
@@ -55,10 +55,10 @@ async def delete_current_exam(exam_id: int, token: Annotated[str, Security(HTTPB
 @router.post("/exam/upload", status_code=status.HTTP_200_OK)
 async def upload_exam(
     school: Annotated[str, Form()],
-    year: Annotated[str, Form()],
+    year: Annotated[int, Form()],
     type: Annotated[str, Form()],
     subject: Annotated[str, Form()],
-    grade: Annotated[str, Form()],
+    grade: Annotated[int, Form()],
     file: Annotated[UploadFile, File()]
 ) -> Response:
     await UploadExam(school,

@@ -25,6 +25,7 @@ async def login_user(response: Response, login_request: LoginRequest) -> LoginRe
         key=os.environ.get("REFRESH_TOKEN_COOKIE_KEY", "refresh_token"),
         value=login_resp["refresh_token"],
         httponly=True,
+        max_age=int(60 * 60 * 24 * float(os.environ.get("REFRESH_TOKEN_EXPIRATION_DAYS", 7)))
     )
 
     return LoginResponse(
@@ -48,6 +49,7 @@ async def register_user(response: Response, register_request: RegistrationReques
             key=os.environ.get("REFRESH_TOKEN_COOKIE_KEY", "refresh_token"),
             value=registration_result["refresh_token"],
             httponly=True,
+            max_age=int(60 * 60 * 24 * float(os.environ.get("REFRESH_TOKEN_EXPIRATION_DAYS", 7)))
         )
 
         return RegistrationResponse(
@@ -101,8 +103,7 @@ async def login_google(response: Response, google_login: GoogleLoginRequest) -> 
             key=os.environ.get("REFRESH_TOKEN_COOKIE_KEY", "refresh_token"),
             value=login_resp["refresh_token"],
             httponly=True,
-            max_age=int(60 * 60 * 24 * float(os.environ.get("REFRESH_TOKEN_EXPIRATION_DAYS", 7))),
-            expiry=login_resp["expiration"]
+            max_age=int(60 * 60 * 24 * float(os.environ.get("REFRESH_TOKEN_EXPIRATION_DAYS", 7)))
         )
 
         return LoginResponse(
@@ -124,8 +125,7 @@ async def login_facebook(response: Response, facebook_login: FacebookLoginReques
             key=os.environ.get("REFRESH_TOKEN_COOKIE_KEY", "refresh_token"),
             value=login_resp["refresh_token"],
             httponly=True,
-            max_age=int(60 * 60 * 24 * float(os.environ.get("REFRESH_TOKEN_EXPIRATION_DAYS", 7))),
-            expiry=login_resp["expiration"]
+            max_age=int(60 * 60 * 24 * float(os.environ.get("REFRESH_TOKEN_EXPIRATION_DAYS", 7)))
         )
 
         return LoginResponse(

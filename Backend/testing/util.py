@@ -95,16 +95,14 @@ def admin_submit_review_exam(token: str, school: str, exam_type: str, year: int,
 def admin_upload_exam(file: BufferedReader, school: str, exam_type: str, year: int, subject: str):
     payload = {
         "school": school,
-        "exam_type": exam_type,
+        "type": exam_type,
         "year": year,
-        "subject": subject
+        "subject": subject,
+        "grade": 12,
+        "file": file
     }
 
-    file = {
-        'file': file
-    }
-
-    response = client.post("/api/admin/exam/upload", data=payload, files=file)
+    response = client.post("/api/admin/exam/upload", files=payload)
 
     assert response.status_code == 200
 

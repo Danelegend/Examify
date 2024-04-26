@@ -60,7 +60,6 @@ const ReviewComponent = ({ file_location, index, onSubmit, onDelete }: ReviewCom
     }
 
     const handleExamTypeChange = (e) => {
-        console.log(e.target.value)
         SetReviewDetails({
             ...ReviewDetails,
             exam_type: e.target.value
@@ -75,7 +74,6 @@ const ReviewComponent = ({ file_location, index, onSubmit, onDelete }: ReviewCom
     }
 
     const handleSubjectChange = (e) => {
-        console.log(e.target.value)
         SetReviewDetails({
             ...ReviewDetails,
             subject: e.target.value
@@ -83,6 +81,14 @@ const ReviewComponent = ({ file_location, index, onSubmit, onDelete }: ReviewCom
     }
 
     const fetchSubmitExam = () => {
+        console.log(JSON.stringify({
+            school: ReviewDetails.school_name,
+            exam_type: ReviewDetails.exam_type,
+            year: ReviewDetails.year,
+            subject: ReviewDetails.subject,
+            file_location: ReviewDetails.file_location
+        }))
+
         return fetch(Environment.BACKEND_URL + "/api/admin/exam/review/submit", {
             headers: {
                 "Authorization": `bearer ${readAccessToken()}`
@@ -90,12 +96,11 @@ const ReviewComponent = ({ file_location, index, onSubmit, onDelete }: ReviewCom
             method: "POST",
             credentials: 'include',
             body: JSON.stringify({
-                file_location: ReviewDetails.file_location,
-                school_name: ReviewDetails.school_name,
+                school: ReviewDetails.school_name,
                 exam_type: ReviewDetails.exam_type,
                 year: ReviewDetails.year,
-                subject: ReviewDetails!.subject
-            
+                subject: ReviewDetails.subject,
+                file_location: ReviewDetails.file_location
             })
         })
     }
@@ -126,6 +131,8 @@ const ReviewComponent = ({ file_location, index, onSubmit, onDelete }: ReviewCom
     const { mutateAsync: SubmitExamMutation } = useMutation<Response>({
         mutationFn: fetchSubmitExam,
         onSuccess: (res) => {
+            console.log(res)
+
             switch (res.status) {
                 case 500:
                     break
@@ -174,12 +181,12 @@ const ReviewComponent = ({ file_location, index, onSubmit, onDelete }: ReviewCom
     const handleDelete = () => {
         DeleteExamMutation()
     }
-    
+
     return (
         <div key={index} className={(index % 2 == 0 ? "bg-blue-100" : "bg-yellow-100") + " py-4 px-4"}>
             <div className="grid md:grid-cols-6">
                 <div className="content-center">
-                    {file_location}
+                    {ReviewDetails.file_location}
                 </div>
                 <div className="col-span-1 space-x-4">
                     <label className="mb-2 text-sm font-medium text-gray-900 dark:text-white">School</label>
@@ -267,7 +274,7 @@ const AdminReviewExamPage = () => {
 
         if (!isPending) {
             SetReviewExams(data.exams.map((exam) => {
-                return exam
+                return exam.file_location
             }))
         }
     }, [error, isPending])

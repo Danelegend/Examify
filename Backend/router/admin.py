@@ -1,5 +1,5 @@
 from typing import Annotated
-from fastapi import APIRouter, HTTPException, Security, status, UploadFile, Form, File
+from fastapi import APIRouter, HTTPException, Response, Security, status, UploadFile, Form, File
 
 from functionality.admin.admin import DeleteCurrentExam, DeleteReviewExam, GetCurrentExams, GetExamsToReview, SubmitReviewExam, UploadExam, ValidateToken
 from functionality.authentication.authentication import GetUserPermissions
@@ -55,14 +55,16 @@ async def delete_current_exam(exam_id: int, token: Annotated[str, Security(HTTPB
 @router.post("/exam/upload", status_code=status.HTTP_200_OK)
 async def upload_exam(
     school: Annotated[str, Form()],
-    year: Annotated[int, Form()],
-    exam_type: Annotated[str, Form()],
+    year: Annotated[str, Form()],
+    type: Annotated[str, Form()],
     subject: Annotated[str, Form()],
+    grade: Annotated[str, Form()],
     file: Annotated[UploadFile, File()]
-):
-    print("LOL")
-    UploadExam(school,
-               year,
-               exam_type,
-               subject,
-               file)
+) -> Response:
+    await UploadExam(school,
+                    year,
+                    type,
+                    subject,
+                    file)
+    
+    return Response(status_code=status.HTTP_200_OK)

@@ -64,7 +64,7 @@ def SubmitReviewExam(school: str, exam_type: str, year: int, subject: str, file_
     # Create new exam
     insert_exam(ExamCreationRequest(
         school=school_id,
-        exam_type=exam_type,
+        exam_type=ExamType.MapNameToPrefix(exam_type),
         year=year,
         file_location=new_file_name,
         subject=subject

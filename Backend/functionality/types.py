@@ -29,6 +29,21 @@ class ExamType(Enum):
         }
         
         return PREFIX_TO_NAME_MAPPING.get(prefix, prefix)
+    
+    @classmethod
+    def MapNameToPrefix(cls, name: str):
+        NAME_TO_PREFIX_MAPPING = {
+            "Trial Exam": "TRI",
+            "HSC Exam": "HSC",
+            "Topic Test": "TOP",
+            "Half Yearly Exam": "HAE",
+            "Term 1 Exam": "T_1",
+            "Term 2 Exam": "T_2",
+            "Term 3 Exam": "T_3",
+            "Term 4 Exam": "T_4"
+        }
+
+        return NAME_TO_PREFIX_MAPPING.get(name, name)
 
     
 class UserType(Enum):

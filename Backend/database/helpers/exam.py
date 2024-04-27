@@ -6,7 +6,7 @@ from logger import log_green, log_red
 
 from database.helpers import connect, disconnect
 from database.helpers.school import get_school_by_id
-from database.db_types.db_request import ExamCreationRequest, ExamFilterRequest
+from database.db_types.db_request import ExamCreationRequest, ExamFilterRequest, ExamTypes
 from database.db_types.db_response import ExamDetailsResponse
 
 def insert_exam(exam: ExamCreationRequest) -> int:
@@ -62,7 +62,7 @@ def get_exam(exam_id: int) -> ExamDetailsResponse:
         disconnect(conn)
     
     return ExamDetailsResponse(id=exam_id,
-                               school=school, 
+                               school=get_school_by_id(school).name, 
                                exam_type=exam_type, 
                                year=year, 
                                file_location=file_location, 
@@ -147,7 +147,7 @@ def delete_exam(exam_id: int):
     finally:
         disconnect(conn)
 
-def get_exam_id_from_schoool_year_type(school: str, year: int, type: str) -> Optional[int]:
+def get_exam_id_from_schoool_year_type(school: str, year: int, type: ExamTypes) -> Optional[int]:
     """
     Gets the exam id from school, year and type
     """

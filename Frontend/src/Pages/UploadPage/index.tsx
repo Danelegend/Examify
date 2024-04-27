@@ -223,7 +223,7 @@ const UploadPage = () => {
                               color="black" 
                             />
                             :
-                            <button className="text-black" onClick={handleUploadClick}>
+                            <button className="text-black bg-white" onClick={handleUploadClick}>
                                 Upload
                             </button>
                         }

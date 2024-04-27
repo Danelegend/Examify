@@ -27,10 +27,11 @@ async def get_exam(school: str, year: int, type: str) -> ExamResponse:
 async def get_exam_pdf(exam_id: int) -> FileResponse:
     try:
         buffer = GetExamPdf(exam_id)
-
-        return Response(buffer, media_type='application/pdf')
+        
+        return Response(buffer.read(), media_type='application/pdf')
     except Exception as e:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="An error occurred") from e
+        print(str(e))
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)) from e
     
 @router.post("/{exam_id}/favourite", status_code=status.HTTP_200_OK)
 async def add_favourite_exam(exam_id: int, token: Annotated[str, Security(HTTPBearer401())]) -> Response:

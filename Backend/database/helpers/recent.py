@@ -43,7 +43,7 @@ def get_user_recently_viewed_exams(user_id: int, size=10) -> List[int]:
                 SELECT exam FROM recently_viewed_exams 
                 WHERE account = %(account)s
                 LIMIT %(size)s
-                ORDERBY date_viewed desc;
+                ORDER BY date_viewed desc;
                 """, {
                     "account": user_id,
                     "size": size

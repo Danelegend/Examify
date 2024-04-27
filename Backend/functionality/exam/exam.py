@@ -16,6 +16,7 @@ def GetExamId(school: str, year: int, type: str) -> int:
     """
     Gets an exam given school, year and type
     """
+    type = ExamType.MapNameToPrefix(type)
 
     exam_id = get_exam_id_from_schoool_year_type(school, year, type)
 
@@ -57,7 +58,9 @@ def GetExam(exam_id: int):
 
     return data
 
-def GetExamPdf(file_name: str):
+def GetExamPdf(exam_id: int):
+    file_name = get_exam(exam_id).file_location
+
     location = os.path.join(os.environ.get("CURRENT_EXAMS_DIRECTORY"), file_name)
 
     if not FileLocationAccessible(location):

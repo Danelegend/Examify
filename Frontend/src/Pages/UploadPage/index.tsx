@@ -4,6 +4,7 @@ import FileUploader from "./Components/FileUploader";
 import { useMutation } from "@tanstack/react-query";
 import Environment from "../../../constants";
 import { ring } from "ldrs";
+import { PostExamUpload } from "../../api/api";
 
 const SUBJECTS = {
     "Maths Extension 2": "MX2",
@@ -55,27 +56,8 @@ const UploadPage = () => {
     const [success, SetSuccess] = useState<string | null>(null)
     const [IsLoading, SetLoading] = useState<boolean>(false)
 
-    const postExam = () => {
-        const formData = new FormData()
-
-        if (UploadForm.file === null) throw new Error("File is required")
-
-        formData.append("file", UploadForm.file)
-        formData.append("school", UploadForm.school)
-        formData.append("year", UploadForm.year.toString())
-        formData.append("type", UploadForm.type)
-        formData.append("grade", UploadForm.grade.toString())
-        formData.append("subject", UploadForm.subject)
-
-        return fetch(Environment.BACKEND_URL + "/api/admin/exam/upload", {
-            method: "POST",
-            credentials: 'include',
-            body: formData
-        })
-    }
-
-    const { mutateAsync: PostExam } = useMutation<Response>({
-        mutationFn: postExam,
+    const { mutateAsync: PostExam } = useMutation({
+        mutationFn: PostExamUpload,
         onSuccess: (data) => {
             SetError(null)
             SetSuccess("Exam Uploaded Successfully")
@@ -122,7 +104,16 @@ const UploadPage = () => {
             return
         }
 
-        PostExam()
+        PostExam({
+            request: {
+                file: UploadForm.file!,
+                school: UploadForm.school,
+                year: UploadForm.year,
+                type: UploadForm.type,
+                grade: UploadForm.grade,
+                subject: UploadForm.subject
+            } 
+        })
         SetLoading(true);
     }
 

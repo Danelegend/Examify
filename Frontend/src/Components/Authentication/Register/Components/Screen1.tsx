@@ -8,6 +8,7 @@ import { SignUpResponse } from "../../../../api/types"
 import { storeAccessToken, storeExpiration } from "../../../../util/utility"
 import { UserContext } from "../../../../context/user-context"
 import { ModalContext } from "../../../../context/modal-context"
+import { PostUserRegistration } from "../../../../api/api"
 
 const RegistrationScreen1 = ({ changeScreen } : 
     { 
@@ -72,31 +73,19 @@ const RegistrationScreen1 = ({ changeScreen } :
             SetResponseMessage(null)
 
             // Register User
-            try {
-                await SignUpMutation()
-            } catch (e) {
-                console.log(e)
-            }
-        }
-    }
-
-    const { mutateAsync: SignUpMutation } = useMutation<Response>({
-        mutationFn: () => {
-            return fetch(Environment.BACKEND_URL + "/api/auth/register", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": document.cookie
-                },
-                body: JSON.stringify({
+            SignUpMutation({
+                request: {
                     first_name: FirstName,
                     last_name: LastName,
                     email: Email,
                     password: Password
-                }),
-                credentials: "include"
+                }
             })
-        },
+        }
+    }
+
+    const { mutateAsync: SignUpMutation } = useMutation({
+        mutationFn: PostUserRegistration,
         onSuccess: (res) => {
             res.json().then((data: SignUpResponse) => {
                 switch (res.status)  {

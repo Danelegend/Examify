@@ -128,9 +128,12 @@ const ExamCard = ({ school, year, type, difficulty, id, favourite, likes, upload
                 <Link to={"/exam/" + school + "/" + year + "/" + type}>
                     <div className="relative truncate bg-green-600 rounded-2xl pl-12 pr-7 py-10 break-words">
                         <FavouriteIcon isFavourite={isFavourite} onClick={FavouriteClick} className="absolute bottom-3 right-2 md:right-5"/>
-                        <div className="grid-rows-4 text-slate-300">
+                        <div className="grid-rows-5 text-slate-300">
                             <div className="font-semibold text-xl">
-                                {school} {subject} {year} {ExamTypeMap[type]} 
+                                {school} {year} {ExamTypeMap[type]} 
+                            </div>
+                            <div className="ml-2 font-semibold text-l">
+                                {subject} 
                             </div>
                             <div className="ml-2">
                                 Uploaded: {uploadDate}

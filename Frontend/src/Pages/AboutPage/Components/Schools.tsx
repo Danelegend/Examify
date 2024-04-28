@@ -4,34 +4,20 @@ import { FetchError } from "../../../util/utility";
 import { useQuery } from "@tanstack/react-query";
 import SchoolLogoCard from "./SchoolLogoCard";
 import useScript from "../../../hooks/useScript";
+import { fetchLogos } from "../../../api/api";
 
 const doubleArray = (arr: any[]) => {
     return arr.concat(arr)
 }
 
 const SchoolLogoCarousel = ({ className }: { className: string}) => {
-    const [Images, SetImages] = useState([]);
+    const [Images, SetImages] = useState<string[]>([]);
 
     useScript("//unpkg.com/alpinejs")
 
-    const fetchImages = () => {
-        return fetch(Environment.BACKEND_URL + "/api/logo/", {
-            method: "GET",
-            credentials: 'include'
-        }).then((async (res) => {
-            const data = await res.json()
-
-            if (res.ok) {
-                return data
-            } else {
-                throw new FetchError(res)
-            }
-        }))
-    }
-
     const { data, isPending, error } = useQuery({
         queryKey: ["Images"],
-        queryFn: fetchImages,
+        queryFn: fetchLogos(),
     })
 
     useEffect(() => {
@@ -47,9 +33,7 @@ const SchoolLogoCarousel = ({ className }: { className: string}) => {
         }
 
         if (!isPending) {
-            SetImages(data.logos.map((image) => {
-                return image
-            }))
+            SetImages(data!.logos)
         }
     }, [error, isPending])
 

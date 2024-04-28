@@ -4,6 +4,7 @@ import { FetchError, handle403, readAccessToken } from "../../../util/utility"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { TiTick } from "react-icons/ti"
 import { MdDelete } from "react-icons/md"
+import { AdminExamReviewDelete, AdminExamReviewSubmit } from "../../../api/api"
 
 type ReviewDetails = {
     school_name: string | null,
@@ -80,48 +81,6 @@ const ReviewComponent = ({ file_location, index, onSubmit, onDelete }: ReviewCom
         })
     }
 
-    const fetchSubmitExam = () => {
-        console.log("D")
-
-        console.log(JSON.stringify({
-            school: ReviewDetails.school_name,
-            exam_type: ReviewDetails.exam_type,
-            year: ReviewDetails.year,
-            subject: ReviewDetails.subject,
-            file_location: ReviewDetails.file_location
-        }))
-
-        return fetch(Environment.BACKEND_URL + "/api/admin/exam/review/submit", {
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `bearer ${readAccessToken()}`
-            },
-            method: "POST",
-            credentials: 'include',
-            body: JSON.stringify({
-                school: ReviewDetails.school_name,
-                exam_type: ReviewDetails.exam_type,
-                year: ReviewDetails.year,
-                subject: ReviewDetails.subject,
-                file_location: ReviewDetails.file_location
-            })
-        })
-    }
-
-    const fetchDeleteExam = () => {
-        return fetch(Environment.BACKEND_URL + "/api/admin/exam/review/delete", {
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `bearer ${readAccessToken()}`
-            },
-            method: "DELETE",
-            credentials: 'include',
-            body: JSON.stringify({
-                file_location: ReviewDetails.file_location
-            })
-        })
-    }
-
     const clear = () => {
         SetReviewDetails({
             school_name: "",
@@ -132,11 +91,9 @@ const ReviewComponent = ({ file_location, index, onSubmit, onDelete }: ReviewCom
         })
     }
  
-    const { mutateAsync: SubmitExamMutation } = useMutation<Response>({
-        mutationFn: fetchSubmitExam,
+    const { mutateAsync: SubmitExamMutation } = useMutation({
+        mutationFn: AdminExamReviewSubmit,
         onSuccess: (res) => {
-            console.log(res)
-
             switch (res.status) {
                 case 500:
                     break
@@ -144,7 +101,6 @@ const ReviewComponent = ({ file_location, index, onSubmit, onDelete }: ReviewCom
                     handleAuthorizationError()
                     break
                 case 200:
-                    clear()
                     break
                 default:
                     break
@@ -155,8 +111,8 @@ const ReviewComponent = ({ file_location, index, onSubmit, onDelete }: ReviewCom
         }
     })
 
-    const { mutateAsync: DeleteExamMutation } = useMutation<Response>({
-        mutationFn: fetchDeleteExam,
+    const { mutateAsync: DeleteExamMutation } = useMutation({
+        mutationFn: AdminExamReviewDelete,
         onSuccess: (res) => {
             switch (res.status) {
                 case 500:
@@ -166,7 +122,6 @@ const ReviewComponent = ({ file_location, index, onSubmit, onDelete }: ReviewCom
                     break
                 case 200:
                     onDelete()
-                    clear()
                     break
                 default:
                     break
@@ -178,20 +133,37 @@ const ReviewComponent = ({ file_location, index, onSubmit, onDelete }: ReviewCom
     })
 
     const handleSubmit = () => {
-        SubmitExamMutation()
+        SubmitExamMutation({
+            token: readAccessToken()!,
+            request: {
+                school: ReviewDetails.school_name!,
+                exam_type: ReviewDetails.exam_type!,
+                year: ReviewDetails.year!,
+                subject: ReviewDetails.subject!,
+                file_location: ReviewDetails.file_location
+            }
+        })
+
         onSubmit()
         clear()
     }
 
     const handleDelete = () => {
-        DeleteExamMutation()
+        DeleteExamMutation({
+            token: readAccessToken()!,
+            request: {
+                file_location: ReviewDetails.file_location
+            }
+        })
+        
+        clear()
     }
 
     return (
         <div key={index} className={(index % 2 == 0 ? "bg-blue-100" : "bg-yellow-100") + " py-4 px-4"}>
             <div className="grid md:grid-cols-6">
                 <div className="content-center text-gray-900">
-                    {ReviewDetails.file_location}
+                    {file_location}
                 </div>
                 <div className="col-span-1 space-x-4">
                     <label className="mb-2 text-sm font-medium text-gray-900">School</label>
@@ -284,6 +256,8 @@ const AdminReviewExamPage = () => {
         }
     }, [error, isPending])
 
+    console.log(ReviewExams)
+
     return (
         <div className="text-center">
             <h1 className="text-slate-100 my-16">Review Exams Page</h1>
@@ -301,6 +275,7 @@ const AdminReviewExamPage = () => {
                                     <ReviewComponent file_location={reviewExam} 
                                                     index={index}
                                                     onSubmit={() => {
+                                                        console.log(reviewExam)
                                                         SetReviewExams(ReviewExams.filter((exam) => exam !== reviewExam))
                                                     }}
                                                     onDelete={() => {

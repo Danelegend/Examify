@@ -5,6 +5,7 @@ import { waveform } from 'ldrs'
 import { authClientMiddleWare, FetchError, handle403, readAccessToken } from "../../util/utility";
 import FavouriteExamsDisplay from "./Components/FavouriteExams";
 import RecentExamsDisplay from "./Components/RecentExams";
+import { FetchUserProfile } from "../../api/api";
 
 
 type UserProfile = {
@@ -16,32 +17,11 @@ type UserProfile = {
 const StudentDashboardPage = () => {
     const [UserProfile, SetUserProfile] = useState<UserProfile | null>(null)
     
-    const accessToken = readAccessToken()
-
     const handleAuthorizationError = handle403()
     
-    const fetchUserProfile = () => {
-        return fetch(Environment.BACKEND_URL + "/api/user/profile", {
-            headers: {
-                'Authorization': 'bearer ' + accessToken
-            },
-            method: 'GET',
-            credentials: 'include'
-        }).then(async (res) => {
-            const data = await res.json()
-
-            if (res.ok) {
-                return data
-            } else {
-                throw new FetchError(res)
-            }
-        })
-    }
-
-
     const { data: userProfileData, isPending: userProfileIsPending, error: userProfileError } = useQuery({
         queryKey: ["UserProfile"],
-        queryFn: authClientMiddleWare(fetchUserProfile),
+        queryFn: authClientMiddleWare(FetchUserProfile(readAccessToken()!)),
     })
 
     

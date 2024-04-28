@@ -3,6 +3,7 @@ import Environment from "../../../../constants";
 import { FetchError, handle403, readAccessToken } from "../../../util/utility";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { MdDelete } from "react-icons/md"
+import { AdminExamCurrentDelete } from "../../../api/api";
 
 type Exam = {
     id: number,
@@ -24,26 +25,8 @@ const DisplayExamComponent = ({ exam, key, onDelete }: DisplayExamComponentProps
 
     const [Exam] = useState(exam)
 
-    const fetchDeleteExam = () => {
-        return fetch(Environment.BACKEND_URL + "/api/admin/exam/current/" + Exam.id.toString(), {
-            headers: {
-                "Authorization": `bearer ${readAccessToken()}`
-            },
-            method: "DELETE",
-            credentials: 'include'
-        }).then(async (res) => {
-            const data = await res.json()
-
-            if (res.ok) {
-                return data
-            } else {
-                throw new FetchError(res)
-            }
-        })
-    }
-
     const { mutateAsync: DeleteExamMutation } = useMutation({
-        mutationFn: fetchDeleteExam,
+        mutationFn: AdminExamCurrentDelete(readAccessToken()!, Exam.id),
         onSuccess: (res) => {
             switch (res.status) {
                 case 500:

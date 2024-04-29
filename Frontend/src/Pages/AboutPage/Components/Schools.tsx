@@ -4,7 +4,7 @@ import { FetchError } from "../../../util/utility";
 import { useQuery } from "@tanstack/react-query";
 import SchoolLogoCard from "./SchoolLogoCard";
 import useScript from "../../../hooks/useScript";
-import { fetchLogos } from "../../../api/api";
+import { FetchLogos } from "../../../api/api";
 
 const doubleArray = (arr: any[]) => {
     return arr.concat(arr)
@@ -17,7 +17,7 @@ const SchoolLogoCarousel = ({ className }: { className: string}) => {
 
     const { data, isPending, error } = useQuery({
         queryKey: ["Images"],
-        queryFn: fetchLogos(),
+        queryFn: () => FetchLogos(),
     })
 
     useEffect(() => {

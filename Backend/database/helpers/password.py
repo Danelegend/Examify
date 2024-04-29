@@ -11,13 +11,13 @@ def log_password_success(message: str):
     """
     Logs a successful exam operation
     """
-    Logger.log_database("Favourite", message)
+    Logger.log_database("Password", message)
 
 def log_password_error(message: str):
     """
     Logs an error in exam operation
     """
-    Logger.log_database_error("Favourite", message)
+    Logger.log_database_error("Password", message)
 
 def insert_password(password: PasswordCreationRequest):
     """

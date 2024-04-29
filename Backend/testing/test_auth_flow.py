@@ -1,6 +1,6 @@
 import os
 
-from datetime import datetime
+from datetime import datetime, timezone
 
 from testing import client
 from testing.util import edit_profile, register, login, logout, refresh
@@ -48,5 +48,5 @@ class TestUserAuthFlow:
         refresh_token1 = response1["cookie"]
 
         # Edit profile
-        edit_profile(access_token1, datetime(year=2002, month=5, day=13), 12, "Freshwater Senior Campus")
+        edit_profile(access_token1, datetime(year=2002, month=5, day=13, tzinfo=timezone.utc), 12, "Freshwater Senior Campus")
         

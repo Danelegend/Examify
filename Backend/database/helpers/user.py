@@ -5,6 +5,7 @@ import psycopg2
 from logger import Logger
 
 from database.helpers import connect, disconnect
+from database.helpers.school import get_or_create_school
 from database.db_types.db_request import RegistrationMethods, UserCreationRequest, UserUpdateRequest
 from database.db_types.db_response import UserDetailsResponse
 
@@ -126,7 +127,7 @@ def update_user(user_update_request: UserUpdateRequest):
         if user_update_request.grade is not None:
             query += f"grade = {user_update_request.grade}, "
         if user_update_request.school is not None:
-            query += f"school = '{user_update_request.school}', "
+            query += f"school = '{get_or_create_school(user_update_request.school)}', "
         if user_update_request.permission is not None:
             query += f"permission = '{user_update_request.permission}', "
         

@@ -2,10 +2,14 @@ import os
 
 from typing import Literal, List, Tuple, Optional
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, status
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from psycopg2 import Error
  
+from logger import Logger
+
 from database.helpers import connect, disconnect
 from database.linker import DatabaseSetup
 
@@ -20,6 +24,16 @@ async def lifespan(app: FastAPI): # pylint: disable=W0621
     
     yield
     # Clean Up
+
+def register_exception(app: FastAPI): # pylint: disable=W0621
+    @app.exception_handler(RequestValidationError)
+    async def validation_exception_handler(request: Request, exc: RequestValidationError):
+        exc_str = f'{exc}'.replace('\n', ' ').replace('   ', ' ')
+
+        Logger.log_backend_error("API", "Error={exc_str}")
+
+        content = {'status_code': 10422, 'message': exc_str, 'data': None}
+        return JSONResponse(content=content, status_code=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
 app = FastAPI(
     title="Examify API",

@@ -12,13 +12,13 @@ def log_school_success(message: str):
     """
     Logs a successful exam operation
     """
-    Logger.log_database("Recent", message)
+    Logger.log_database("School", message)
 
 def log_school_error(message: str):
     """
     Logs an error in exam operation
     """
-    Logger.log_database_error("Recent", message)
+    Logger.log_database_error("School", message)
 
 def insert_school(school: SchoolCreationRequest) -> int:
     """

@@ -25,9 +25,9 @@ def insert_exam(exam: ExamCreationRequest) -> int:
     """
     Inserts a new exam into the database
     """
-    log_exam_success("Inserting a new Exam into Database \
-                        school=%s, exam_type=%s, year=%s, file_location=%s, subject=%s", 
-                        exam.school, exam.exam_type, exam.year, exam.file_location, exam.subject)
+    log_exam_success(f"Inserting a new Exam into Database \
+                        school={exam.school}, exam_type={exam.exam_type}, year={exam.year}, \
+                            file_location={exam.file_location}, subject={exam.subject}")
     try:
         conn = connect()
         with conn.cursor() as cur:
@@ -46,7 +46,7 @@ def insert_exam(exam: ExamCreationRequest) -> int:
             exam_id = cur.fetchone()
 
         conn.commit()
-        log_exam_success("Finished inserting the Exam into Database, exam_id=%s", exam_id[0])
+        log_exam_success(f"Finished inserting the Exam into Database, exam_id={exam_id[0]}")
     except psycopg2.Error as e:
         log_exam_error(f"Error inserting the Exam: {e}")
         conn.rollback()

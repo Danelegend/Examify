@@ -3,6 +3,8 @@ import os
 
 from typing import List
 
+from logger import Logger
+
 from googleapiclient.discovery import build, MediaFileUpload
 from googleapiclient.http import MediaIoBaseDownload
 from google.oauth2 import service_account
@@ -23,6 +25,8 @@ def _get_drive_folder_id(type: str) -> str:
     raise Exception("Invalid type")
 
 def upload_file_to_drive(file_path: str, type: str):
+    Logger.log_backend("Google Drive", f"Uploading file to Google Drive: {file_path}")
+
     creds = _authenticate()
     service = build('drive', 'v3', credentials=creds)
 
@@ -35,6 +39,8 @@ def upload_file_to_drive(file_path: str, type: str):
     file = service.files().create(
         body=file_metadata, 
         media_body=media).execute()
+    
+    Logger.log_backend("Google Drive", f"Successfully uploaded file")
 
 def _add_to_file_map(file_name: str, file_id: str, type: str):
     if type == "review":
@@ -67,16 +73,21 @@ def get_files_in_review() -> List[str]:
     return _get_files("review")
 
 def _delete_file_from_drive(file_id: str):
+    Logger.log_backend("Google Drive", f"Deleting file from Google Drive: {file_id}")
+
     creds = _authenticate()
     service = build('drive', 'v3', credentials=creds)
 
     service.files().delete(fileId=file_id).execute()
+    Logger.log_backend("Google Drive", f"Successfully deleted file: {file_id}")
 
 def delete_file_from_review(file_name: str, file_id: str):
     _delete_file_from_drive(file_id)
     REVIEW_FILES_TO_ID.pop(file_name)
 
 def move_file_from_review_to_current(file_name: str, new_name: str) -> str:
+    Logger.log_backend("Google Drive", f"Moving file from review to current: {file_name} -> {new_name}")
+    
     # Get the file id
     file_id = REVIEW_FILES_TO_ID[file_name]
 
@@ -84,9 +95,12 @@ def move_file_from_review_to_current(file_name: str, new_name: str) -> str:
 
     # Delete the file from review
     delete_file_from_review(file_name, file_id)
+    Logger.log_backend("Google Drive", f"Successfully moved file from review to current: {file_name} -> {new_name}")
 
 
 def _download_file(file_id: str, file_name: str):
+    Logger.log_backend("Google Drive", f"Downloading file from Google Drive: {file_id}")
+
     creds = _authenticate()
     service = build('drive', 'v3', credentials=creds)
 
@@ -101,7 +115,11 @@ def _download_file(file_id: str, file_name: str):
         status, done = downloader.next_chunk()
 
     fh.seek(0)
+                       
+    file_loc = os.path.join(os.environ.get("CURRENT_EXAMS_DIRECTORY", "D:\\Examify\\Examify\\exams"), file_name)
 
-    with open(os.path.join(os.environ.get("CURRENT_EXAMS_DIRECTORY", "D:\\Examify\\Examify\\exams"), file_name), "wb") as f:
+    with open(file_loc, "wb") as f:
         f.write(fh.read())
         f.close()
+
+    Logger.log_backend("Google Drive", f"Successfully downloaded file: file_location={file_loc}")

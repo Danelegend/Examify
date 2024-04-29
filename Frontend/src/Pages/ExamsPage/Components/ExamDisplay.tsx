@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { FetchError, readAccessToken, removeAccessToken } from "../../../util/utility";
 import { UserContext } from "../../../context/user-context";
 import DropdownFilter from "./DropdownFilter";
+import { FetchExams, FetchExamSubjects, FetchSchools } from "../../../api/api";
 
 type Filter = {
     schools: string[]
@@ -23,88 +24,25 @@ const ExamDisplay = () => {
     })
     
     const { setAccessToken } = useContext(UserContext)
-    
-    const accessToken = readAccessToken()
 
-    const fetchSchoolFilters = () => {
-        return fetch(Environment.BACKEND_URL + "/api/exams/schools", {
-            headers: 
-            {  
-                'Content-Type': 'application/json',
-            },
-            method: "GET",
-            credentials: 'include'
-        }).then(async (res) => {
-            const data = await res.json()
-
-            if (res.ok) {
-                return data
-            } else {
-                throw new FetchError(res, "Bad")
-            }
-        })
-    }
-
-    const fetchSubjectFilters = () => {
-        return fetch(Environment.BACKEND_URL + "/api/exams/subjects", {
-            headers: 
-            {  
-                'Content-Type': 'application/json',
-            },
-            method: "GET",
-            credentials: 'include'
-        }).then(async (res) => {
-            const data = await res.json()
-
-            if (res.ok) {
-                return data
-            } else {
-                throw new FetchError(res, "Bad")
-            }
-        })
-    }
-
-    const fetchExams = () => {
-        return fetch(Environment.BACKEND_URL + "/api/exams/", {
-            headers: (accessToken === null) ?
-            {  
-                'Content-Type': 'application/json',
-            } :
-            {
-                'Content-Type': 'application/json',
-                'Authorization': 'bearer ' + accessToken
-            },
-            method: "POST",
-            body: JSON.stringify({
-                page: 1,
-                filter: Filter
-            }),
-            credentials: 'include'
-        }).then(async (res) => {
-            const data = await res.json()
-            
-            if (res.ok) {
-                return data
-            } else {
-                throw new FetchError(res, "Bad")
-            }
-        })
-    }
 
     const { data: schoolFilterData, isPending: schoolFilterPending } = useQuery({
         queryKey: ["SchoolFilters"],
-        queryFn: fetchSchoolFilters
+        queryFn: () => FetchSchools()
     })
 
     const { data: subjectFilterData, isPending: subjectFilterPending } = useQuery({
         queryKey: ["SubjectFilters"],
-        queryFn: fetchSubjectFilters
+        queryFn: () => FetchExamSubjects()
     })
 
     const { data, isPending, error } = useQuery({
         queryKey: ["Exams"],
-        queryFn: fetchExams,
-        retry: false
+        queryFn: () => FetchExams({ token: readAccessToken(), 
+                            request: { 
+                                page: 1, 
+                                filter: Filter 
+                            }})
     })
 
     const UpdateSchools = (arr: string[]) => {
@@ -168,7 +106,6 @@ const ExamDisplay = () => {
         }
     },   [data, isPending, error])
 
-    
     return (
         schoolFilterPending || subjectFilterPending ? <div>Loading</div> : 
 
@@ -177,8 +114,8 @@ const ExamDisplay = () => {
                 <div className="border-b mb-6 mx-8">
                     <h1 className="text-3xl font-bold text-white text-center">Exams</h1>
                     <div className="flex justify-center space-x-4 my-2">
-                        <DropdownFilter title={"School"} items={schoolFilterData.schools.filter((school) => school !== "")} search={true} update={UpdateSchools}/>
-                        <DropdownFilter title={"Subject"} items={subjectFilterData.subjects} search={true} update={UpdateSubjects}/>
+                        <DropdownFilter title={"School"} items={schoolFilterData!.schools.filter((school) => school !== "")} search={true} update={UpdateSchools}/>
+                        <DropdownFilter title={"Subject"} items={subjectFilterData!.subjects} search={true} update={UpdateSubjects}/>
                         <DropdownFilter title={"Year"} items={Array.from({ length: 5}, (_, i) => (2024 - i * 1).toString())} update={UpdateYears} search={true}/>
                     </div>  
                 </div>

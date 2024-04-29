@@ -1,9 +1,9 @@
 import { MdArrowBackIos } from "react-icons/md";
 import ExamCard, { ExamCardProps } from "../../../Components/ExamCards";
 import { useEffect, useState } from "react";
-import Environment from "../../../../constants";
-import { authClientMiddleWare, FetchError, handle403, readAccessToken } from "../../../util/utility";
+import { FetchError, handle403, readAccessToken } from "../../../util/utility";
 import { useQuery } from "@tanstack/react-query";
+import { FetchRecentExams } from "../../../api/api";
 
 const RecentExamsDisplay = () => {
     const [RecentExams, SetRecentExams] = useState<ExamCardProps[]>([])
@@ -31,27 +31,9 @@ const RecentExamsDisplay = () => {
         return (RecentlyViewedPosition + pos) % RecentExams.length
     }
 
-    const fetchRecentExams = () => {
-        return fetch(Environment.BACKEND_URL + "/api/exams/recents", {
-            headers: {
-                'Authorization': 'bearer ' + readAccessToken()
-            },
-            method: "GET",
-            credentials: 'include'
-        }).then(async (res) => {
-            const data = await res.json()
-
-            if (res.ok) {
-                return data
-            } else {
-                throw new FetchError(res)
-            }
-        })
-    }
-
     const { data: recentData, isPending: recentIsPending, error: recentError } = useQuery({
         queryKey: ["RecentExams"],
-        queryFn: authClientMiddleWare(fetchRecentExams),
+        queryFn: () => FetchRecentExams({ token: readAccessToken()! }),
     })
 
     useEffect(() => {
@@ -78,7 +60,10 @@ const RecentExamsDisplay = () => {
                         year: exam.year,
                         type: exam.type,
                         difficulty: 1,
-                        favourite: exam.favourite
+                        favourite: exam.favourite,
+                        subject: exam.subject,
+                        likes: exam.likes,
+                        uploadDate: exam.upload_date
                     }
                 }))
             }

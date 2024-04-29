@@ -140,7 +140,7 @@ const ReviewComponent = ({ file_location, index, onSubmit, onDelete }: ReviewCom
                 exam_type: ReviewDetails.exam_type!,
                 year: ReviewDetails.year!,
                 subject: ReviewDetails.subject!,
-                file_location: ReviewDetails.file_location
+                file_location: file_location
             }
         })
 
@@ -255,8 +255,6 @@ const AdminReviewExamPage = () => {
             }))
         }
     }, [error, isPending])
-
-    console.log(ReviewExams)
 
     return (
         <div className="text-center">

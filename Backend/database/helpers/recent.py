@@ -53,9 +53,9 @@ def get_user_recently_viewed_exams(user_id: int, size=10) -> List[int]:
             cur.execute(
                 """
                 SELECT exam FROM recently_viewed_exams 
-                WHERE account = %(account)s
-                LIMIT %(size)s
-                ORDER BY date_viewed desc;
+                WHERE account = %(account)s 
+                ORDER BY date_viewed DESC 
+                LIMIT %(size)s;
                 """, {
                     "account": user_id,
                     "size": size

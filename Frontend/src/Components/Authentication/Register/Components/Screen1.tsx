@@ -88,12 +88,18 @@ const RegistrationScreen1 = ({ changeScreen } :
         mutationFn: PostUserRegistration,
         onSuccess: (res) => {
             res.json().then((data: SignUpResponse) => {
+                console.log(data)
                 switch (res.status)  {
                     case 500:
                         SetResponseMessage("Internal Error")
                         break
                     case 400:
-                        SetResponseMessage(data.message)
+                        if (data.detail === undefined) {
+                            SetResponseMessage("Unknown Error")
+                        } else {
+                            SetResponseMessage(data.detail)
+                        }
+
                         break
                     case 200:
                         storeAccessToken(data.access_token)
@@ -113,7 +119,6 @@ const RegistrationScreen1 = ({ changeScreen } :
     })
 
     ring.register()
-
     return (
         <div>
             <form className="px-4 pt-4 pb-0.5 md:px-5 md:pt-5 md:pb-1">

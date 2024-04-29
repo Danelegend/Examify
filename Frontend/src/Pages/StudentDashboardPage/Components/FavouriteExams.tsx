@@ -1,10 +1,10 @@
 import { MdArrowBackIos } from "react-icons/md"
 import ExamCard, { ExamCardProps } from "../../../Components/ExamCards"
 import { useEffect, useState } from "react"
-import { authClientMiddleWare, FetchError, handle403, readAccessToken } from "../../../util/utility"
+import { FetchError, handle403, readAccessToken } from "../../../util/utility"
 import { useQuery } from "@tanstack/react-query"
 import { waveform } from "ldrs"
-import Environment from "../../../../constants"
+import { FetchFavouriteExams } from "../../../api/api"
 
 const FavouriteExamsDisplay = () => {
     const [FavouriteExams, SetFavouriteExams] = useState<ExamCardProps[]>([])
@@ -17,27 +17,9 @@ const FavouriteExamsDisplay = () => {
         return (FavouritePosition + pos) % FavouriteExams.length
     }
 
-    const fetchFavouriteExams = () => {
-        return fetch(Environment.BACKEND_URL + "/api/exams/favourites", {
-            headers: {
-                'Authorization': 'bearer ' + readAccessToken()
-            },
-            method: "GET",
-            credentials: 'include'
-        }).then(async (res) => {
-            const data = await res.json()
-
-            if (res.ok) {
-                return data
-            } else {
-                throw new FetchError(res)
-            }
-        })
-    }
-
     const { data: favouriteData, isPending: favouriteIsPending, error: favouriteError } = useQuery({
         queryKey: ["FavouriteExams"],
-        queryFn: authClientMiddleWare(fetchFavouriteExams),
+        queryFn: () => FetchFavouriteExams({ token: readAccessToken()! }),
     })
 
     const handleLeftFavouriteClick = () => {
@@ -79,7 +61,10 @@ const FavouriteExamsDisplay = () => {
                         year: exam.year,
                         type: exam.type,
                         difficulty: 1,
-                        favourite: exam.favourite
+                        favourite: exam.favourite,
+                        subject: exam.subject,
+                        likes: exam.likes,
+                        uploadDate: exam.upload_date
                     }
                 }))
             }

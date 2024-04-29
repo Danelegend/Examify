@@ -5,6 +5,8 @@ from fastapi import UploadFile
 
 from errors import AuthenticationError
 
+from logger import Logger
+
 from functionality.google.gdrive import delete_file_from_review, get_files_in_review, move_file_from_review_to_current, upload_file_to_drive
 from functionality.authentication.authentication import GetUserPermissions
 from functionality.types import ExamType
@@ -52,6 +54,8 @@ def GetExamsToReview() -> List[ReviewExamResponse]:
     return exams
 
 def SubmitReviewExam(school: str, exam_type: str, year: int, subject: str, file_location: str) -> None:
+    Logger.log_backend("Admin", f"Submitting exam from review to current: {school}, {exam_type}, {year}, {subject}, {file_location}")
+    
     # Generate name for the file
     new_file_name = f"{school}-{year}_{subject}_{exam_type}.pdf"
 

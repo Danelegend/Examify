@@ -31,7 +31,7 @@ async def get_review_exams(token: Annotated[str, Security(HTTPBearer401())]) -> 
     return ReviewExamsResponse(exams=exams)
 
 @router.post("/exam/review/submit", status_code=status.HTTP_200_OK)
-async def submit_review_exam(exam_submit: SubmitReviewExamRequest, token: Annotated[str, Security(HTTPBearer401())]) -> None:
+def submit_review_exam(exam_submit: SubmitReviewExamRequest, token: Annotated[str, Security(HTTPBearer401())]) -> None:
     TokenValidation(token)
 
     SubmitReviewExam(exam_submit.school, 

@@ -1,6 +1,3 @@
-import { useMutation } from "@tanstack/react-query";
-import Environment from "../../constants";
-import { RefreshTokenResponse } from "../api/types";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "../context/user-context";
@@ -43,61 +40,6 @@ export const haveAccessToken = () => {
 export const removeAccessToken = () => {
     localStorage.removeItem("access_token")
     localStorage.removeItem("expiration")
-}
-
-type AuthClientMiddleWareType = (done: () => Promise<Response>) => () => Promise<Response>
-
-export const authClientMiddleWare: AuthClientMiddleWareType = (done) => {
-    // Check if the user's token is expired
-    const exp = readExpiration()
-
-    const { setAccessToken } = useContext(UserContext)
-
-    const navigate = useNavigate()
-
-    const { mutateAsync: RefreshTokenMutation } = useMutation<Response>({
-        mutationFn: () => {
-            return fetch(Environment.BACKEND_URL + "/api/auth/refresh", {
-                method: "GET",
-                credentials: 'include'   
-            })
-        },
-        onSuccess: (res) => {
-            res.json().then((data: RefreshTokenResponse) => {
-                switch (res.status) {
-                    case 500:
-                        break
-                    case 403:
-                        setAccessToken(null)
-                        clear()
-                        navigate("/")
-                        break
-                    case 200:
-                        storeAccessToken(data.access_token)
-                        storeExpiration(data.expiration)
-                        setAccessToken(data.access_token)
-                        break
-                    default:
-                        break
-                }
-            })
-        },
-        onError: (e) => {
-            console.log(e)
-        },
-        retry: false
-    })
-
-    return () => {
-        if (exp === null || new Date(exp) <= new Date()) {
-            RefreshTokenMutation()
-        } 
-        
-        if (readAccessToken() === null) {
-            return new Promise<Response>(() => {})
-        } 
-        return done()
-    }
 }
 
 export class FetchError extends Error {

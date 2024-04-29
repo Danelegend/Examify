@@ -26,7 +26,7 @@ const DisplayExamComponent = ({ exam, key, onDelete }: DisplayExamComponentProps
     const [Exam] = useState(exam)
 
     const { mutateAsync: DeleteExamMutation } = useMutation({
-        mutationFn: AdminExamCurrentDelete(readAccessToken()!, Exam.id),
+        mutationFn: AdminExamCurrentDelete,
         onSuccess: (res) => {
             switch (res.status) {
                 case 500:
@@ -43,7 +43,10 @@ const DisplayExamComponent = ({ exam, key, onDelete }: DisplayExamComponentProps
     })
 
     const handleDelete = () => {
-        DeleteExamMutation()
+        DeleteExamMutation({
+            token: readAccessToken()!,
+            exam_id: exam.id
+        })
         onDelete()
     }
 

@@ -1,8 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import Environment from "../../../constants";
 import { waveform } from 'ldrs'
-import { authClientMiddleWare, FetchError, handle403, readAccessToken } from "../../util/utility";
+import { FetchError, handle403, readAccessToken } from "../../util/utility";
 import FavouriteExamsDisplay from "./Components/FavouriteExams";
 import RecentExamsDisplay from "./Components/RecentExams";
 import { FetchUserProfile } from "../../api/api";
@@ -21,7 +20,7 @@ const StudentDashboardPage = () => {
     
     const { data: userProfileData, isPending: userProfileIsPending, error: userProfileError } = useQuery({
         queryKey: ["UserProfile"],
-        queryFn: authClientMiddleWare(FetchUserProfile(readAccessToken()!)),
+        queryFn: () => FetchUserProfile({ token: readAccessToken()! }),
     })
 
     

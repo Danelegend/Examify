@@ -1,10 +1,35 @@
 import Environment from "../../constants"
-import { FetchError } from "../util/utility"
-import { AdminExamReviewDeleteRequest, AdminExamReviewSubmitRequest, ExamUploadRequest, FetchLogosResponse, FetchUserResponse, UserProfileEditRequest, UserRegistrationRequest, UserRegistrationResponse } from "./types"
+import { FetchError, readExpiration, storeAccessToken, storeExpiration } from "../util/utility"
+import { AdminExamReviewDeleteRequest, AdminExamReviewSubmitRequest, ExamUploadRequest, FetchExamsRequest, FetchExamsResponse, FetchExamSubjectsResponse, FetchFavouriteExamsResponse, FetchLogosResponse, FetchRecentExamsResponse, FetchSchoolsResponse, FetchUserResponse, UserProfileEditRequest, UserRegistrationRequest, UserRegistrationResponse } from "./types"
 
 export type UserAuthentication = {
     refresh_token: string,
     access_token: string
+}
+
+type AuthorizationMiddlewareType = <T,>(func: () => Promise<T>) => Promise<T>
+
+const AuthorizationMiddleware: AuthorizationMiddlewareType = (func) => {
+    // If the token has expired, refresh it
+    if (readExpiration() === null || new Date(readExpiration()!) <= new Date()) {
+        return fetch(Environment.BACKEND_URL + "/api/auth/refresh", {
+            method: "GET",
+            credentials: "include"
+        }).then(async (res) => {
+            const data: UserAuthentication = await res.json()
+
+            if (res.ok) {
+                storeAccessToken(data.access_token)
+                storeExpiration(data.refresh_token)
+
+                return func()
+            } else {
+                throw new FetchError(res)
+            }
+        })
+    }
+    
+    return func()
 }
 
 export const PostUserRegistration = ({ request }: { request: UserRegistrationRequest }): Promise<Response> => {
@@ -24,7 +49,7 @@ export const PostUserRegistration = ({ request }: { request: UserRegistrationReq
 }
 
 export const EditUserProfileData = ({ token, request }: { token: string, request: UserProfileEditRequest }): Promise<Response> => {
-    return fetch(Environment.BACKEND_URL + "/api/auth/profile", {
+    return AuthorizationMiddleware(() => fetch(Environment.BACKEND_URL + "/api/auth/profile", {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
@@ -35,7 +60,7 @@ export const EditUserProfileData = ({ token, request }: { token: string, request
             school_year: request.school_year,
             school: request.school
         })
-    })
+    }))
 }
 
 export const fetchLogos = (): () => Promise<FetchLogosResponse> => {
@@ -54,7 +79,7 @@ export const fetchLogos = (): () => Promise<FetchLogosResponse> => {
 }
 
 export const AdminExamReviewSubmit = ({ token, request }: { token: string, request: AdminExamReviewSubmitRequest }): Promise<Response> => {
-    return fetch(Environment.BACKEND_URL + "/api/admin/exam/review/submit", {
+    return AuthorizationMiddleware(() => fetch(Environment.BACKEND_URL + "/api/admin/exam/review/submit", {
         headers: {
             "Content-Type": "application/json",
             "Authorization": `bearer ${token}`
@@ -68,11 +93,11 @@ export const AdminExamReviewSubmit = ({ token, request }: { token: string, reque
             subject: request.subject,
             file_location: request.file_location
         })
-    })
+    }))
 }
 
 export const AdminExamReviewDelete = ({ token, request}: { token: string, request: AdminExamReviewDeleteRequest}): Promise<Response> => {
-    return fetch(Environment.BACKEND_URL + "/api/admin/exam/review/delete", {
+    return AuthorizationMiddleware(() => fetch(Environment.BACKEND_URL + "/api/admin/exam/review/delete", {
         headers: {
             "Content-Type": "application/json",
             "Authorization": `bearer ${token}`
@@ -82,11 +107,11 @@ export const AdminExamReviewDelete = ({ token, request}: { token: string, reques
         body: JSON.stringify({
             file_location: request.file_location
         })
-    })
+    }))
 }
 
-export const AdminExamCurrentDelete = (token: string, exam_id: number): () => Promise<any> => {
-    return () => fetch(Environment.BACKEND_URL + "/api/admin/exam/current/" + exam_id.toString(), {
+export const AdminExamCurrentDelete = ({ token, exam_id }: { token: string, exam_id: number }): Promise<Response> => {
+    return AuthorizationMiddleware(() => fetch(Environment.BACKEND_URL + "/api/admin/exam/current/" + exam_id.toString(), {
         headers: {
             "Authorization": `bearer ${token}`
         },
@@ -100,7 +125,7 @@ export const AdminExamCurrentDelete = (token: string, exam_id: number): () => Pr
         } else {
             throw new FetchError(res)
         }
-    })
+    }))
 }
 
 export const PostExamUpload = ({ request }: { request: ExamUploadRequest }): Promise<Response> => {
@@ -120,8 +145,8 @@ export const PostExamUpload = ({ request }: { request: ExamUploadRequest }): Pro
     })
 }
 
-export const FetchUserProfile = (token: string): () => Promise<FetchUserResponse> => {
-    return () => fetch(Environment.BACKEND_URL + "/api/user/profile", {
+export const FetchUserProfile = ({ token }: { token: string }): Promise<FetchUserResponse> => {
+    return AuthorizationMiddleware(() => fetch(Environment.BACKEND_URL + "/api/user/profile", {
         headers: {
             "Authorization": `bearer ${token}`
         },
@@ -135,5 +160,136 @@ export const FetchUserProfile = (token: string): () => Promise<FetchUserResponse
         } else {
             throw new FetchError(res)
         }
+    }))
+}
+
+export const FetchExams = ({ token, request }: { token: string | null, request: FetchExamsRequest }): Promise<FetchExamsResponse> => {
+    return fetch(Environment.BACKEND_URL + "/api/exams/", {
+        headers: (token === null) ?
+        {  
+            'Content-Type': 'application/json',
+        } :
+        {
+            'Content-Type': 'application/json',
+            "Authorization": `bearer ${token}`
+        },
+        method: "POST",
+        body: JSON.stringify({
+            page: request.page,
+            filter: request.filter
+        }),
+        credentials: 'include'
+    }).then(async (res) => {
+        const data = await res.json()
+        
+        if (res.ok) {
+            return data
+        } else {
+            throw new FetchError(res, "Bad")
+        }
     })
+}
+
+export const FetchExamSubjects = (): Promise<FetchExamSubjectsResponse> => {
+    return fetch(Environment.BACKEND_URL + "/api/exams/subjects", {
+        headers: 
+        {  
+            'Content-Type': 'application/json',
+        },
+        method: "GET",
+        credentials: 'include'
+    }).then(async (res) => {
+        const data = await res.json()
+
+        if (res.ok) {
+            return data
+        } else {
+            throw new FetchError(res, "Bad")
+        }
+    })
+}
+
+export const FetchSchools = (): Promise<FetchSchoolsResponse> => {
+    return fetch(Environment.BACKEND_URL + "/api/exams/schools", {
+        headers: 
+        {  
+            'Content-Type': 'application/json',
+        },
+        method: "GET",
+        credentials: 'include'
+    }).then(async (res) => {
+        const data = await res.json()
+
+        if (res.ok) {
+            return data
+        } else {
+            throw new FetchError(res, "Bad")
+        }
+    })
+}
+
+export const PostFavourite = ({ token, exam_id }: { token: string, exam_id: number }): Promise<Response> => {
+    return AuthorizationMiddleware(() => fetch(Environment.BACKEND_URL + "/api/exam/" + exam_id.toString() + "/favourite", {
+        headers: {
+            'Content-Type': 'application/json',
+            "Authorization": `bearer ${token}`
+        },
+        method: "POST",
+        body: JSON.stringify({
+            exam_id: exam_id
+        }),
+        credentials: 'include'
+    }))
+}
+
+export const DeleteFavourite = ({ token, exam_id }: { token: string, exam_id: number }): Promise<Response> => {
+    return AuthorizationMiddleware(() => fetch(Environment.BACKEND_URL + "/api/exam/" + exam_id.toString() + "/favourite", {
+        headers: {
+            'Content-Type': 'application/json',
+            "Authorization": `bearer ${token}`
+        },
+        body: JSON.stringify({
+            exam_id: exam_id
+        }),
+        method: "DELETE",
+        credentials: 'include'
+    }))
+}
+
+export const FetchFavouriteExams = ({ token }: { token: string }): Promise<FetchFavouriteExamsResponse> => {
+    return AuthorizationMiddleware(() => fetch(Environment.BACKEND_URL + "/api/exams/favourites", {
+        headers: {
+            'Content-Type': 'application/json',
+            "Authorization": `bearer ${token}`
+        },
+        method: "GET",
+        credentials: 'include'
+    }).then(async (res) => {
+        const data = await res.json()
+
+        if (res.ok) {
+            return data
+        } else {
+            throw new FetchError(res)
+        }
+    }))
+}
+
+export const FetchRecentExams = ({ token }: { token: string }): Promise<FetchRecentExamsResponse> => {
+    return AuthorizationMiddleware(() => fetch(Environment.BACKEND_URL + "/api/exams/recents", {
+        headers: {
+            'Content-Type': 'application/json',
+            "Authorization": `bearer ${token}`
+        },
+        method: "GET",
+        credentials: 'include'
+    }).then(async (res) => {
+        const data = await res.json()
+
+        if (res.ok) {
+            return data
+        } else {
+            throw new FetchError(res)
+        }
+    }))
 }

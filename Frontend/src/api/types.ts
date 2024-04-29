@@ -34,11 +34,20 @@ export type UserProfileEditRequest = {
     school_year: number
 }
 
+export type FetchExamsRequest = {
+    page: number,
+    filter: {
+        schools: string[],
+        subjects: string[],
+        years: number[]
+    }
+}
+
 // RESPONSES
 
 export type SignUpResponse = {
     status: number,
-    message: string,
+    detail?: string,
     access_token: string,
     refresh_token: string,
     expiration: string
@@ -90,4 +99,36 @@ export type FetchUserResponse = {
 export type UserRegistrationResponse = {
     refresh_token: string,
     access_token: string
+}
+
+export type ExamDetails = {
+    id: number,
+    school_name: string,
+    year: number,
+    type: string
+    favourite: boolean,
+    upload_date: string,
+    likes: number,
+    subject: string
+
+}
+
+export type FetchExamsResponse = {
+    exams: ExamDetails[]
+}
+
+export type FetchExamSubjectsResponse = {
+    subjects: string[]
+}
+
+export type FetchSchoolsResponse = {
+    schools: string[]
+}
+
+export type FetchFavouriteExamsResponse = {
+    exams: ExamDetails[]
+}
+
+export type FetchRecentExamsResponse = {
+    exams: ExamDetails[]
 }

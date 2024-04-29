@@ -1,11 +1,10 @@
 import { Link } from "react-router-dom";
 import FavouriteIcon from "../Pages/ExamsPage/Components/FavouriteIcon";
 import { useContext, useState } from "react";
-import Environment from "../../constants";
-import { authClientMiddleWare, readAccessToken } from "../util/utility";
+import { readAccessToken } from "../util/utility";
 import { useMutation } from "@tanstack/react-query";
-import { UserContext } from "../context/user-context";
 import { ModalContext } from "../context/modal-context";
+import { DeleteFavourite, PostFavourite } from "../api/api";
 
 export type ExamCardProps = {
     school: string,
@@ -20,53 +19,13 @@ export type ExamCardProps = {
     className?: string
 }
 
-const ExamTypeMap = {
-    "TRI" : "Trial Exam",
-    "HSC" : "HSC Exam",
-    "TOP" : "Topic Test",
-    "HAF" : "Half Yearly Exam",
-    "T_1" : "Term 1 Exam",
-    "T_2" : "Term 2 Exam",
-    "T_3" : "Term 3 Exam",
-    "T_4" : "Term 4 Exam"
-}
-
 const ExamCard = ({ school, year, type, difficulty, id, favourite, likes, uploadDate, className, subject }: ExamCardProps) => {
     const [isFavourite, setIsFavourite] = useState(favourite)
 
-    const { accessToken } = useContext(UserContext)
     const { SetDisplayLogin } = useContext(ModalContext)
-    
-    const postFavourite = () => {
-        return fetch(Environment.BACKEND_URL + "/api/exam/" + id.toString() + "/favourite", {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'bearer ' + readAccessToken()
-            },
-            method: "POST",
-            body: JSON.stringify({
-                exam_id: id
-            }),
-            credentials: 'include'
-        }) 
-    }
-    
-    const deleteFavourite = () => {
-        return fetch(Environment.BACKEND_URL + "/api/exam/" + id.toString() + "/favourite", {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'bearer ' + readAccessToken()
-            },
-            body: JSON.stringify({
-                exam_id: id
-            }),
-            method: "DELETE",
-            credentials: 'include'
-        })
-    }
 
-    const { mutateAsync: FavouriteMutation } = useMutation<Response>({
-        mutationFn: authClientMiddleWare(postFavourite),
+    const { mutateAsync: FavouriteMutation } = useMutation({
+        mutationFn: PostFavourite,
         onSuccess: (res) => {
             switch (res.status) {
                 case 200:
@@ -85,8 +44,8 @@ const ExamCard = ({ school, year, type, difficulty, id, favourite, likes, upload
         }
     })
 
-    const { mutateAsync: UnfavouriteMutation } = useMutation<Response>({
-        mutationFn: deleteFavourite,
+    const { mutateAsync: UnfavouriteMutation } = useMutation({
+        mutationFn: DeleteFavourite,
         onSuccess: (res) => {
             switch (res.status) {
                 case 200:
@@ -108,15 +67,21 @@ const ExamCard = ({ school, year, type, difficulty, id, favourite, likes, upload
     const FavouriteClick = (e: Event) => {
         e.preventDefault()
         
-        if (accessToken === null) {
+        if (readAccessToken() === null) {
             SetDisplayLogin(true)
             return
         }
 
         if (isFavourite) {
-            UnfavouriteMutation()
+            UnfavouriteMutation({
+                token: readAccessToken()!,
+                exam_id: id
+            })
         } else {
-            FavouriteMutation()
+            FavouriteMutation({
+                token: readAccessToken()!,
+                exam_id: id
+            })
         }
         
         setIsFavourite(!isFavourite)
@@ -130,10 +95,10 @@ const ExamCard = ({ school, year, type, difficulty, id, favourite, likes, upload
                         <FavouriteIcon isFavourite={isFavourite} onClick={FavouriteClick} className="absolute bottom-3 right-2 md:right-5"/>
                         <div className="grid-rows-5 text-slate-300">
                             <div className="font-semibold text-xl">
-                                {school} {year} {ExamTypeMap[type]} 
+                                {school} {subject} {year} 
                             </div>
                             <div className="ml-2 font-semibold text-l">
-                                {subject} 
+                                {type} 
                             </div>
                             <div className="ml-2">
                                 Uploaded: {uploadDate}

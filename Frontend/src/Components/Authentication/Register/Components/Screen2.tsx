@@ -25,7 +25,7 @@ const RegistrationScreen2 = ({ changeScreen } :
     })
 
     const handleDOBChange = (e) => {
-        SetDOB(e.target.value)
+        SetDOB(e.target.valueAsDate)
     }
 
     const handleSchoolYearChange = (e) => {

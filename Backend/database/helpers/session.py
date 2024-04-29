@@ -2,12 +2,23 @@ import psycopg2
 
 from typing import Optional
 
-from logger import log_green, log_red
+from logger import Logger
 
 from database.helpers import connect, disconnect
 from database.db_types.db_response import SessionDetailResponse
 from database.db_types.db_request import SessionCreationRequest
 
+def log_session_success(message: str):
+    """
+    Logs a successful exam operation
+    """
+    Logger.log_database("Session", message)
+
+def log_session_error(message: str):
+    """
+    Logs an error in exam operation
+    """
+    Logger.log_database_error("Session", message)
 
 def create_session(session: SessionCreationRequest) -> int:
     """
@@ -28,9 +39,9 @@ def create_session(session: SessionCreationRequest) -> int:
             session_id = cur.fetchone()
 
         conn.commit()
-        log_green("Finished inserting the Session in Database")
+        log_session_success("Finished inserting the Session in Database")
     except psycopg2.Error as e:
-        log_red(f"Error inserting the Session in Database: {e}")
+        log_session_error(f"Error inserting the Session in Database: {e}")
         conn.rollback()
         raise e
     finally:
@@ -48,9 +59,9 @@ def check_if_session_exists(session_id: int) -> bool:
             cur.execute("SELECT EXISTS(SELECT 1 FROM sessions WHERE id = %(id)s);", {"id": session_id})
             exists = cur.fetchone()
 
-        log_green("Finished checking if the Session exists in Database")
+        log_session_success("Finished checking if the Session exists in Database")
     except psycopg2.Error as e:
-        log_red(f"Error checking if the Session exists: {e}")
+        log_session_error(f"Error checking if the Session exists: {e}")
         raise e
     finally:
         disconnect(conn)
@@ -72,9 +83,9 @@ def get_session(session_id: int) -> Optional[SessionDetailResponse]:
 
             refresh_id, user = res
 
-        log_green("Finished getting information about the Session in Database")
+        log_session_success("Finished getting information about the Session in Database")
     except psycopg2.Error as e:
-        log_red(f"Error getting information about the Session: {e}")
+        log_session_error(f"Error getting information about the Session: {e}")
         conn.rollback()
         raise e
     finally:
@@ -95,9 +106,9 @@ def delete_session(session_id: int):
             cur.execute("DELETE FROM sessions WHERE id = %(id)s;", {"id": session_id})
 
         conn.commit()
-        log_green("Finished deleting the Session from Database")
+        log_session_success("Finished deleting the Session from Database")
     except psycopg2.Error as e:
-        log_red(f"Error deleting the Session from Database: {e}")
+        log_session_error(f"Error deleting the Session from Database: {e}")
         conn.rollback()
         raise e
     finally:

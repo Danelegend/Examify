@@ -2,11 +2,23 @@ import psycopg2
 
 from typing import List
 
-from logger import log_green, log_red
+from logger import Logger
 
 from database.helpers import connect, disconnect
 from database.db_types.db_request import SchoolCreationRequest
 from database.db_types.db_response import SchoolDetailsResponse
+
+def log_school_success(message: str):
+    """
+    Logs a successful exam operation
+    """
+    Logger.log_database("Recent", message)
+
+def log_school_error(message: str):
+    """
+    Logs an error in exam operation
+    """
+    Logger.log_database_error("Recent", message)
 
 def insert_school(school: SchoolCreationRequest) -> int:
     """
@@ -27,9 +39,9 @@ def insert_school(school: SchoolCreationRequest) -> int:
             school_id = cur.fetchone()
 
         conn.commit()
-        log_green("Finished inserting the School into Database")
+        log_school_success("Finished inserting the School into Database")
     except psycopg2.Error as e:
-        log_red(f"Error inserting the School: {e}")
+        log_school_error(f"Error inserting the School: {e}")
         conn.rollback()
         raise e
     finally:
@@ -50,9 +62,9 @@ def get_school_by_id(school_id: int) -> SchoolDetailsResponse:
 
             name, logo_location = school
 
-        log_green("Finished getting the School from Database")
+        log_school_success("Finished getting the School from Database")
     except psycopg2.Error as e:
-        log_red(f"Error getting the School: {e}")
+        log_school_error(f"Error getting the School: {e}")
         raise e
     finally:
         disconnect(conn)
@@ -74,9 +86,9 @@ def get_school_by_name(school: str) -> SchoolDetailsResponse:
 
             _, logo_location = school
 
-        log_green("Finished getting the School from Database")
+        log_school_success("Finished getting the School from Database")
     except psycopg2.Error as e:
-        log_red(f"Error getting the School: {e}")
+        log_school_error(f"Error getting the School: {e}")
         raise e
     finally:
         disconnect(conn)
@@ -96,9 +108,9 @@ def get_schools() -> List[SchoolDetailsResponse]:
             cur.execute("SELECT id, name, logo_location FROM schools;")
             schools = cur.fetchall()
 
-        log_green("Finished getting all Schools from Database")
+        log_school_success("Finished getting all Schools from Database")
     except psycopg2.Error as e:
-        log_red(f"Error getting all Schools: {e}")
+        log_school_error(f"Error getting all Schools: {e}")
         raise e
     finally:
         disconnect(conn)
@@ -125,9 +137,9 @@ def get_or_create_school(school: str) -> int:
                     name=school
                 )) if not res else res[0]
 
-        log_green("Finished getting or creating the School from Database")
+        log_school_success("Finished getting or creating the School from Database")
     except psycopg2.Error as e:
-        log_red(f"Error getting or creating the School: {e}")
+        log_school_error(f"Error getting or creating the School: {e}")
         raise e
     finally:
         disconnect(conn)

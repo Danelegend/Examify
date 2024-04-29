@@ -1,3 +1,5 @@
+import os
+
 from typing import Literal, List, Tuple, Optional
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
@@ -36,7 +38,7 @@ origins = [
     "http://localhost:8000",
     "http://localhost:3000",
     "http://localhost:3001",
-    "http://localhost:5173"
+    os.environ.get("FRONTEND_ORIGIN", "http://localhost:5173")
 ]
 
 # https://fastapi.tiangolo.com/tutorial/cors/

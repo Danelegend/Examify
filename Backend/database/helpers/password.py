@@ -2,10 +2,22 @@ from typing import List, Optional
 
 import psycopg2
 
-from logger import log_green, log_red
+from logger import Logger
 
 from database.db_types.db_request import PasswordCreationRequest
 from database.helpers import connect, disconnect
+
+def log_password_success(message: str):
+    """
+    Logs a successful exam operation
+    """
+    Logger.log_database("Favourite", message)
+
+def log_password_error(message: str):
+    """
+    Logs an error in exam operation
+    """
+    Logger.log_database_error("Favourite", message)
 
 def insert_password(password: PasswordCreationRequest):
     """
@@ -24,9 +36,9 @@ def insert_password(password: PasswordCreationRequest):
                 })
 
         conn.commit()
-        log_green("Finished inserting the Password into Database")
+        log_password_success("Finished inserting the Password into Database")
     except psycopg2.Error as e:
-        log_red(f"Error inserting the Password: {e}")
+        log_password_error(f"Error inserting the Password: {e}")
         conn.rollback()
         raise e
     finally:
@@ -42,9 +54,9 @@ def check_user_id_and_password_match(user: int, password: str) -> bool:
             cur.execute("SELECT EXISTS(SELECT 1 FROM passwords WHERE account = %(account)s AND password = %(password)s);", {"account": user, "password": password})
             exists = cur.fetchone()
 
-        log_green("Finished checking if the User and Password match in Database")
+        log_password_success("Finished checking if the User and Password match in Database")
     except psycopg2.Error as e:
-        log_red(f"Error checking if the User and Password match: {e}")
+        log_password_error(f"Error checking if the User and Password match: {e}")
         raise e
     finally:
         disconnect(conn)
@@ -61,9 +73,9 @@ def get_user_from_email_and_password(email: str, password: str) -> Optional[int]
             cur.execute("SELECT account FROM passwords WHERE account = (SELECT id FROM accounts WHERE email = %(email)s) AND password = %(password)s;", {"email": email, "password": password})
             user_id = cur.fetchone()
 
-        log_green("Finished getting the User from Email and Password in Database")
+        log_password_success("Finished getting the User from Email and Password in Database")
     except psycopg2.Error as e:
-        log_red(f"Error getting the User from Email and Password: {e}")
+        log_password_error(f"Error getting the User from Email and Password: {e}")
         raise e
     finally:
         disconnect(conn)

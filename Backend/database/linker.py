@@ -4,7 +4,7 @@ from typing import List, Tuple, Optional, Any
 from psycopg2 import Error, sql
 
 from database.helpers import connect, disconnect
-from logger import log_red, log_green
+from logger import Logger
 
 class DatabaseSetup:
     def __init__(self):
@@ -19,6 +19,19 @@ class DatabaseSetup:
             cls.instance.__loaded = False
         return cls.instance
 
+    @classmethod
+    def log_success(cls, message: str):
+        """
+        Logs a successful database operation
+        """
+        Logger.log_database("DatabaseSetup", message)
+
+    def log_error(cls, message: str):
+        """
+        Logs an error in database operation
+        """
+        Logger.log_database_error("DatabaseSetup", message)
+
     def inject_schema(self):
         """
         Injects the database schema into the database
@@ -29,9 +42,9 @@ class DatabaseSetup:
                 with open(os.path.join(os.getcwd(), "db/schema.sql"), encoding="utf8") as file:
                     cur.execute(file.read())
 
-            log_green("done injecting schema")
+            self.log_success("done injecting schema")
         except Error as err:
-            log_red(f"database error while injecting schema: {err}")
+            self.log_error(f"database error while injecting schema: {err}")
             raise err
         finally:
             disconnect(conn)
@@ -51,9 +64,9 @@ class DatabaseSetup:
                 cur.execute("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_type = 'BASE TABLE';")
                 tables = cur.fetchall()
 
-            log_green("done listing tables")
+            self.log_success("done listing tables")
         except Error as err:
-            log_red(f"database error: {err}")
+            self.log_error(f"database error: {err}")
             raise err
         finally:
             disconnect(conn)
@@ -76,11 +89,11 @@ class DatabaseSetup:
             with conn.cursor() as cur:
                 cur.execute(sql.SQL("SELECT * FROM {};").format(sql.Identifier(table)))
                 contents = cur.fetchall()
-            log_green(f"done displaying contents of table \"{table}\"")
+            self.log_success(f"done displaying contents of table \"{table}\"")
 
             return contents
         except Error as err:
-            log_red(f"error displaying contents of table \"{table}\": {err}")
+            self.log_error(f"error displaying contents of table \"{table}\": {err}")
             raise err
         finally:
             disconnect(conn)
@@ -100,9 +113,9 @@ class DatabaseSetup:
                     cur.execute(sql.SQL("TRUNCATE {} CASCADE;").format(sql.Identifier(table)))
                 conn.commit()
 
-                log_green(f"truncated table \"{table}\"")
+                self.log_success(f"truncated table \"{table}\"")
             except Error as err:
-                log_red(f"error truncating table \"{table}\": {err}")
+                self.log_error(f"error truncating table \"{table}\": {err}")
                 raise err
             finally:
                 disconnect(conn)
@@ -122,7 +135,7 @@ class DatabaseSetup:
                 tables = self.list_tables()
                 self.clear_tables(tables)
         finally:
-            log_green("Finished with the database")
+            self.log_success("Finished with the database")
 
 if __name__ == "__main__":
     db_setup = DatabaseSetup()

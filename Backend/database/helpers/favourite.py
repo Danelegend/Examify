@@ -2,9 +2,21 @@ from typing import List
 
 import psycopg2
 
-from logger import log_green, log_red
+from logger import Logger
 
 from database.helpers import connect, disconnect
+
+def log_favourite_success(message: str):
+    """
+    Logs a successful exam operation
+    """
+    Logger.log_database("Favourite", message)
+
+def log_favourite_error(message: str):
+    """
+    Logs an error in exam operation
+    """
+    Logger.log_database_error("Favourite", message)
 
 def insert_user_favourite_exam(user_id: int, exam_id: int):
     """
@@ -23,9 +35,9 @@ def insert_user_favourite_exam(user_id: int, exam_id: int):
                 })
 
         conn.commit()
-        log_green("Finished inserting the User Favourite Exam into Database")
+        log_favourite_success("Finished inserting the User Favourite Exam into Database")
     except psycopg2.Error as e:
-        log_red(f"Error inserting the User Favourite Exam: {e}")
+        log_favourite_error(f"Error inserting the User Favourite Exam: {e}")
         conn.rollback()
         raise e
     finally:
@@ -47,9 +59,9 @@ def delete_user_favourite_exam(user_id: int, exam_id: int):
                 })
 
         conn.commit()
-        log_green("Finished deleting the User Favourite Exam from Database")
+        log_favourite_success("Finished deleting the User Favourite Exam from Database")
     except psycopg2.Error as e:
-        log_red(f"Error deleting the User Favourite Exam: {e}")
+        log_favourite_error(f"Error deleting the User Favourite Exam: {e}")
         conn.rollback()
         raise e
     finally:
@@ -65,9 +77,9 @@ def check_if_user_favourite_exam_exists(user_id: int, exam_id: int) ->bool:
             cur.execute("SELECT EXISTS(SELECT 1 FROM favourite_exams WHERE account = %(account)s AND exam = %(exam)s);", {"account": user_id, "exam": exam_id})
             exists = cur.fetchone()
 
-        log_green("Finished checking if the User Favourite Exam exists in Database")
+        log_favourite_success("Finished checking if the User Favourite Exam exists in Database")
     except psycopg2.Error as e:
-        log_red(f"Error checking if the User Favourite Exam exists: {e}")
+        log_favourite_error(f"Error checking if the User Favourite Exam exists: {e}")
         raise e
     finally:
         disconnect(conn)
@@ -84,9 +96,9 @@ def get_user_favourite_exams(user_id: int) -> List[int]:
             cur.execute("SELECT exam FROM favourite_exams WHERE account = %(account)s;", {"account": user_id})
             exams = cur.fetchall()
 
-        log_green("Finished getting the User Favourite Exams from Database")
+        log_favourite_success("Finished getting the User Favourite Exams from Database")
     except psycopg2.Error as e:
-        log_red(f"Error getting the User Favourite Exams: {e}")
+        log_favourite_error(f"Error getting the User Favourite Exams: {e}")
         raise e
     finally:
         disconnect(conn)
@@ -104,9 +116,9 @@ def get_exam_likes_count(exam_id: int) -> int:
             cur.execute("SELECT COUNT(*) FROM favourite_exams WHERE exam = %(exam)s;", {"exam": exam_id})
             count = cur.fetchone()
 
-        log_green("Finished getting the Exam Likes Count from Database")
+        log_favourite_success("Finished getting the Exam Likes Count from Database")
     except psycopg2.Error as e:
-        log_red(f"Error getting the Exam Likes Count: {e}")
+        log_favourite_error(f"Error getting the Exam Likes Count: {e}")
         raise e
     finally:
         disconnect(conn)

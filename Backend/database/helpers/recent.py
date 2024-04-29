@@ -1,10 +1,22 @@
-from typing import List, Optional
+from typing import List
 
 import psycopg2
 
-from logger import log_green, log_red
+from logger import Logger
 
 from database.helpers import connect, disconnect
+
+def log_recent_success(message: str):
+    """
+    Logs a successful exam operation
+    """
+    Logger.log_database("Recent", message)
+
+def log_recent_error(message: str):
+    """
+    Logs an error in exam operation
+    """
+    Logger.log_database_error("Recent", message)
 
 def insert_user_recently_viewed_exam(user_id: int, exam_id: int):
     """
@@ -23,9 +35,9 @@ def insert_user_recently_viewed_exam(user_id: int, exam_id: int):
                 })
 
         conn.commit()
-        log_green("Finished inserting the User Recently Viewed Exam into Database")
+        log_recent_success("Finished inserting the User Recently Viewed Exam into Database")
     except psycopg2.Error as e:
-        log_red(f"Error inserting the User Recently Viewed Exam: {e}")
+        log_recent_error(f"Error inserting the User Recently Viewed Exam: {e}")
         conn.rollback()
         raise e
     finally:
@@ -50,9 +62,9 @@ def get_user_recently_viewed_exams(user_id: int, size=10) -> List[int]:
                     })
             exams = cur.fetchall()
 
-        log_green("Finished getting the User Recently Viewed Exams from Database")
+        log_recent_success("Finished getting the User Recently Viewed Exams from Database")
     except psycopg2.Error as e:
-        log_red(f"Error getting the User Recently Viewed Exams: {e}")
+        log_recent_error(f"Error getting the User Recently Viewed Exams: {e}")
         raise e
     finally:
         disconnect(conn)

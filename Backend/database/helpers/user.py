@@ -2,11 +2,23 @@ from typing import Optional
 
 import psycopg2
 
-from logger import log_green, log_red
+from logger import Logger
 
 from database.helpers import connect, disconnect
 from database.db_types.db_request import RegistrationMethods, UserCreationRequest, UserUpdateRequest
 from database.db_types.db_response import UserDetailsResponse
+
+def log_user_success(message: str):
+    """
+    Logs a successful exam operation
+    """
+    Logger.log_database("User", message)
+
+def log_user_error(message: str):
+    """
+    Logs an error in exam operation
+    """
+    Logger.log_database_error("User", message)
 
 def insert_user(user: UserCreationRequest) -> int:
     """
@@ -31,9 +43,9 @@ def insert_user(user: UserCreationRequest) -> int:
             user_id = cur.fetchone()
 
         conn.commit()
-        log_green("Finished inserting the User into Database")
+        log_user_success("Finished inserting the User into Database")
     except psycopg2.Error as e:
-        log_red(f"Error inserting the User: {e}")
+        log_user_error(f"Error inserting the User: {e}")
         conn.rollback()
         raise e
     finally:
@@ -51,9 +63,9 @@ def check_if_user_exists(user_id: int) -> bool:
             cur.execute("SELECT EXISTS(SELECT 1 FROM accounts WHERE id = %(id)s);", {"id": user_id})
             exists = cur.fetchone()
 
-        log_green("Finished checking if the User exists in Database")
+        log_user_success("Finished checking if the User exists in Database")
     except psycopg2.Error as e:
-        log_red(f"Error checking if the User exists: {e}")
+        log_user_error(f"Error checking if the User exists: {e}")
         raise e
     finally:
         disconnect(conn)
@@ -70,9 +82,9 @@ def get_user_id(email: str) -> int:
             cur.execute("SELECT id FROM accounts WHERE email = %(email)s;", {"email": email})
             user_id = cur.fetchone()
 
-        log_green("Finished getting the User ID from Database")
+        log_user_success("Finished getting the User ID from Database")
     except psycopg2.Error as e:
-        log_red(f"Error getting the User ID: {e}")
+        log_user_error(f"Error getting the User ID: {e}")
         raise e
     finally:
         disconnect(conn)
@@ -89,9 +101,9 @@ def get_user_permissions(user_id: int) -> str:
             cur.execute("SELECT permission FROM accounts WHERE id = %(id)s;", {"id": user_id})
             permissions = cur.fetchone()
 
-        log_green("Finished getting the User Permissions from Database")
+        log_user_success("Finished getting the User Permissions from Database")
     except psycopg2.Error as e:
-        log_red(f"Error getting the User Permissions: {e}")
+        log_user_error(f"Error getting the User Permissions: {e}")
         raise e
     finally:
         disconnect(conn)
@@ -129,9 +141,9 @@ def update_user(user_update_request: UserUpdateRequest):
             )
 
         conn.commit()
-        log_green("Finished updating the User in Database")
+        log_user_success("Finished updating the User in Database")
     except psycopg2.Error as e:
-        log_red(f"Error updating the User: {e}")
+        log_user_error(f"Error updating the User: {e}")
         conn.rollback()
         raise e
     finally:
@@ -147,9 +159,9 @@ def check_user_email_exists(email: str) -> bool:
             cur.execute("SELECT EXISTS(SELECT 1 FROM accounts WHERE email = %(email)s);", {"email": email})
             exists = cur.fetchone()
 
-        log_green("Finished checking if the User email exists in Database")
+        log_user_success("Finished checking if the User email exists in Database")
     except psycopg2.Error as e:
-        log_red(f"Error checking if the User email exists: {e}")
+        log_user_error(f"Error checking if the User email exists: {e}")
         raise e
     finally:
         disconnect(conn)
@@ -171,9 +183,9 @@ def get_user_details(user_id: int) -> UserDetailsResponse:
                 """, {"id": user_id})
             first_name, last_name, email, phone, registration, permissions, school, grade = cur.fetchone()
 
-        log_green("Finished getting the User Details from Database")
+        log_user_success("Finished getting the User Details from Database")
     except psycopg2.Error as e:
-        log_red(f"Error getting the User Details: {e}")
+        log_user_error(f"Error getting the User Details: {e}")
         raise e
     finally:
         disconnect(conn)
@@ -199,9 +211,9 @@ def get_user_by_email_and_registration(email: str, registration_method: Registra
             cur.execute("SELECT id FROM accounts WHERE email = %(email)s AND registeration_method = %(registration_method)s;", {"email": email, "registration_method": registration_method})
             user_id = cur.fetchone()
 
-        log_green("Finished getting the User from Email and Registration Method in Database")
+        log_user_success("Finished getting the User from Email and Registration Method in Database")
     except psycopg2.Error as e:
-        log_red(f"Error getting the User from Email and Registration Method: {e}")
+        log_user_error(f"Error getting the User from Email and Registration Method: {e}")
         raise e
     finally:
         disconnect(conn)

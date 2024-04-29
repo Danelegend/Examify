@@ -2,17 +2,32 @@ from typing import List, Optional
 
 import psycopg2
 
-from logger import log_green, log_red
+from logger import Logger
 
 from database.helpers import connect, disconnect
 from database.helpers.school import get_school_by_id
 from database.db_types.db_request import ExamCreationRequest, ExamFilterRequest, ExamTypes
 from database.db_types.db_response import ExamDetailsResponse
 
+def log_exam_success(message: str):
+    """
+    Logs a successful exam operation
+    """
+    Logger.log_database("Exam", message)
+
+def log_exam_error(message: str):
+    """
+    Logs an error in exam operation
+    """
+    Logger.log_database_error("Exam", message)
+
 def insert_exam(exam: ExamCreationRequest) -> int:
     """
     Inserts a new exam into the database
     """
+    log_exam_success("Inserting a new Exam into Database \
+                        school=%s, exam_type=%s, year=%s, file_location=%s, subject=%s", 
+                        exam.school, exam.exam_type, exam.year, exam.file_location, exam.subject)
     try:
         conn = connect()
         with conn.cursor() as cur:
@@ -31,9 +46,9 @@ def insert_exam(exam: ExamCreationRequest) -> int:
             exam_id = cur.fetchone()
 
         conn.commit()
-        log_green("Finished inserting the Exam into Database")
+        log_exam_success("Finished inserting the Exam into Database, exam_id=%s", exam_id[0])
     except psycopg2.Error as e:
-        log_red(f"Error inserting the Exam: {e}")
+        log_exam_error(f"Error inserting the Exam: {e}")
         conn.rollback()
         raise e
     finally:
@@ -54,9 +69,9 @@ def get_exam(exam_id: int) -> ExamDetailsResponse:
 
             school, exam_type, year, file_location, date_uploaded, subject = exam
 
-        log_green("Finished getting the Exam from Database")
+        log_exam_success("Finished getting the Exam from Database")
     except psycopg2.Error as e:
-        log_red(f"Error getting the Exam: {e}")
+        log_exam_error(f"Error getting the Exam: {e}")
         raise e
     finally:
         disconnect(conn)
@@ -79,9 +94,9 @@ def get_exams() -> List[ExamDetailsResponse]:
             cur.execute("SELECT id, school, exam_type, year, file_location, date_uploaded, subject FROM exams;")
             exams = cur.fetchall()
 
-        log_green("Finished getting the Exams from Database")
+        log_exam_success("Finished getting the Exams from Database")
     except psycopg2.Error as e:
-        log_red(f"Error getting the Exams: {e}")
+        log_exam_error(f"Error getting the Exams: {e}")
         raise e
     finally:
         disconnect(conn)
@@ -114,9 +129,9 @@ def get_exams_using_filter(exam_filter_request: ExamFilterRequest) -> List[ExamD
                 })
             exams = cur.fetchall()
 
-        log_green("Finished getting the Exams from Database using Filter")
+        log_exam_success("Finished getting the Exams from Database using Filter")
     except psycopg2.Error as e:
-        log_red(f"Error getting the Exams using Filter: {e}")
+        log_exam_error(f"Error getting the Exams using Filter: {e}")
         raise e
     finally:
         disconnect(conn)
@@ -139,9 +154,9 @@ def delete_exam(exam_id: int):
             cur.execute("DELETE FROM exams WHERE id = %(id)s;", {"id": exam_id})
 
         conn.commit()
-        log_green("Finished deleting the Exam from Database")
+        log_exam_success("Finished deleting the Exam from Database")
     except psycopg2.Error as e:
-        log_red(f"Error deleting the Exam: {e}")
+        log_exam_error(f"Error deleting the Exam: {e}")
         conn.rollback()
         raise e
     finally:
@@ -157,9 +172,9 @@ def get_exam_id_from_schoool_year_type(school: str, year: int, type: ExamTypes) 
             cur.execute("SELECT id FROM exams WHERE school = (SELECT id FROM schools WHERE name = %(school)s) AND year = %(year)s AND exam_type = %(type)s;", {"school": school, "year": year, "type": type})
             exam_id = cur.fetchone()
 
-        log_green("Finished getting the Exam ID from School, Year and Type in Database")
+        log_exam_success("Finished getting the Exam ID from School, Year and Type in Database")
     except psycopg2.Error as e:
-        log_red(f"Error getting the Exam ID from School, Year and Type: {e}")
+        log_exam_error(f"Error getting the Exam ID from School, Year and Type: {e}")
         raise e
     finally:
         disconnect(conn)
@@ -176,9 +191,9 @@ def check_exam_exists(exam_id: int) -> bool:
             cur.execute("SELECT EXISTS(SELECT 1 FROM exams WHERE id = %(id)s);", {"id": exam_id})
             exists = cur.fetchone()
 
-        log_green("Finished checking if the Exam exists in Database")
+        log_exam_success("Finished checking if the Exam exists in Database")
     except psycopg2.Error as e:
-        log_red(f"Error checking if the Exam exists: {e}")
+        log_exam_error(f"Error checking if the Exam exists: {e}")
         raise e
     finally:
         disconnect(conn)

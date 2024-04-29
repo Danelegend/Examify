@@ -3,7 +3,7 @@ import { validateEmail, validatePasswordLength, validatePasswordLowerCaseLetter,
 import SignInWithGoogle from "../../Components/GoogleButton"
 import SignInWithFacebook from "../../Components/FacebookButton"
 import { useMutation } from "@tanstack/react-query"
-import Environment from "../../../../../constants"
+import { ring } from "ldrs";
 import { SignUpResponse } from "../../../../api/types"
 import { storeAccessToken, storeExpiration } from "../../../../util/utility"
 import { UserContext } from "../../../../context/user-context"
@@ -84,7 +84,7 @@ const RegistrationScreen1 = ({ changeScreen } :
         }
     }
 
-    const { mutateAsync: SignUpMutation } = useMutation({
+    const { mutateAsync: SignUpMutation, isPending } = useMutation({
         mutationFn: PostUserRegistration,
         onSuccess: (res) => {
             res.json().then((data: SignUpResponse) => {
@@ -112,6 +112,8 @@ const RegistrationScreen1 = ({ changeScreen } :
         }
     })
 
+    ring.register()
+
     return (
         <div>
             <form className="px-4 pt-4 pb-0.5 md:px-5 md:pt-5 md:pb-1">
@@ -138,10 +140,21 @@ const RegistrationScreen1 = ({ changeScreen } :
                     </div>
                 </div>
                 <div className="flex justify-center">
-                    <div onClick={handleSubmission} className="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 cursor-pointer">
-                       <svg className="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd"></path></svg>
-                        Register
-                    </div>
+                    {
+                        (isPending) ? 
+                        <l-ring
+                              size="40"
+                              stroke="5"
+                              bg-opacity="0"
+                              speed="2" 
+                              color="black" 
+                            /> : 
+                        <div onClick={handleSubmission} className="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 cursor-pointer">
+                           <svg className="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd"></path></svg>
+                            Register
+                        </div>
+
+                    }
                 </div>
                     {
                         (ResponseMessage === null) ? null : 

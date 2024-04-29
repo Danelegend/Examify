@@ -1,5 +1,6 @@
 import os
 
+from datetime import datetime
 from io import BufferedReader
 from testing import client
 
@@ -49,6 +50,17 @@ def login(email: str, password: str):
 
 def logout(token: str):
     response = client.delete("/api/auth/logout", headers={"Authorization": f"bearer {token}"})
+
+    assert response.status_code == 200
+
+def edit_profile(token: str, dob: datetime, school_year: int, school: str):
+    payload = {
+        "dob": dob.isoformat(),
+        "school_year": school_year,
+        "school": school
+    }
+
+    response = client.put("/api/auth/profile", json=payload, headers={"Authorization": f"bearer {token}"})
 
     assert response.status_code == 200
 

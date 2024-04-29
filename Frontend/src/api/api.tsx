@@ -31,7 +31,7 @@ export const EditUserProfileData = ({ token, request }: { token: string, request
             "Authorization": `bearer ${token}`
         },
         body: JSON.stringify({
-            dob: request.dob,
+            dob: request.dob.toISOString(),
             school_year: request.school_year,
             school: request.school
         })

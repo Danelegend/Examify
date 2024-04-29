@@ -1,7 +1,9 @@
 import os
 
+from datetime import datetime
+
 from testing import client
-from testing.util import register, login, logout, refresh
+from testing.util import edit_profile, register, login, logout, refresh
 
 class TestUserAuthFlow:
     def test_user_signup_then_refresh_token(self):
@@ -38,3 +40,13 @@ class TestUserAuthFlow:
 
         # Refresh
         refresh(refresh_token)
+
+    def test_user_signup_then_edit_profile(self):
+        # Signup
+        response1 = register("Dane", "Urban", "danelegend13@gmail.com", "ThisIsAGoodPassword123@")
+        access_token1 = response1["access_token"]
+        refresh_token1 = response1["cookie"]
+
+        # Edit profile
+        edit_profile(access_token1, datetime(year=2002, month=5, day=13), 12, "Freshwater Senior Campus")
+        

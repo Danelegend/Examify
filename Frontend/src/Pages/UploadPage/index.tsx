@@ -2,7 +2,6 @@ import { useState } from "react";
 import useWindowSize from "../../hooks/useWindowSize";
 import FileUploader from "./Components/FileUploader";
 import { useMutation } from "@tanstack/react-query";
-import Environment from "../../../constants";
 import { ring } from "ldrs";
 import { PostExamUpload } from "../../api/api";
 

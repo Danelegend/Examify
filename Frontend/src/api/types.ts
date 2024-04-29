@@ -28,6 +28,12 @@ export type UserRegistrationRequest = {
     password: string
 }
 
+export type UserProfileEditRequest = {
+    dob: Date,
+    school: string,
+    school_year: number
+}
+
 // RESPONSES
 
 export type SignUpResponse = {

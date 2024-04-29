@@ -1,7 +1,7 @@
 import { useState } from "react"
-import Environment from "../../../../../constants"
-import { authClientMiddleWare, readAccessToken } from "../../../../util/utility"
+import { readAccessToken } from "../../../../util/utility"
 import { useMutation } from "@tanstack/react-query"
+import { EditUserProfileData } from "../../../../api/api"
 
 const RegistrationScreen2 = ({ changeScreen } : 
     {
@@ -12,30 +12,10 @@ const RegistrationScreen2 = ({ changeScreen } :
     const [SchoolYear, SetSchoolYear] = useState<number>(-1)
     const [SchoolName, SetSchoolName] = useState<string>("")
 
-    const [Subjects, SetSubjects] = useState<String[]>([])
-
     const [ResponseMessage, SetResponseMessage] = useState<string | null>(null)
 
-    const accessToken = readAccessToken()
-
-    const putRegistrationData = async () => {
-        return fetch(Environment.BACKEND_URL + "/api/auth/profile", {
-            method: "PUT",
-            headers: {
-                "Authorization": "bearer " + accessToken, 
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                dob: DOB,
-                school_year: SchoolYear,
-                school: SchoolName,
-                subjects: Subjects
-            })
-        })
-    }
-
     const { mutateAsync: postData } = useMutation({
-        mutationFn: authClientMiddleWare(putRegistrationData),
+        mutationFn: EditUserProfileData,
         onSuccess: (data) => {
             changeScreen()
         },
@@ -72,7 +52,14 @@ const RegistrationScreen2 = ({ changeScreen } :
             return
         }
 
-        postData()
+        postData({
+            token: readAccessToken()!,
+            request: {
+                dob: DOB,
+                school_year: SchoolYear,
+                school: SchoolName
+            }
+        })
     }
 
     return (

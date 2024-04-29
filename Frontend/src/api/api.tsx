@@ -1,6 +1,6 @@
 import Environment from "../../constants"
 import { FetchError } from "../util/utility"
-import { AdminExamReviewDeleteRequest, AdminExamReviewSubmitRequest, ExamUploadRequest, FetchLogosResponse, FetchUserResponse, UserRegistrationRequest, UserRegistrationResponse } from "./types"
+import { AdminExamReviewDeleteRequest, AdminExamReviewSubmitRequest, ExamUploadRequest, FetchLogosResponse, FetchUserResponse, UserProfileEditRequest, UserRegistrationRequest, UserRegistrationResponse } from "./types"
 
 export type UserAuthentication = {
     refresh_token: string,
@@ -8,7 +8,7 @@ export type UserAuthentication = {
 }
 
 export const PostUserRegistration = ({ request }: { request: UserRegistrationRequest }): Promise<Response> => {
-    return fetch(Environment.BACKEND_URL + "/api/user/register", {
+    return fetch(Environment.BACKEND_URL + "/api/auth/register", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -20,6 +20,21 @@ export const PostUserRegistration = ({ request }: { request: UserRegistrationReq
             password: request.password
         }),
         credentials: "include"
+    })
+}
+
+export const EditUserProfileData = ({ token, request }: { token: string, request: UserProfileEditRequest }): Promise<Response> => {
+    return fetch(Environment.BACKEND_URL + "/api/auth/profile", {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `bearer ${token}`
+        },
+        body: JSON.stringify({
+            dob: request.dob,
+            school_year: request.school_year,
+            school: request.school
+        })
     })
 }
 

@@ -1,6 +1,21 @@
 version: '3.9'
 
 services:
+  prod-backend:
+    image: "examify-backend:0.0.1"
+    container_name: examify-be
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    env_file: .env
+    # environment:  # comment out when normal development, to avoid rate limits
+    #   USE_API_FOR_ADDRESS_AUTOCOMPLETE: y
+    volumes:
+      - ./backend:/app
+    command: uvicorn main:app --host 0.0.0.0 --port 8080 --reload
+
   database:
     image: "examify-database:0.0.1"
     container_name: examify-db

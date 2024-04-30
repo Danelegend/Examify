@@ -69,7 +69,7 @@ const FavouriteExamsDisplay = () => {
                 }))
             }
         }
-    })
+    }, [favouriteIsPending])
 
     waveform.register()
 

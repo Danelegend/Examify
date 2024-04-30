@@ -1,10 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
-import Environment from "../../../../constants";
 import { readAccessToken, removeAccessToken } from "../../../util/utility";
 import { useContext } from "react";
 import { UserContext } from "../../../context/user-context";
 import { NavigationButton } from "./NavButton";
+import { UserLogout } from "../../../api/api";
 
 const LoggedInNavbar = () => {
     const { setAccessToken } = useContext(UserContext)
@@ -13,23 +13,16 @@ const LoggedInNavbar = () => {
 
     const handleLogoutClick = () => {
         try {
-            LogoutMutation()
+            LogoutMutation({
+                token: readAccessToken()!
+            })
         } catch (e) {
             console.error(e)
         }
     }
 
-    const { mutateAsync: LogoutMutation } = useMutation<Response>({
-        mutationFn: () => {
-            return fetch(Environment.BACKEND_URL + "/api/auth/logout", {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'bearer ' + readAccessToken()
-                },
-                method: "DELETE",
-                credentials: 'include'
-            })
-        },
+    const { mutateAsync: LogoutMutation } = useMutation({
+        mutationFn: UserLogout,
         onSuccess: () => {
             removeAccessToken()
             setAccessToken(null)

@@ -2,9 +2,9 @@ import React, { useContext } from "react";
 import SocialLogin from "react-social-login";
 import { UserContext } from "../../../context/user-context";
 import { useMutation } from "@tanstack/react-query";
-import Environment from "../../../../constants";
 import { storeAccessToken, storeExpiration } from "../../../util/utility";
 import { SignInResponse } from "../../../api/types";
+import { PostFacebookSignIn } from "../../../api/api";
 
 class SignInWithFacebookButton extends React.Component {
     render() {
@@ -38,19 +38,8 @@ const SignInWithFacebook = ({ title, SetResponseMessage, onSuccess }: { title: s
 
     const { setAccessToken } = useContext(UserContext);
 
-    const { mutateAsync: FacebookSignInMutation } = useMutation<Response>({
-        mutationFn: () => {
-            return fetch(Environment.BACKEND_URL + "/api/auth/login/facebook", {
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                method: "POST",
-                credentials: 'include',
-                body: JSON.stringify({
-                    facebook_token: facebook_token
-                })
-            })
-        },
+    const { mutateAsync: FacebookSignInMutation } = useMutation({
+        mutationFn: PostFacebookSignIn,
         onSuccess: (res) => {
             res.json().then((data: SignInResponse) => {
                 switch (res.status) {
@@ -81,7 +70,15 @@ const SignInWithFacebook = ({ title, SetResponseMessage, onSuccess }: { title: s
 
     const onFacebookSuccess = (res) => {
         facebook_token = res._token.accessToken
-        FacebookSignInMutation()
+
+        if (facebook_token === null) {
+            SetResponseMessage("Problem with Facebook Login")
+            return
+        }
+
+        FacebookSignInMutation({
+            facebook_token: facebook_token
+        })
     }
 
     const onFacebookFailure = (e) => {

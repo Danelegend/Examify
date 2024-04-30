@@ -28,6 +28,11 @@ export type UserRegistrationRequest = {
     password: string
 }
 
+export type UserLoginRequest = {
+    email: string,
+    password: string
+}
+
 export type UserProfileEditRequest = {
     dob: Date,
     school: string,

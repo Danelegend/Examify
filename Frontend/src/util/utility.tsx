@@ -19,7 +19,7 @@ export const storeAccessToken = (token: string) => {
     store("access_token", token)
 }
 
-export const storeExpiration = (exp: string) => {
+export const storeExpiration = (exp: Date) => {
     store("expiration", exp)
 }
 

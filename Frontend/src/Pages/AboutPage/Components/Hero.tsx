@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 const PageButton = ({ children, className, onClick }: { children: ReactNode, className?: string, onClick?: () => void }) => {
     return (
-        <div className={`text-slate-800 font-medium cursor-pointer rounded-lg border bg-blue-200 px-6 py-2 ${className}`} onClick={onClick}>
+        <div className={`text-slate-800 font-medium cursor-pointer rounded-2xl border bg-blue-200 hover:bg-blue-300 shadow-lg px-6 py-2 ${className}`} onClick={onClick}>
             {children}
         </div>
     )

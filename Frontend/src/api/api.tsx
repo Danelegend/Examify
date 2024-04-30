@@ -1,9 +1,9 @@
 import Environment from "../../constants"
 import { FetchError, readExpiration, storeAccessToken, storeExpiration } from "../util/utility"
-import { AdminExamReviewDeleteRequest, AdminExamReviewSubmitRequest, ExamUploadRequest, FetchExamsRequest, FetchExamsResponse, FetchExamSubjectsResponse, FetchFavouriteExamsResponse, FetchLogosResponse, FetchRecentExamsResponse, FetchSchoolsResponse, FetchUserResponse, UserProfileEditRequest, UserRegistrationRequest, UserRegistrationResponse } from "./types"
+import { AdminExamReviewDeleteRequest, AdminExamReviewSubmitRequest, ExamUploadRequest, FetchExamsRequest, FetchExamsResponse, FetchExamSubjectsResponse, FetchFavouriteExamsResponse, FetchLogosResponse, FetchRecentExamsResponse, FetchSchoolsResponse, FetchUserResponse, UserLoginRequest, UserProfileEditRequest, UserRegistrationRequest, UserRegistrationResponse } from "./types"
 
 export type UserAuthentication = {
-    refresh_token: string,
+    expiration: Date,
     access_token: string
 }
 
@@ -20,7 +20,7 @@ const AuthorizationMiddleware: AuthorizationMiddlewareType = (func) => {
 
             if (res.ok) {
                 storeAccessToken(data.access_token)
-                storeExpiration(data.refresh_token)
+                storeExpiration(data.expiration)
 
                 return func()
             } else {
@@ -30,6 +30,13 @@ const AuthorizationMiddleware: AuthorizationMiddlewareType = (func) => {
     }
     
     return func()
+}
+
+export const GetTokenRefresh = (): Promise<Response> => {
+    return fetch(Environment.BACKEND_URL + "/api/auth/refresh", {
+        method: "GET",
+        credentials: "include"
+    })
 }
 
 export const PostUserRegistration = ({ request }: { request: UserRegistrationRequest }): Promise<Response> => {
@@ -45,6 +52,31 @@ export const PostUserRegistration = ({ request }: { request: UserRegistrationReq
             password: request.password
         }),
         credentials: "include"
+    })
+}
+
+export const PostUserSignIn = ({ request }: { request: UserLoginRequest }): Promise<Response> => {
+    return fetch(Environment.BACKEND_URL + "/api/auth/login", {
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        method: "POST",
+        body: JSON.stringify({
+            email: request.email,
+            password: request.password
+        }),
+        credentials: 'include'
+    })
+}
+
+export const UserLogout = ({ token }: { token: string }): Promise<Response> => {
+    return fetch(Environment.BACKEND_URL + "/api/auth/logout", {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `bearer ${token}`
+        },
+        method: "DELETE",
+        credentials: 'include'
     })
 }
 
@@ -292,4 +324,30 @@ export const FetchRecentExams = ({ token }: { token: string }): Promise<FetchRec
             throw new FetchError(res)
         }
     }))
+}
+
+export const PostGoogleSignIn = ({ google_token }: { google_token: string }): Promise<Response> => {
+    return fetch(Environment.BACKEND_URL + "/api/auth/login/google", {
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        method: "POST",
+        credentials: 'include',
+        body: JSON.stringify({
+            google_token: google_token
+        })
+    })
+}
+
+export const PostFacebookSignIn = ({ facebook_token }: { facebook_token: string }): Promise<Response> => {
+    return fetch(Environment.BACKEND_URL + "/api/auth/login/facebook", {
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        method: "POST",
+        credentials: 'include',
+        body: JSON.stringify({
+            facebook_token: facebook_token
+        })
+    })
 }

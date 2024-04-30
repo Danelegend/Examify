@@ -1,5 +1,3 @@
-import Environment from "../../../../constants"
-
 import { useContext, useRef, useState } from "react";
 import SignInWithGoogle from "../Components/GoogleButton";
 import SignInWithFacebook from "../Components/FacebookButton";
@@ -10,6 +8,7 @@ import { storeAccessToken, storeExpiration } from "../../../util/utility";
 import { UserContext } from "../../../context/user-context";
 import { ModalContext } from "../../../context/modal-context";
 import { useOnClickOutside } from "usehooks-ts";
+import { PostUserSignIn } from "../../../api/api";
 
 type LoginPopupProps = {
     onExit: () => void,
@@ -36,20 +35,8 @@ const LoginPopup = ({ onExit }: LoginPopupProps) => {
         SetPassword(e.target.value);
     }
 
-    const { mutateAsync: SignInMutation } = useMutation<Response>({
-        mutationFn: () =>  {
-            return fetch(Environment.BACKEND_URL + "/api/auth/login", {
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                method: "POST",
-                body: JSON.stringify({
-                    email: Email,
-                    password: Password
-                }),
-                credentials: 'include'
-            })
-        },
+    const { mutateAsync: SignInMutation } = useMutation({
+        mutationFn: PostUserSignIn,
         onSuccess: (res) => {
             res.json().then((data: SignInResponse) => {
                 switch (res.status) {
@@ -88,7 +75,12 @@ const LoginPopup = ({ onExit }: LoginPopupProps) => {
             SetResponseMessage(null)
 
             try {
-                await SignInMutation()
+                await SignInMutation({
+                    request: {
+                        email: Email,
+                        password: Password
+                    }
+                })
             } catch (e) {
                 console.log(e)
             }

@@ -5,25 +5,15 @@ import { storeAccessToken, storeExpiration } from "../../../util/utility";
 import { SignInResponse } from "../../../api/types";
 import { useContext } from "react";
 import { UserContext } from "../../../context/user-context";
+import { PostGoogleSignIn } from "../../../api/api";
 
 const SignInWithGoogle = ({ title, SetResponseMessage, onSuccess }: { title: string, SetResponseMessage: (msg: string) => void, onSuccess: () => void }) =>  {
     let google_token: null | string = null;
 
     const { setAccessToken } = useContext(UserContext)
 
-    const { mutateAsync: GoogleSignInMutation } = useMutation<Response>({
-        mutationFn: () => {
-            return fetch(Environment.BACKEND_URL + "/api/auth/login/google", {
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                method: "POST",
-                credentials: 'include',
-                body: JSON.stringify({
-                    google_token: google_token
-                })
-            })
-        },
+    const { mutateAsync: GoogleSignInMutation } = useMutation({
+        mutationFn: PostGoogleSignIn,
         onSuccess: (res) => {
             res.json().then((data: SignInResponse) => {
                 switch (res.status) {
@@ -58,7 +48,9 @@ const SignInWithGoogle = ({ title, SetResponseMessage, onSuccess }: { title: str
 
     const onGoogleSuccess = (res: CodeResponse) => {
         google_token = res.code; 
-        GoogleSignInMutation();
+        GoogleSignInMutation({
+            google_token: google_token
+        });
     }
 
     const onGoogleError = () => {

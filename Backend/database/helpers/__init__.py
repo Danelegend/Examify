@@ -10,6 +10,7 @@ USER = os.environ.get("POSTGRES_USER", "postgres")
 PASSWORD = os.environ.get("POSTGRES_PASSWORD", "1234567890")
 DB_NAME = os.environ.get("POSTGRES_DB", "dream")
 DB_PORT = os.environ.get("POSTGRES_PORT", "5432")
+HOST = os.environ.get("POSTGRES_HOST", "host.docker.internal")
 MIN_CONN = int(os.environ.get("POSTGRES_MINCONN", "1"))
 MAX_CONN = int(os.environ.get("POSTGRES_MAXCONN", "10"))
 
@@ -19,7 +20,7 @@ connection_pool = pool.ThreadedConnectionPool(
     user=USER,
     password=PASSWORD,
     database=DB_NAME,
-    host="host.docker.internal",
+    host=HOST,
     port=DB_PORT
 )
 

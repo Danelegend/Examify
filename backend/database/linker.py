@@ -39,9 +39,9 @@ class DatabaseSetup:
         try:
             conn = connect()
             with conn.cursor() as cur:
-                with open(os.path.join(os.getcwd(), "db/schema.sql"), encoding="utf8") as file:
+                with open(os.path.join(os.getcwd(), "database/schema.sql"), encoding="utf8") as file:
                     cur.execute(file.read())
-
+            conn.commit()
             self.log_success("done injecting schema")
         except Error as err:
             self.log_error(f"database error while injecting schema: {err}")
@@ -124,16 +124,12 @@ class DatabaseSetup:
         """
         Set up a database by injecting schema, listing tables, injecting dummy data, and providing details about a specific table
         """
-        parser = argparse.ArgumentParser(description="Setting up the skeleton of the database with schema and dummy data")
-        parser.add_argument("--load_db", help="Flag indicating whether to load the database (default is True)", action="store_false")
-        namespace = parser.parse_args()
-        load_db = namespace.load_db
+        self.log_success("Setting up the database")
 
         try:
-            if load_db:
-                self.inject_schema()
-                tables = self.list_tables()
-                self.clear_tables(tables)
+            self.inject_schema()
+            tables = self.list_tables()
+            self.clear_tables(tables)
         finally:
             self.log_success("Finished with the database")
 

@@ -3,7 +3,7 @@ type Environment_Type = {
 }
 
 const Environment: Environment_Type = {
-    BACKEND_URL: "http://127.0.0.1:8080"
+    BACKEND_URL: "http://170.64.157.121:8080"
 }
 
 export default Environment

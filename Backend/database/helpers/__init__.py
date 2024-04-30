@@ -14,6 +14,8 @@ HOST = os.environ.get("POSTGRES_HOST", "host.docker.internal")
 MIN_CONN = int(os.environ.get("POSTGRES_MINCONN", "1"))
 MAX_CONN = int(os.environ.get("POSTGRES_MAXCONN", "10"))
 
+Logger.log_database("Connection", f"Connecting to database {DB_NAME} on {HOST}:{DB_PORT} with user {USER}")
+
 connection_pool = pool.ThreadedConnectionPool(
     minconn=1,
     maxconn=10,

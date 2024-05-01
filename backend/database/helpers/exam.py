@@ -112,7 +112,7 @@ def get_exams() -> List[ExamDetailsResponse]:
         raise e
     finally:
         disconnect(conn)
-
+    
     return [ExamDetailsResponse(id=id,
                                 school=get_school_by_id(school).name, 
                                 exam_type=exam_type, 

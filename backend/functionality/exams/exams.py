@@ -19,6 +19,7 @@ def GetExams(accessToken: Optional[str], filterConfig: FilterConfig, sortType="D
     exams = []
 
     for item in queryset:
+        print("Test")
         exams.append(ExamDetails(
             id=item.id,
             school_name=item.school,

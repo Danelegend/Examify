@@ -3,7 +3,7 @@ from typing import List, Optional
 from functionality.util import datetime_to_string
 from functionality.token import get_user_id
 from functionality.exams.FilterConfig import FilterConfig
-from functionality.types import ExamType
+from functionality.types import ExamType, SubjectType
 from functionality.exam.exam import GetExamLikes, ExamFavouriteOfUser
 
 from database.helpers.exam import get_exam, get_exams
@@ -27,7 +27,7 @@ def GetExams(accessToken: Optional[str], filterConfig: FilterConfig, sortType="D
             favourite=False if accessToken is None else ExamFavouriteOfUser(accessToken, item.id),
             upload_date=datetime_to_string(item.date_uploaded),
             likes=GetExamLikes(item.id),
-            subject=item.subject
+            subject=SubjectType.MapPrefixToName(item.subject)
         ))
 
     return exams
@@ -53,7 +53,7 @@ def GetFavouriteExams(access_token: str) -> List[ExamDetails]:
             favourite=True,
             upload_date=datetime_to_string(exam.date_uploaded),
             likes=GetExamLikes(exam_id),
-            subject=exam.subject
+            subject=SubjectType.MapPrefixToName(exam.subject)
         
         ))
 
@@ -81,7 +81,7 @@ def GetRecentlyViewedExams(access_token: str) -> List[ExamDetails]:
                 favourite=False,
                 upload_date=datetime_to_string(exam.date_uploaded),
                 likes=GetExamLikes(exam_id),
-                subject=exam.subject
+                subject=SubjectType.MapPrefixToName(exam.subject)
             )
         )
 

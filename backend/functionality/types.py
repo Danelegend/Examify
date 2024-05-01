@@ -54,3 +54,35 @@ class UserType(Enum):
     @classmethod
     def Choices(cls):
         return tuple((i.value, i.name) for i in cls)
+    
+
+class SubjectType(Enum):
+    MATHS_EXTENSION_2 = "Maths Extension 2"
+    MATHS_EXTENSION_1 = "Maths Extension 1"
+    PHYSICS = "Physics"
+    CHEMISTRY = "Chemistry"
+    BIOLOGY = "Biology"
+    ECONOMICS = "Economics"
+    BUSINESS = "Business"
+    MATHS_ADVANCED = "Maths Advanced"
+    MATHS_STANDARD_2 = "Maths Standard 2"
+
+    @classmethod
+    def Choices(cls):
+        return tuple((i.value, i.name) for i in cls)
+    
+    @classmethod
+    def MapPrefixToName(cls, prefix: str):
+        PREFIX_TO_NAME_MAPPING = {
+            "Maths Extension 2": "MX2",
+            "Maths Extension 1": "MX1",
+            "Physics": "PHY",
+            "Chemistry": "CHEM",
+            "Biology": "BIO",
+            "Economics": "ECO",
+            "Business": "BUS",
+            "Maths Advanced": "MA",
+            "Maths Standard 2": "MS2"
+        }
+        
+        return PREFIX_TO_NAME_MAPPING.get(prefix, prefix)

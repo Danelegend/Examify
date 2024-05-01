@@ -99,7 +99,7 @@ def get_exams() -> List[ExamDetailsResponse]:
         conn = connect()
         with conn.cursor() as cur:
             cur.execute("""
-                        SELECT e.school, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject, COUNT(fe.exam) AS likes
+                        SELECT e.id, e.school, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject, COUNT(fe.exam) AS likes
                         FROM exams e
                         LEFT JOIN favourite_exams fe ON e.id = fe.exam
                         GROUP BY e.school, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject;

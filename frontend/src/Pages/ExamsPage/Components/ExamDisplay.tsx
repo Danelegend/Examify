@@ -1,5 +1,3 @@
-import Environment from "../../../../constants";
-
 import { useContext, useEffect, useState } from "react";
 import ExamCard, { ExamCardProps } from "../../../Components/ExamCards";
 import { useQuery } from "@tanstack/react-query";
@@ -121,7 +119,7 @@ const ExamDisplay = () => {
                 </div>
                 {
                     isPending ? <div>Loading</div> : 
-                    <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-x-4 gap-y-12 bg-slate-800 pt-10 pb-16">
+                    <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-x-4 gap-y-12 bg-slate-800 pt-10 pb-16">
                         {
                             Exams.filter(exam => Filter.schools.length === 0 || Filter.schools.includes(exam.school))
                                  .filter(exam => Filter.subjects.length === 0 || Filter.subjects.includes(exam.subject))

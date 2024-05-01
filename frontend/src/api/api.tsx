@@ -1,6 +1,6 @@
 import Environment from "../../constants"
 import { FetchError, readExpiration, storeAccessToken, storeExpiration } from "../util/utility"
-import { AdminExamReviewDeleteRequest, AdminExamReviewSubmitRequest, ExamUploadRequest, FetchExamsRequest, FetchExamsResponse, FetchExamSubjectsResponse, FetchFavouriteExamsResponse, FetchLogosResponse, FetchRecentExamsResponse, FetchSchoolsResponse, FetchUserResponse, UserLoginRequest, UserProfileEditRequest, UserRegistrationRequest, UserRegistrationResponse } from "./types"
+import { AdminExamReviewDeleteRequest, AdminExamReviewSubmitRequest, ExamUploadRequest, FetchExamResponse, FetchExamsRequest, FetchExamsResponse, FetchExamSubjectsResponse, FetchFavouriteExamsResponse, FetchLogosResponse, FetchRecentExamsResponse, FetchSchoolsResponse, FetchUserResponse, UserLoginRequest, UserProfileEditRequest, UserRegistrationRequest, UserRegistrationResponse } from "./types"
 
 export type UserAuthentication = {
     expiration: Date,
@@ -349,5 +349,34 @@ export const PostFacebookSignIn = ({ facebook_token }: { facebook_token: string 
         body: JSON.stringify({
             facebook_token: facebook_token
         })
+    })
+}
+
+export const PostRecentlyViewedExam = ({ token, exam_id }: { token: string, exam_id: number }): Promise<Response> => {
+    return AuthorizationMiddleware<Response>(() => fetch(Environment.BACKEND_URL + "/api/exam/" + exam_id.toString() + "/recent", {
+        headers: {
+            'Content-Type': 'application/json',
+            "Authorization": `bearer ${token}`
+        },
+        method: "POST",
+        credentials: 'include'
+    }))
+}
+
+export const FetchExam = ({ school, year, exam_type }: { school: string, year: number, exam_type: string }): Promise<FetchExamResponse> => {
+    return fetch(Environment.BACKEND_URL + "/api/exam/" + school + "/" + year.toString() + "/" + exam_type, {
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        method: "GET",
+        credentials: 'include'
+    }).then(async (res) => {
+        const data = await res.json()
+
+        if (res.ok)     {
+            return data
+        } else {
+            throw new FetchError(res)
+        }
     })
 }

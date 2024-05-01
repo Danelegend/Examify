@@ -137,3 +137,7 @@ export type FetchFavouriteExamsResponse = {
 export type FetchRecentExamsResponse = {
     exams: ExamDetails[]
 }
+
+export type FetchExamResponse = {
+    exam_id: number
+}

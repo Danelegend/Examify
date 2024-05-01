@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import FavouriteIcon from "../Pages/ExamsPage/Components/FavouriteIcon";
 import { useContext, useState } from "react";
 import { readAccessToken } from "../util/utility";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ModalContext } from "../context/modal-context";
 import { DeleteFavourite, PostFavourite } from "../api/api";
 
@@ -23,6 +23,8 @@ const ExamCard = ({ school, year, type, difficulty, id, favourite, likes, upload
     const [isFavourite, setIsFavourite] = useState(favourite)
 
     const { SetDisplayLogin } = useContext(ModalContext)
+
+    const queryClient = useQueryClient()
 
     const { mutateAsync: FavouriteMutation } = useMutation({
         mutationFn: PostFavourite,
@@ -85,6 +87,9 @@ const ExamCard = ({ school, year, type, difficulty, id, favourite, likes, upload
         }
         
         setIsFavourite(!isFavourite)
+        queryClient.invalidateQueries({
+            queryKey: ["Exams"]
+        })
     }
 
     return (

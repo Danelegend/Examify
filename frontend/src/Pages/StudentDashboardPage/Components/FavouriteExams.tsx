@@ -18,7 +18,7 @@ const FavouriteExamsDisplay = () => {
     }
 
     const { data: favouriteData, isPending: favouriteIsPending, error: favouriteError } = useQuery({
-        queryKey: ["FavouriteExams"],
+        queryKey: ["Exams", "FavouriteExams"],
         queryFn: () => FetchFavouriteExams({ token: readAccessToken()! }),
     })
 

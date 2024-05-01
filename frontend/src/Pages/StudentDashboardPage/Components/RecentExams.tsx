@@ -32,7 +32,7 @@ const RecentExamsDisplay = () => {
     }
 
     const { data: recentData, isPending: recentIsPending, error: recentError } = useQuery({
-        queryKey: ["RecentExams"],
+        queryKey: ["Exams", "RecentExams"],
         queryFn: () => FetchRecentExams({ token: readAccessToken()! }),
     })
 

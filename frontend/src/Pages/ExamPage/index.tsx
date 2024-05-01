@@ -3,20 +3,13 @@ import Environment from "../../../constants"
 import { useContext, useEffect, useState } from "react"
 import ExamDisplay from "./Components/ExamDisplay"
 import ExamFullScreenDisplay from "./Components/ExamFullScreenDisplay"
-import { Link, useLocation, useParams } from "react-router-dom"
-import React from "react"
-import { useQuery } from "@tanstack/react-query";
+import { Link, useParams } from "react-router-dom"
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { UserContext } from "../../context/user-context";
-import { FetchError } from "../../util/utility";
-
-// A custom hook that builds on useLocation to parse
-// the query string for you.
-function useSearch() {
-    const { search } = useLocation();
-    return React.useMemo(() => new URLSearchParams(search), [search]);    
-}
+import { FetchError, readAccessToken } from "../../util/utility";
+import { FetchExam, PostRecentlyViewedExam } from "../../api/api"
 
 const ExamPage = () => {
     const [Fullscreen, SetFullscreen] = useState(false)
@@ -24,40 +17,29 @@ const ExamPage = () => {
     const { accessToken } = useContext(UserContext)
     const { school, year, exam_type } = useParams()
 
+    const queryClient = useQueryClient()
+
     const onFullScreenExit = () => {
         SetFullscreen(false);
     }
 
-    const fetchExam = () => {
-        return fetch(Environment.BACKEND_URL + "/api/exam/" + school + "/" + year?.toString() + "/" + exam_type, {
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            method: "GET",
-            credentials: 'include'
-        }).then(async (res) => {
-            const data = await res.json()
-
-            if (res.ok)     {
-                return data
-            } else {
-                throw new FetchError(res)
-            }
-        })
-    }
-
     const { isPending, data, error } = useQuery({
         queryKey: ["exam", school, year, exam_type],
-        queryFn: fetchExam
+        queryFn: () => FetchExam({
+            school: school!,
+            year: parseInt(year!),
+            exam_type: exam_type!
+        })
     })
 
     const RunRecentlyViewed = async () => {
-        fetch(Environment.BACKEND_URL + "/api/exam/" + data.exam_id.toString() + "/recent", {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'bearer ' + accessToken
-            }
+        PostRecentlyViewedExam({
+            token: readAccessToken()!,
+            exam_id: data!.exam_id
+        })
+
+        queryClient.invalidateQueries({
+            queryKey: ["Exams", "RecentExams"]
         })
     }   
 
@@ -84,7 +66,7 @@ const ExamPage = () => {
 
     return (
         (isPending) ? <div> Loading </div> :
-        (Fullscreen) ? <ExamFullScreenDisplay onExit={onFullScreenExit} fileLoc={data.exam_id} /> :
+        (Fullscreen) ? <ExamFullScreenDisplay onExit={onFullScreenExit} fileLoc={Environment.BACKEND_URL + "/api/exam/pdf/" + data!.exam_id.toString()} /> :
         <div className="bg-slate-700 w-full h-full">
             <div className="absolute pt-4 pl-4">
                 <Link to = "/exams">
@@ -93,7 +75,7 @@ const ExamPage = () => {
             </div>
             <div className="flex items-center justify-center">
                 <div className="border-1 border-black">
-                    <ExamDisplay examId={data.exam_id} />
+                    <ExamDisplay examId={data!.exam_id} />
                 </div>
             </div>
         </div>

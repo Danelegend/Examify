@@ -55,7 +55,6 @@ def GetFavouriteExams(access_token: str) -> List[ExamDetails]:
             upload_date=datetime_to_string(exam.date_uploaded),
             likes=exam.likes,
             subject=SubjectType.MapPrefixToName(exam.subject)
-        
         ))
 
     return favourites

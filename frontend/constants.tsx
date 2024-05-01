@@ -3,7 +3,7 @@ type Environment_Type = {
 }
 
 const Environment: Environment_Type = {
-    BACKEND_URL: "http://170.64.157.121:8080"
+    BACKEND_URL: (process.env.BACKEND_URL === undefined) ? "http://localhost:8000" : process.env.BACKEND_URL
 }
 
 export default Environment

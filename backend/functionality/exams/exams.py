@@ -16,16 +16,11 @@ from database.helpers.school import get_schools
 from router.api_types.api_response import ExamDetails
 
 def GetExams(accessToken: Optional[str], filterConfig: FilterConfig, sortType="DEFAULT") -> List[ExamDetails]:
-    print("T1")
-    Logger.log_backend("Exam", "Yes")
     queryset = get_exams()
-    Logger.log_backend("Exam", "No")
 
-    print("T2")
     exams = []
 
     for item in queryset:
-        print("Test")
         exams.append(ExamDetails(
             id=item.id,
             school_name=item.school,
@@ -36,8 +31,6 @@ def GetExams(accessToken: Optional[str], filterConfig: FilterConfig, sortType="D
             likes=item.likes,
             subject=SubjectType.MapPrefixToName(item.subject)
         ))
-        print("T3")
-    print("T4")
     return exams
 
 def GetFavouriteExams(access_token: str) -> List[ExamDetails]:

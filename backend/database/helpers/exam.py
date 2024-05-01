@@ -69,7 +69,7 @@ def get_exam(exam_id: int) -> ExamDetailsResponse:
                         FROM exams e
                         LEFT JOIN favourite_exams fe ON e.id = fe.exam
                         WHERE e.id = %(id)s
-                        GROUPBY e.school, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject;
+                        GROUP BY e.school, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject;
                         """, {"id": exam_id})
             exam = cur.fetchone()
 
@@ -102,7 +102,7 @@ def get_exams() -> List[ExamDetailsResponse]:
                         SELECT e.school, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject, COUNT(fe.exam) AS likes
                         FROM exams e
                         LEFT JOIN favourite_exams fe ON e.id = fe.exam
-                        GROUPBY e.school, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject;
+                        GROUP BY e.school, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject;
                         """)
             exams = cur.fetchall()
 
@@ -135,7 +135,7 @@ def get_exams_using_filter(exam_filter_request: ExamFilterRequest) -> List[ExamD
                 FROM exams e
                 LEFT JOIN favourite_exams fe ON e.id = fe.exam
                 WHERE school = (SELECT id FROM schools WHERE name = %(school)s) AND exam_type = %(exam_type)s AND year = %(year)s
-                GROUPBY e.school, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject;
+                GROUP BY e.school, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject;
                 """, {
                     "school": exam_filter_request.school, 
                     "exam_type": exam_filter_request.exam_type, 

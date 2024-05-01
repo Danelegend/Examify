@@ -114,7 +114,7 @@ def get_exams() -> List[ExamDetailsResponse]:
         disconnect(conn)
 
     Logger.log_database_error("PRoblem", "HEre")
-    Logger.log_database_error("Problem", f"{x}")
+    Logger.log_database_error("Problem", f"{exams}")
 
     for x in exams:
         Logger.log_database_error("Problem", f"{x}")

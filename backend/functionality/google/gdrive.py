@@ -81,7 +81,8 @@ def _delete_file_from_drive(file_id: str):
     service.files().delete(fileId=file_id).execute()
     Logger.log_backend("Google Drive", f"Successfully deleted file: {file_id}")
 
-def delete_file_from_review(file_name: str, file_id: str):
+def delete_file_from_review(file_name: str):
+    file_id = REVIEW_FILES_TO_ID[file_name]
     _delete_file_from_drive(file_id)
     REVIEW_FILES_TO_ID.pop(file_name)
 
@@ -94,7 +95,7 @@ def move_file_from_review_to_current(file_name: str, new_name: str) -> str:
     _download_file(file_id, new_name)
 
     # Delete the file from review
-    delete_file_from_review(file_name, file_id)
+    delete_file_from_review(file_name)
     Logger.log_backend("Google Drive", f"Successfully moved file from review to current: {file_name} -> {new_name}")
 
 

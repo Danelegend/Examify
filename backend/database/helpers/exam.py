@@ -102,7 +102,7 @@ def get_exams() -> List[ExamDetailsResponse]:
                         SELECT e.id, e.school, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject, COUNT(fe.exam) AS likes
                         FROM exams e
                         LEFT JOIN favourite_exams fe ON e.id = fe.exam
-                        GROUP BY e.school, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject;
+                        GROUP BY e.id, e.school, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject;
                         """)
             exams = cur.fetchall()
 
@@ -112,9 +112,6 @@ def get_exams() -> List[ExamDetailsResponse]:
         raise e
     finally:
         disconnect(conn)
-
-    Logger.log_database_error("PRoblem", "HEre")
-    Logger.log_database_error("Problem", f"{exams}")
 
     for x in exams:
         Logger.log_database_error("Problem", f"{x}")

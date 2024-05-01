@@ -19,6 +19,7 @@ class ExamDetailsResponse(BaseModel):
     file_location: str
     date_uploaded: datetime
     subject: str
+    likes: int
 
 class UserDetailsResponse(BaseModel):
     first_name: str

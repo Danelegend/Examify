@@ -25,39 +25,6 @@ def GetExamId(school: str, year: int, type: str) -> int:
     
     return exam_id
 
-def GetExam(exam_id: int):
-    """
-    Given an id for an exam, get the details regarding it
-
-    Parameters:
-        exam_id: The id for the exam we want to search about
-    
-    Return:
-        json serialized document with following keys:
-         - id
-         - school_name
-         - type
-         - year
-         - exam_link
-
-    Errors:
-        Returns None if no record is found with the given exam_id
-    """
-    exam = get_exam(exam_id)
-
-    file_location = exam.file_location
-    exam_link = URL + "/api/exam/exampdf?location=" + file_location
-
-    data = {
-        "id": exam.id,
-        "school_name": exam.school_name,
-        "type": ExamType.MapPrefixToName(exam.exam_type),
-        "year": exam.year,
-        "exam_link": exam_link
-    }
-
-    return data
-
 def GetExamPdf(exam_id: int):
     file_name = get_exam(exam_id).file_location
 

@@ -64,10 +64,16 @@ def get_exam(exam_id: int) -> ExamDetailsResponse:
     try:
         conn = connect()
         with conn.cursor() as cur:
-            cur.execute("SELECT school, exam_type, year, file_location, date_uploaded, subject FROM exams WHERE id = %(id)s;", {"id": exam_id})
+            cur.execute("""
+                        SELECT e.school, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject, COUNT(fe.exam) AS likes
+                        FROM exams e
+                        LEFT JOIN favourite_exams fe ON e.id = fe.exam
+                        WHERE e.id = %(id)s
+                        GROUPBY e.school, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject;
+                        """, {"id": exam_id})
             exam = cur.fetchone()
 
-            school, exam_type, year, file_location, date_uploaded, subject = exam
+            school, exam_type, year, file_location, date_uploaded, subject, likes = exam
 
         log_exam_success("Finished getting the Exam from Database")
     except psycopg2.Error as e:
@@ -82,7 +88,8 @@ def get_exam(exam_id: int) -> ExamDetailsResponse:
                                year=year, 
                                file_location=file_location, 
                                date_uploaded=date_uploaded, 
-                               subject=subject)
+                               subject=subject,
+                               likes=likes)
 
 def get_exams() -> List[ExamDetailsResponse]:
     """
@@ -91,7 +98,12 @@ def get_exams() -> List[ExamDetailsResponse]:
     try:
         conn = connect()
         with conn.cursor() as cur:
-            cur.execute("SELECT id, school, exam_type, year, file_location, date_uploaded, subject FROM exams;")
+            cur.execute("""
+                        SELECT e.school, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject, COUNT(fe.exam) AS likes
+                        FROM exams e
+                        LEFT JOIN favourite_exams fe ON e.id = fe.exam
+                        GROUPBY e.school, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject;
+                        """)
             exams = cur.fetchall()
 
         log_exam_success("Finished getting the Exams from Database")
@@ -107,7 +119,8 @@ def get_exams() -> List[ExamDetailsResponse]:
                                 year=year, 
                                 file_location=file_location, 
                                 date_uploaded=date_uploaded, 
-                                subject=subject) for id, school, exam_type, year, file_location, date_uploaded, subject in exams]
+                                subject=subject,
+                                likes=likes) for id, school, exam_type, year, file_location, date_uploaded, subject, likes in exams]
 
 def get_exams_using_filter(exam_filter_request: ExamFilterRequest) -> List[ExamDetailsResponse]:
     """
@@ -118,10 +131,11 @@ def get_exams_using_filter(exam_filter_request: ExamFilterRequest) -> List[ExamD
         with conn.cursor() as cur:
             cur.execute(
                 """
-                SELECT id, school, exam_type, year, file_location, date_uploaded, subject 
-                FROM exams WHERE school = (
-                SELECT id FROM schools WHERE name = %(school)s
-                ) AND exam_type = %(exam_type)s AND year = %(year)s;
+                SELECT e.school, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject, COUNT(fe.exam) AS likes
+                FROM exams e
+                LEFT JOIN favourite_exams fe ON e.id = fe.exam
+                WHERE school = (SELECT id FROM schools WHERE name = %(school)s) AND exam_type = %(exam_type)s AND year = %(year)s
+                GROUPBY e.school, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject;
                 """, {
                     "school": exam_filter_request.school, 
                     "exam_type": exam_filter_request.exam_type, 
@@ -142,7 +156,8 @@ def get_exams_using_filter(exam_filter_request: ExamFilterRequest) -> List[ExamD
                                 year=year, 
                                 file_location=file_location, 
                                 date_uploaded=date_uploaded, 
-                                subject=subject) for id, school, exam_type, year, file_location, date_uploaded, subject in exams]
+                                subject=subject,
+                                likes=likes) for id, school, exam_type, year, file_location, date_uploaded, subject, likes in exams]
 
 def delete_exam(exam_id: int):
     """

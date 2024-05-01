@@ -8,13 +8,13 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     ports:
-      - "80:80"
+      - "443:443"
     env_file: .env
     # environment:  # comment out when normal development, to avoid rate limits
     #   USE_API_FOR_ADDRESS_AUTOCOMPLETE: y
     volumes:
       - ./backend:/app
-    command: uvicorn main:app --host 0.0.0.0 --port 80 --reload
+    command: uvicorn main:app --host 0.0.0.0 --port 443 --reload
 
   prod-frontend:
     image: "examify-frontend:0.0.1"

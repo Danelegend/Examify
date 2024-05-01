@@ -96,6 +96,8 @@ export const EditUserProfileData = ({ token, request }: { token: string, request
 }
 
 export const FetchLogos = (): Promise<FetchLogosResponse> => {
+    console.log(process.env)
+
     return fetch(Environment.BACKEND_URL + "/api/logo/", {
         method: "GET",
         credentials: 'include'

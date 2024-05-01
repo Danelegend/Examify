@@ -5,6 +5,7 @@ import { FetchError, readAccessToken, removeAccessToken } from "../../../util/ut
 import { UserContext } from "../../../context/user-context";
 import DropdownFilter from "./DropdownFilter";
 import { FetchExams, FetchExamSubjects, FetchSchools } from "../../../api/api";
+import SortBy from "./SortBy";
 
 type Filter = {
     schools: string[]
@@ -111,11 +112,28 @@ const ExamDisplay = () => {
             <div className="bg-slate-800 rounded-lg pt-8">
                 <div className="border-b mb-6 mx-8">
                     <h1 className="text-3xl font-bold text-white text-center">Exams</h1>
-                    <div className="flex justify-center space-x-4 my-2">
-                        <DropdownFilter title={"School"} items={schoolFilterData!.schools.filter((school) => school !== "")} search={true} update={UpdateSchools}/>
-                        <DropdownFilter title={"Subject"} items={subjectFilterData!.subjects} search={true} update={UpdateSubjects}/>
-                        <DropdownFilter title={"Year"} items={Array.from({ length: 5}, (_, i) => (2024 - i * 1).toString())} update={UpdateYears} search={true}/>
-                    </div>  
+                    <div className="grid grid-cols-3">
+                        <div className="col-start-2 col-span-1 flex justify-center space-x-4 my-2">
+                            <DropdownFilter title={"School"} items={schoolFilterData!.schools.filter((school) => school !== "")} search={true} update={UpdateSchools}/>
+                            <DropdownFilter title={"Subject"} items={subjectFilterData!.subjects} search={true} update={UpdateSubjects}/>
+                            <DropdownFilter title={"Year"} items={Array.from({ length: 5}, (_, i) => (2024 - i * 1).toString())} update={UpdateYears} search={true}/>
+                        </div>  
+                        <div className="col-start-3 col-span-1 flex justify-end my-2 mx-4">
+                            <SortBy exams={Exams} setExams={SetExams} relevant={data!.exams.map(exam => {
+                                return {
+                                    id: exam.id,
+                                    school: exam.school_name,
+                                    year: exam.year,
+                                    type: exam.type,
+                                    difficulty: 1,
+                                    favourite: exam.favourite,
+                                    uploadDate: exam.upload_date,
+                                    likes: exam.likes,
+                                    subject: exam.subject
+                                }
+                            })}/>
+                        </div>
+                    </div>
                 </div>
                 {
                     isPending ? <div>Loading</div> : 

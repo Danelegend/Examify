@@ -38,7 +38,7 @@ const Footer = () => {
             
             <div className="flex flex-col items-center border-t border-slate-400/10 py-2 sm:flex-row-reverse sm:justify-between sm:px-4">
               <div className="flex space-x-6">
-                <Link to={DISCORD_LINK} target="_blank">
+                <Link to={DISCORD_LINK} target="_blank" rel="noopener noreferrer">
                   <a className="group">
                     <span className="sr-only">Examify on Discord</span>
                     <svg viewBox="0 -28.5 256 256" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid" 

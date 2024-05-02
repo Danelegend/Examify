@@ -20,6 +20,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import AdminPage from './Pages/Admin';
 import AdminCurrentExamPage from './Pages/Admin/CurrentExamPage';
 import AdminReviewExamPage from './Pages/Admin/ReviewExamPage';
+import NotFoundPage from './Pages/NotFoundPage';
 
 const router = createBrowserRouter([
   {
@@ -83,6 +84,10 @@ const router = createBrowserRouter([
   {
     element: <ExamPage />,
     path: "/exam/:school/:year/:exam_type"
+  },
+  {
+    element: <NotFoundPage />,
+    path: "*"
   }
 ])
 

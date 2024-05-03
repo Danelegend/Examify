@@ -176,7 +176,7 @@ const RegistrationScreen1 = ({ changeScreen } :
             <div className="flex flex-col justify-center items-center pt-1 pb-5">
                 <div className="flex flex-col gap-3">
                     <SignInWithGoogle title={"Sign Up With Google"} SetResponseMessage={SetResponseMessage} onSuccess={handleGoogleRegistrationSuccess}/>
-                    <SignInWithFacebook title={"Sign Up With Facebook"} SetResponseMessage={SetResponseMessage} onSuccess={handleFacebookRegistrationSuccess}/>
+                    {/*<SignInWithFacebook title={"Sign Up With Facebook"} SetResponseMessage={SetResponseMessage} onSuccess={handleFacebookRegistrationSuccess}/>*/}
                 </div>
             </div>
         </div>

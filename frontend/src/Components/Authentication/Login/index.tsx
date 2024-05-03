@@ -148,7 +148,7 @@ const LoginPopup = ({ onExit }: LoginPopupProps) => {
                     <div className="flex flex-col justify-center items-center pt-1 pb-4">
                         <div className="flex flex-col gap-3">
                             <SignInWithGoogle title={"Sign In With Google"} SetResponseMessage={SetResponseMessage} onSuccess={handleGoogleLoginSuccess}/>
-                            <SignInWithFacebook title={"Sign In With Facebook"} SetResponseMessage={SetResponseMessage} onSuccess={handleFacebookLoginSuccess}/>
+                            {/*<SignInWithFacebook title={"Sign In With Facebook"} SetResponseMessage={SetResponseMessage} onSuccess={handleFacebookLoginSuccess}/>*/}
                         </div>
                     </div>
                 </div>

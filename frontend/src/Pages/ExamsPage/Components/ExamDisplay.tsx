@@ -119,7 +119,7 @@ const ExamDisplay = () => {
                             <DropdownFilter title={"Year"} items={Array.from({ length: 5}, (_, i) => (2024 - i * 1).toString())} update={UpdateYears} search={true}/>
                         </div>  
                         <div className="col-start-3 col-span-1 flex justify-end my-2 mx-4">
-                            <SortBy exams={Exams} setExams={SetExams} relevant={data!.exams.map(exam => {
+                            <SortBy exams={Exams} setExams={SetExams} relevant={isPending ? [] : data!.exams.map(exam => {
                                 return {
                                     id: exam.id,
                                     school: exam.school_name,

@@ -1,14 +1,14 @@
 const PrivacyPage = () => {
     return (
         <div>
-            <div className="text-center text-white md:mx-16 lg:mx-32">
+            <div className="text-center text-white md:mx-32 lg:mx-64">
                 <h1 className="pb-4">
                     Privacy Policy
                 </h1>
                 <div>
                     Examify ("we", "us", or "our") is committed to protecting the privacy of our users. This Privacy Policy outlines how we collect, use, disclose, and safeguard your information when you use our software-as-a-service platform and website located at [YourWebsite.com] (collectively, the "Service"). Please read this Privacy Policy carefully. By accessing or using our Service, you agree to be bound by this Privacy Policy.
 
-                    <ol className="text-left list-decimal">
+                    <ol className="text-left list-decimal space-y-4">
                         <li>
                             Information We Collect
                             <ul>

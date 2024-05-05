@@ -1,41 +1,31 @@
 import { Link } from "react-router-dom"
 
-/*
-<div className="pt-6 pb-4">
-              <nav className="text-sm" aria-label="quick links">
-                <ul className="flex justify-center space-x-6">
-                  <li>
-                    <Link to="#features">
-                      <a className="rounded-lg px-2 py-1 text-slate-700 hover:bg-slate-100 hover:text-slate-900">
-                        Features
-                      </a>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="#testimonials">
-                      <a className="rounded-lg px-2 py-1 text-slate-700 hover:bg-slate-100 hover:text-slate-900">
-                        Testimonials
-                      </a>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="#pricing">
-                      <a className="rounded-lg px-2 py-1 text-slate-700 hover:bg-slate-100 hover:text-slate-900">
-                        Pricing
-                      </a>
-                    </Link>
-                  </li>
-                </ul>
-              </nav>
-            </div>
-*/
 const DISCORD_LINK = "https://discord.gg/mVjjSJNUuf"
 
 const Footer = () => {
     return (
         <footer className="bg-slate-50 border-t">
           <div>
-            
+            <div className="pt-6 pb-4">
+              <nav className="text-sm" aria-label="quick links">
+                <ul className="flex justify-center space-x-6">
+                  <li>
+                    <Link to="privacy">
+                      <a className="rounded-lg px-2 py-1 text-slate-700 hover:bg-slate-100 hover:text-slate-900">
+                        Privacy
+                      </a>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="tos">
+                      <a className="rounded-lg px-2 py-1 text-slate-700 hover:bg-slate-100 hover:text-slate-900">
+                        Terms of Service
+                      </a>
+                    </Link>
+                  </li>
+                </ul>
+              </nav>
+            </div>
             <div className="flex flex-col items-center border-t border-slate-400/10 py-2 sm:flex-row-reverse sm:justify-between sm:px-4">
               <div className="flex space-x-6">
                 <Link to={DISCORD_LINK} target="_blank" rel="noopener noreferrer">

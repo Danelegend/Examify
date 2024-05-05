@@ -21,6 +21,8 @@ import AdminPage from './Pages/Admin';
 import AdminCurrentExamPage from './Pages/Admin/CurrentExamPage';
 import AdminReviewExamPage from './Pages/Admin/ReviewExamPage';
 import NotFoundPage from './Pages/NotFoundPage';
+import PrivacyPage from './Pages/PrivacyPage';
+import TosPage from './Pages/TosPage';
 
 const router = createBrowserRouter([
   {
@@ -41,6 +43,14 @@ const router = createBrowserRouter([
       {
         element: <ContactPage />,
         path: "contact",
+      },
+      {
+        element: <PrivacyPage />,
+        path: "privacy",
+      },
+      {
+        element: <TosPage />,
+        path: "tos"
       },
       {
         element: <ProtectedRoute />,

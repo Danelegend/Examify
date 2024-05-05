@@ -1,13 +1,13 @@
 const TosPage = () => {
     return (
         <div>
-            <div className="text-center text-white">
+            <div className="text-center text-white md:mx-16 lg:mx-32">
                 <h1 className="pb-4">
                     Terms of Service
                 </h1>
                 <div>
                     These Terms of Service ("Terms") govern your access to and use of the software-as-a-service platform and website provided by Examify ("we," "us," or "our") located at www.examify.com.au (the "Service"). Please read these Terms carefully before accessing or using the Service. By accessing or using the Service, you agree to be bound by these Terms. If you do not agree to these Terms, you may not access or use the Service.
-                    <ol>
+                    <ol className="text-left list-decimal">
                         <li>
                         Use of the Service
                             <ul>

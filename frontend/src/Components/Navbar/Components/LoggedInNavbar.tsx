@@ -31,15 +31,7 @@ const LoggedInNavbar = () => {
     })
 
     return (
-        <div>
-            <div className="flex w-full h-1/5 left-0 top-0 bg-[#282828] justify-between items-center px-5">
-                <div className="pl-7 py-5 justify-start items-center inline-flex">
-                    <Link to="/">
-                        <div className="text-neutral-200 text-2xl font-bold font-['Montserrat'] leading-loose tracking-tight cursor-pointer">
-                            Examify
-                        </div>
-                    </Link>
-                </div>
+        <>
 
                 <div className="self-stretch justify-start items-center gap-[21px] inline-flex text-base font-['Montserrat']">
                     <NavigationButton link="/dashboard" title="Home" />
@@ -53,8 +45,7 @@ const LoggedInNavbar = () => {
                         Logout
                     </div>
                 </div>
-            </div>
-        </div>
+        </>
     )
 }
 

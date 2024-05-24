@@ -154,17 +154,17 @@ const UploadPage = () => {
                     <div className="flex flex-row justify-center gap-2">
                         <div className="">
                             <label>School</label>
-                            <input type="text" onChange={(e) => SetUploadForm({...UploadForm, school: e.target.value})} className="mt-1 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="School" />
+                            <input type="text" onChange={(e) => SetUploadForm({...UploadForm, school: e.target.value})} className="mt-1 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="School" />
                         </div>
                         <div className="">
                             <label>Year</label>
-                            <input type="number" onChange={(e) => SetUploadForm({...UploadForm, year: e.target.valueAsNumber})} className="mt-1 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Year" />
+                            <input type="number" onChange={(e) => SetUploadForm({...UploadForm, year: e.target.valueAsNumber})} className="mt-1 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="Year" />
                         </div>
                     </div>
                     <div className="flex flex-row justify-center gap-2">
                         <div className="truncate">
                             <label>Exam Type</label>
-                            <select id="exam_type" onChange={(e) => SetUploadForm({...UploadForm, type: e.target.value})} className="mt-1 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                            <select id="exam_type" onChange={(e) => SetUploadForm({...UploadForm, type: e.target.value})} className="mt-1 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2">
                                 {
                                     Object.keys(EXAM_TYPE).map((exam_type, index) => {
                                         return <option key={index} value={EXAM_TYPE[exam_type]}>{exam_type}</option>
@@ -174,13 +174,13 @@ const UploadPage = () => {
                         </div>
                         <div className="">
                             <label>Grade</label>
-                            <input type="number" onChange={(e) => SetUploadForm({...UploadForm, grade: e.target.valueAsNumber})} className="mt-1 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Grade" />
+                            <input type="number" onChange={(e) => SetUploadForm({...UploadForm, grade: e.target.valueAsNumber})} className="mt-1 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " placeholder="Grade" />
                         </div>
                     </div>
                     <div className="flex flex-row justify-center">
                         <div className="truncate">
                             <label>Subject</label>
-                            <select id="subject" onChange={(e) => SetUploadForm({...UploadForm, subject: e.target.value})} className="mt-1 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block p-2 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                            <select id="subject" onChange={(e) => SetUploadForm({...UploadForm, subject: e.target.value})} className="mt-1 bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block p-2 ">
                                 {
                                     Object.keys(SUBJECTS).map((subject, index) => {
                                         return <option key={index} value={SUBJECTS[subject]}>{subject}</option>

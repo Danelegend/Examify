@@ -71,7 +71,7 @@ const FavouriteExamsDisplay = () => {
         }
     }, [favouriteIsPending])
 
-    waveform.register()
+    waveform.register();
 
     return (
         <div className="bg-white col-span-3">

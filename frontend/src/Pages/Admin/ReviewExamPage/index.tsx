@@ -167,11 +167,11 @@ const ReviewComponent = ({ file_location, index, onSubmit, onDelete }: ReviewCom
                 </div>
                 <div className="col-span-1 space-x-4">
                     <label className="mb-2 text-sm font-medium text-gray-900">School</label>
-                    <input type="text" onChange={handleSchoolNameChange} value={ReviewDetails.school_name!} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+                    <input type="text" onChange={handleSchoolNameChange} value={ReviewDetails.school_name!} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 p-2.5" />
                 </div>
                 <div className="col-span-1 space-x-4">
                     <label className="mb-2 text-sm font-medium text-gray-900">Exam Type</label>
-                    <select id="exam_type" onChange={handleExamTypeChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                    <select id="exam_type" onChange={handleExamTypeChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 p-2.5">
                         {
                             Object.keys(EXAM_TYPE).map((exam_type, index) => {
                                 return <option key={index} value={EXAM_TYPE[exam_type]}>{exam_type}</option>
@@ -181,11 +181,11 @@ const ReviewComponent = ({ file_location, index, onSubmit, onDelete }: ReviewCom
                 </div>
                 <div className="col-span-1 space-x-4">
                 <label className="mb-2 text-sm font-medium text-gray-900">Year</label>
-                    <input type="number" onChange={handleYearChange} value={ReviewDetails.year!} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+                    <input type="number" onChange={handleYearChange} value={ReviewDetails.year!} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 p-2.5" />
                 </div>
                 <div className="col-span-1 space-x-4">
                     <label className="mb-2 text-sm font-medium text-gray-900">Subject</label>
-                    <select id="subject" onChange={handleSubjectChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                    <select id="subject" onChange={handleSubjectChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 p-2.5">
                         {
                             Object.keys(SUBJECTS).map((subject, index) => {
                                 return <option key={index} value={SUBJECTS[subject]}>{subject}</option>
@@ -273,7 +273,6 @@ const AdminReviewExamPage = () => {
                                     <ReviewComponent file_location={reviewExam} 
                                                     index={index}
                                                     onSubmit={() => {
-                                                        console.log(reviewExam)
                                                         SetReviewExams(ReviewExams.filter((exam) => exam !== reviewExam))
                                                     }}
                                                     onDelete={() => {

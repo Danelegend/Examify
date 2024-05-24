@@ -6,6 +6,7 @@ import { UserContext } from "../../../context/user-context";
 import DropdownFilter from "./DropdownFilter";
 import { FetchExams, FetchExamSubjects, FetchSchools } from "../../../api/api";
 import SortBy from "./SortBy";
+import { waveform, dotSpinner } from "ldrs"
 
 type Filter = {
     schools: string[]
@@ -105,13 +106,23 @@ const ExamDisplay = () => {
         }
     },   [data, isPending, error])
 
-    return (
-        schoolFilterPending || subjectFilterPending ? <div>Loading</div> : 
+    waveform.register();
+    dotSpinner.register();
 
-        <div className="px-4 pt-5">
-            <div className="bg-slate-800 rounded-lg pt-8">
+    return (
+        schoolFilterPending || subjectFilterPending ? 
+        <div className="">
+            <l-dot-spinner
+                size="35"
+                speed="1"
+                color="black"
+            />
+        </div>
+        : 
+        <div className="mx-4 mt-5 rounded-lg bg-slate-100">
+            <div className="pt-8">
                 <div className="border-b mb-6 mx-8">
-                    <h1 className="text-3xl font-bold text-white text-center">Exams</h1>
+                    <h1 className="text-3xl font-bold text-black text-center">Exams</h1>
                     <div className="grid grid-cols-3">
                         <div className="col-start-2 col-span-1 flex justify-center space-x-4 my-2">
                             <DropdownFilter title={"School"} items={schoolFilterData!.schools.filter((school) => school !== "")} search={true} update={UpdateSchools}/>
@@ -136,8 +147,15 @@ const ExamDisplay = () => {
                     </div>
                 </div>
                 {
-                    isPending ? <div>Loading</div> : 
-                    <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-x-4 gap-y-12 bg-slate-800 pt-10 pb-16">
+                    isPending ? 
+                    <l-waveform
+                        size="35"
+                        stroke="3.5"
+                        speed="1"
+                        color="black"
+                    />
+                    : 
+                    <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-x-4 gap-y-12 pt-10 pb-16">
                         {
                             Exams.filter(exam => Filter.schools.length === 0 || Filter.schools.includes(exam.school))
                                  .filter(exam => Filter.subjects.length === 0 || Filter.subjects.includes(exam.subject))

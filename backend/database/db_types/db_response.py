@@ -30,3 +30,12 @@ class UserDetailsResponse(BaseModel):
     permissions: str
     school: Optional[str] = None
     grade: Optional[int] = None
+
+class NotificationResponse(BaseModel):
+    id: int
+    user: int
+    sender: Optional[int] = None
+    title: str
+    message: str
+    link: Optional[str] = None
+    date_sent: datetime

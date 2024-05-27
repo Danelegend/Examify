@@ -1,4 +1,6 @@
-from typing import List
+from datetime import datetime
+
+from typing import List, Optional
 from pydantic import AwareDatetime, BaseModel
 
 ################################################################################
@@ -85,3 +87,14 @@ class LogosResponse(BaseModel):
 class UserProfileResponse(BaseModel):
     name: str
     exams_completed: int
+
+class NotificationResponse(BaseModel):
+    id: str
+    sender: Optional[str] = None
+    title: str
+    message: str
+    link: Optional[str] = None
+    date_sent: datetime
+
+class UserNotificationsResponse(BaseModel):
+    notifications: List[NotificationResponse]

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, status
 
-from router.api_types.api_response import UserProfileResponse
+from router.api_types.api_response import UserNotificationsResponse, UserProfileResponse
 
 router = APIRouter()
 
@@ -10,3 +10,7 @@ async def get_profile() -> UserProfileResponse:
         name="Dane",
         exams_completed=6
     )
+
+@router.get("/notifications", status_code=status.HTTP_200_OK, response_model=UserNotificationsResponse)
+async def get_notifications() -> UserNotificationsResponse:
+    

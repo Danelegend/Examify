@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { Link } from "react-router-dom";
-import { ModalContext } from "../../../context/modal-context";
-import { NavigationButton } from "./NavButton";
+import { ModalContext } from "../../../../context/modal-context";
+import { NavigationButton } from "../NavButton";
 
 const LoggedOutNavbar = () => {
     const { SetDisplayLogin, SetDisplayRegister } = useContext(ModalContext)

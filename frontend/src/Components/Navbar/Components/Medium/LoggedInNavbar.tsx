@@ -1,10 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
-import { Link, useNavigate } from "react-router-dom";
-import { readAccessToken, removeAccessToken } from "../../../util/utility";
+import { useNavigate } from "react-router-dom";
+import { readAccessToken, removeAccessToken } from "../../../../util/utility";
 import { useContext } from "react";
-import { UserContext } from "../../../context/user-context";
-import { NavigationButton } from "./NavButton";
-import { UserLogout } from "../../../api/api";
+import { UserContext } from "../../../../context/user-context";
+import { NavigationButton } from "../NavButton";
+import { UserLogout } from "../../../../api/api";
 
 const LoggedInNavbar = () => {
     const { setAccessToken } = useContext(UserContext)
@@ -32,7 +32,6 @@ const LoggedInNavbar = () => {
 
     return (
         <>
-
                 <div className="self-stretch justify-start items-center gap-[21px] inline-flex text-base font-['Montserrat']">
                     <NavigationButton link="/dashboard" title="Home" />
                     <NavigationButton link="/exams" title="Exams" />

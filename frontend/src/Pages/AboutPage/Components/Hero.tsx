@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 const PageButton = ({ children, className, onClick }: { children: ReactNode, className?: string, onClick?: () => void }) => {
     return (
-        <div className={`text-slate-800 font-medium cursor-pointer rounded-2xl border bg-blue-200 hover:bg-blue-300 shadow-lg px-6 py-2 ${className}`} onClick={onClick}>
+        <div className={`text-slate-800 font-medium cursor-pointer rounded-2xl border bg-blue-400 hover:bg-blue-300 shadow-lg px-6 py-2 ${className}`} onClick={onClick}>
             {children}
         </div>
     )
@@ -22,10 +22,10 @@ const Hero = () => {
     }
 
     return (
-        <div className="pt-20 pb-16 text-center lg:pt-32 text-white">
-            <h1 className="mx-auto max-w-4xl font-display text-5xl font-medium tracking-tight text-slate-100 sm:text-7xl">
+        <div className="pt-20 pb-16 text-center lg:pt-32 text-slate-700">
+            <h1 className="mx-auto max-w-4xl font-display text-5xl font-medium tracking-tight text-slate-900 sm:text-7xl">
                 Supercharge{' '}
-                <span className="relative whitespace-nowrap text-blue-400">
+                <span className="relative whitespace-nowrap text-blue-600">
                     <svg
                         aria-hidden="true"
                         viewBox="0 0 418 42"
@@ -38,7 +38,7 @@ const Hero = () => {
                 </span>{' '}
                 with Examify!
             </h1>
-            <p className="mx-auto mt-16 max-w-2xl text-lg tracking-tight text-slate-200">
+            <p className="mx-auto mt-16 max-w-2xl text-lg tracking-tight">
                 The most comprehensive platform for HSC students to access past papers, study resources, and more!
             </p>
             <div className="mt-16 flex justify-center space-x-24">
@@ -50,7 +50,7 @@ const Hero = () => {
                 </PageButton>
             </div>
             <div className="mt-10 lg:mt-20">
-                <p className="font-display text-base text-slate-200">
+                <p className="font-display text-base">
                     Trusted by students from these schools
                 </p>
                 <SchoolLogoCarousel className="mt-12"/>

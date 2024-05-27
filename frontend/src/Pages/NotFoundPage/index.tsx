@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 const NotFoundPage = () => {
     return (
-        <div>
+        <div className="text-black">
             <h1>
                 Oops you appear to be lost.
             </h1>

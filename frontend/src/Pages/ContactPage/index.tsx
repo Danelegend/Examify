@@ -1,7 +1,7 @@
 const ContactPage = () => {
     return (
         <div className="flex flex-col justify-between gap-y-10">
-            <div className="text-white align-middle justify-center mt-4 flex-col gap-y-10 flex">
+            <div className="text-black align-middle justify-center mt-4 flex-col gap-y-10 flex">
                 <div>
                     <div className="text-center text-2xl tracking-wide">
                         📩 Get in Touch with Examify! 📩

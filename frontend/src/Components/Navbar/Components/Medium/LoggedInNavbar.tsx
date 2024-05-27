@@ -1,10 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
-import { Link, useNavigate } from "react-router-dom";
-import { readAccessToken, removeAccessToken } from "../../../util/utility";
+import { useNavigate } from "react-router-dom";
+import { readAccessToken, removeAccessToken } from "../../../../util/utility";
 import { useContext } from "react";
-import { UserContext } from "../../../context/user-context";
-import { NavigationButton } from "./NavButton";
-import { UserLogout } from "../../../api/api";
+import { UserContext } from "../../../../context/user-context";
+import { NavigationButton } from "../NavButton";
+import { UserLogout } from "../../../../api/api";
 
 const LoggedInNavbar = () => {
     const { setAccessToken } = useContext(UserContext)
@@ -31,18 +31,9 @@ const LoggedInNavbar = () => {
     })
 
     return (
-        <div>
-            <div className="flex w-full h-1/5 left-0 top-0 bg-[#282828] justify-between items-center px-5">
-                <div className="pl-7 py-5 justify-start items-center inline-flex">
-                    <Link to="/">
-                        <div className="text-neutral-200 text-2xl font-bold font-['Montserrat'] leading-loose tracking-tight cursor-pointer">
-                            Examify
-                        </div>
-                    </Link>
-                </div>
-
+        <>
                 <div className="self-stretch justify-start items-center gap-[21px] inline-flex text-base font-['Montserrat']">
-                    <NavigationButton link="/dashboard" title="Home" />
+                    <NavigationButton link="/dashboard" title="Dashboard" />
                     <NavigationButton link="/exams" title="Exams" />
                     <NavigationButton link="/upload" title="Upload" />
                     <NavigationButton link="/contact" title="Contact" />
@@ -53,8 +44,7 @@ const LoggedInNavbar = () => {
                         Logout
                     </div>
                 </div>
-            </div>
-        </div>
+        </>
     )
 }
 

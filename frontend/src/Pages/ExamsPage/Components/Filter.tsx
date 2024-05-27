@@ -1,6 +1,7 @@
-import { useEffect, useRef, useState } from "react"
+import { forwardRef, useEffect, useRef, useState } from "react"
 import { TiTick } from "react-icons/ti";
 import { useOnClickOutside } from "usehooks-ts";
+import { FaFilter } from "react-icons/fa";
 
 type DropdownFilterProps = {
     title: string
@@ -21,17 +22,17 @@ const DropdownItem = ({ item, UpdateItem }: { item: Item, UpdateItem: () => void
 
     return (
         <li className="flex items-center">
-              <input id="apple" type="checkbox" value="" checked={item.selected} onChange={handleSelectChange}
-                className="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+              <input type="checkbox" value="" checked={item.selected} onChange={handleSelectChange}
+                className="w-4 h-4 bg-white border-gray-300 rounded-lg text-primary-600" />
 
-          <label className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
+          <label className="ml-2 text-sm font-medium text-gray-900">
             {item.name}
           </label>
         </li>
     )
 }
 
-const DropdownFilter = ({ title, items, search, update }: DropdownFilterProps) => {
+export const DesktopFilter = ({ title, items, search, update }: DropdownFilterProps) => {
     const [isOpen, setIsOpen] = useState(false)
     const [Search, SetSearch] = useState("")
 
@@ -95,7 +96,7 @@ const DropdownFilter = ({ title, items, search, update }: DropdownFilterProps) =
     return (
         <div ref={dropdownRef}>
             <button id="dropdownDefault" data-dropdown-toggle="dropdown"
-               className="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+               className="text-black bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center"
                type="button" onClick={toggle}>
                {title}
                <svg className="w-4 h-4 ml-2" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -103,11 +104,11 @@ const DropdownFilter = ({ title, items, search, update }: DropdownFilterProps) =
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
                 </svg>
             </button>
-            <div id="dropdown" className={(isOpen ? "" : "hidden ") + "absolute z-10 w-56 p-3 bg-white rounded-lg shadow dark:bg-gray-700"}>
+            <div id="dropdown" className={(isOpen ? "" : "hidden ") + "absolute z-10 w-56 p-3 bg-white rounded-lg shadow"}>
                 {
                     (hasSearch) ? 
                     <div className="flex py-2 space-x-3">
-                        <input type="text" onChange={handleSearchChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder={"Search " + title.toLowerCase() + "..."} />
+                        <input type="text" onChange={handleSearchChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder={"Search " + title.toLowerCase() + "..."} />
                         <TiTick className="m-auto cursor-pointer" size={22} onClick={handleSearchSubmit}/>
                     </div>
                     : null
@@ -126,4 +127,33 @@ const DropdownFilter = ({ title, items, search, update }: DropdownFilterProps) =
     )
 }
 
-export default DropdownFilter
+export const MobileFilter = forwardRef(({ onClick }: { onClick: () => void }, ref: any) => {
+    return (
+        <button className="flex items-center space-x-2 bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center"
+            onClick={onClick} ref={ref}>
+            <FaFilter size={16} color={"black"}/>
+            <div>
+                Filter
+            </div>
+        </button>
+    )
+})
+
+export type MobileFilterItem = {
+    items: string[]
+    updateFunction: (arr: string[]) => void
+}
+
+type MobileFilterProps = {
+    items: Map<string, MobileFilterItem>
+}
+
+export const MobileFilterDisplay = forwardRef(({ items }: MobileFilterProps, ref: any) => {
+    return (
+        <div ref={ref} className="flex justify-around shadow-md">
+            <DesktopFilter title={"School"} items={items.get("School")!.items} search={true} update={items.get("School")!.updateFunction} />
+            <DesktopFilter title={"Subject"} items={items.get("Subject")!.items} search={true} update={items.get("Subject")!.updateFunction} />
+            <DesktopFilter title={"Year"} items={items.get("Year")!.items} search={true} update={items.get("Year")!.updateFunction} />
+        </div>
+    )
+})

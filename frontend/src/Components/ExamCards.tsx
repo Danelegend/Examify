@@ -19,6 +19,17 @@ export type ExamCardProps = {
     className?: string
 }
 
+const SUBJECT_COLOR = {
+    "Maths Extension 2": "bg-purple-400",
+    "Maths Extension 1": "bg-sky-500",
+    "Maths Advanced": "bg-green-500",
+    "Chemistry": "bg-teal-500"
+}
+
+const GetColor: (subject: string) => string = (subject: string) => {
+    return (Object.keys(SUBJECT_COLOR).includes(subject)) ? SUBJECT_COLOR[subject] : "bg-orange-500"
+}   
+
 const ExamCard = ({ school, year, type, difficulty, id, favourite, likes, uploadDate, className, subject }: ExamCardProps) => {
     const [isFavourite, setIsFavourite] = useState(favourite)
 
@@ -96,9 +107,9 @@ const ExamCard = ({ school, year, type, difficulty, id, favourite, likes, upload
         <div className={"flex justify-center " + className}> 
             <div className="w-4/5">
                 <Link to={"/exam/" + school + "/" + year + "/" + type}>
-                    <div className="relative bg-green-600 rounded-2xl pl-12 pr-7 py-10">
+                    <div className={GetColor(subject) + " relative rounded-2xl pl-12 pr-7 py-10 shadow-md text-zinc-200"}>
                         <FavouriteIcon isFavourite={isFavourite} onClick={FavouriteClick} className="absolute bottom-3 right-2 md:right-5"/>
-                        <div className="flex flex-col text-slate-300 break-words">
+                        <div className="flex flex-col break-words">
                             <div className="flex flex-col font-semibold text-xl break-words">
                                 {school} {subject} {year} 
                             </div>

@@ -51,7 +51,7 @@ const DisplayExamComponent = ({ exam, key, onDelete }: DisplayExamComponentProps
     }
 
     return (
-        <div key={key} className={(key % 2 == 0 ? "bg-blue-100" : "bg-yellow-100") + " py-4 px-4"}>
+        <div key={key} className={(key % 2 == 0 ? "bg-blue-100" : "bg-yellow-100") + " py-4 px-4 text-black"}>
             <div className="grid md:grid-cols-6">
                 <div className="content-center">
                     {exam.school}
@@ -137,7 +137,7 @@ const AdminCurrentExamPage = () => {
 
     return (
         <div className="text-center">
-            <h1 className="text-slate-100 my-16">Current Exams Page</h1>
+            <h1 className="text-black my-16">Current Exams Page</h1>
 
             <div className="mx-16">
                 <ul className="space-y-4">

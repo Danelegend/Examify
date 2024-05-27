@@ -66,14 +66,14 @@ const StudentDashboardPage = () => {
     : 
      (
         <div>
-            <div className="text-white text-center text-xl mt-6 font-bold">
+            <div className="text-black text-center text-xl mt-6 font-bold">
                 Welcome back {UserProfile?.name}
             </div>
             <div className="grid grid-cols-4 mx-32 gap-4 pt-4">
                 <FavouriteExamsDisplay />
                 <RecentExamsDisplay />
                 <div>
-                    <div className="text-white text-xl text-center">
+                    <div className="text-black text-xl text-center">
                         Exams Completed: {UserProfile?.exams_completed}
                     </div>
                 </div>

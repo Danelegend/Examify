@@ -160,7 +160,7 @@ const ReviewComponent = ({ file_location, index, onSubmit, onDelete }: ReviewCom
     }
 
     return (
-        <div key={index} className={(index % 2 == 0 ? "bg-blue-100" : "bg-yellow-100") + " py-4 px-4"}>
+        <div key={index} className={(index % 2 == 0 ? "bg-blue-100" : "bg-yellow-100") + " py-4 px-4 text-black"}>
             <div className="grid md:grid-cols-6">
                 <div className="content-center text-gray-900">
                     {file_location}
@@ -258,11 +258,11 @@ const AdminReviewExamPage = () => {
 
     return (
         <div className="text-center">
-            <h1 className="text-slate-100 my-16">Review Exams Page</h1>
+            <h1 className="text-black my-16">Review Exams Page</h1>
 
             <div className="mx-16">
                 { (ReviewExams.length === 0) ? 
-                <div className="text-slate-200 text-3xl mt-48">
+                <div className="text-black text-3xl mt-48">
                     No Exams to Review
                 </div> :
                 <ul className="space-y-4">

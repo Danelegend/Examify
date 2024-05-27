@@ -33,7 +33,7 @@ const LoggedInNavbar = () => {
     return (
         <>
                 <div className="self-stretch justify-start items-center gap-[21px] inline-flex text-base font-['Montserrat']">
-                    <NavigationButton link="/dashboard" title="Home" />
+                    <NavigationButton link="/dashboard" title="Dashboard" />
                     <NavigationButton link="/exams" title="Exams" />
                     <NavigationButton link="/upload" title="Upload" />
                     <NavigationButton link="/contact" title="Contact" />

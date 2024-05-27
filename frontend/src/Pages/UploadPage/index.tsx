@@ -120,7 +120,7 @@ const UploadPage = () => {
 
     return (
         <div className="flex flex-col justify-between gap-y-10">
-            <div className="text-white align-middle justify-center mt-4">
+            <div className="text-black align-middle justify-center mt-4">
                 <div className="text-center text-2xl tracking-wide">
                 🎓 Join the Movement to Empower Students! 📚
                 </div>
@@ -147,7 +147,7 @@ const UploadPage = () => {
                 </div>
             </div>
             <div className="mx-64">
-                <div className="flex flex-col justify-between text-white text-center gap-y-4">
+                <div className="flex flex-col justify-between text-black text-center gap-y-4">
                     <div className="text-2xl">
                         Upload Form
                     </div>

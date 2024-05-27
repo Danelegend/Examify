@@ -75,7 +75,7 @@ const FavouriteExamsDisplay = () => {
 
     return (
         <div className="bg-white col-span-3">
-                    <div className="text-center text-xl font-semibold">
+                    <div className="text-black text-center text-xl font-semibold">
                         Favourite Exams
                     </div>
                     <div className="flex justify-center items-center py-4 mx-4">

@@ -144,8 +144,6 @@ const ExamDisplay = () => {
         updateFunction: UpdateYears
     })
 
-    console.log(FilterItems)
-
     return (
         schoolFilterPending || subjectFilterPending ? 
         <div className="">

@@ -9,6 +9,7 @@ DROP TABLE IF EXISTS exams CASCADE;
 DROP TABLE IF EXISTS sessions CASCADE;
 DROP TABLE IF EXISTS favourite_exams CASCADE;
 DROP TABLE IF EXISTS recently_viewed_exams CASCADE;
+DROP TABLE IF EXISTS notifications CASCADE;
 
 -- Types / Domains
 CREATE TYPE EXAM_TYPE AS ENUM ('TRI', 'HSC', 'TOP', 'HAF', 'T_1', 'T_2', 'T_3', 'T_4');
@@ -85,4 +86,18 @@ CREATE TABLE recently_viewed_exams (
     PRIMARY KEY             (account, exam, date_viewed),
     FOREIGN KEY             (account) REFERENCES accounts(id),
     FOREIGN KEY             (exam) REFERENCES exams(id)
+);
+
+CREATE TABLE notifications (
+    id                      BIGSERIAL,
+    user                    BIGINT NOT NULL,
+    sender                  BIGINT DEFAULT NULL,
+    title                   VARCHAR(255) DEFAULT "" NOT NULL,
+    message                 VARCHAR(255) DEFAULT "" NOT NULL,
+    link                    VARCHAR(255) DEFAULT NULL,
+    date_sent               TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    read                    BOOLEAN DEFAULT FALSE,
+    date_read               TIMESTAMP DEFAULT NULL,
+    PRIMARY KEY             (id),
+    FOREIGN KEY             (user) REFERENCES accounts(id)
 );

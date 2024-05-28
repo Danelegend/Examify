@@ -5,7 +5,7 @@ import LoggedInNavbar from "./Components/Medium/LoggedInNavbar";
 import { useMutation } from "@tanstack/react-query";
 import { GetTokenRefresh } from "../../api/api";
 import { readExpiration, removeAccessToken, storeAccessToken, storeExpiration } from "../../util/utility";
-import { Link } from "react-router-dom";
+import { Link, Navigation } from "react-router-dom";
 import { useWindowSize } from "usehooks-ts";
 import { MdMenu } from "react-icons/md";
 
@@ -14,7 +14,7 @@ type NavigationType = {
     link: string
 } 
 
-const NAVIGATION_OPTIONS: Array<NavigationType> = [
+const LOGGED_OUT_NAV_OPTIONS: Array<NavigationType> = [
     {
         title: "Home",
         link: "/"
@@ -41,6 +41,31 @@ const NAVIGATION_OPTIONS: Array<NavigationType> = [
     }
 ]
 
+const LOGGED_IN_NAV_OPTIONS: Array<NavigationType> = [
+    {
+        title: "Dashboard",
+        link: "/dashboard"
+    },
+    {
+        title: "Exams",
+        link: "/exams"
+    },
+    {
+        title: "Upload",
+        link: "/upload"
+    },
+    {
+        title: "Contact Us",
+        link: "/contact"
+    },
+    {
+        title: "Notifications",
+        link: "/notification"
+    },
+]
+
+
+
 const SmallNavbar = ({ accessToken }: { accessToken: string | null }) => {
     const [isMenuOpen, SetMenuOpen] = useState<boolean>(false);
 
@@ -51,6 +76,8 @@ const SmallNavbar = ({ accessToken }: { accessToken: string | null }) => {
     const handleLogoutClick = () => {
 
     }
+
+    const NAVIGATION_OPTIONS = accessToken === null ? LOGGED_OUT_NAV_OPTIONS : LOGGED_IN_NAV_OPTIONS
 
     return (
         <>

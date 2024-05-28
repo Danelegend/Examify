@@ -1,23 +1,81 @@
-import { useState } from "react"
+import { useQuery } from "@tanstack/react-query"
+import { useEffect, useRef, useState } from "react"
 import { IoIosNotifications } from "react-icons/io"
+import { readAccessToken } from "../../../util/utility"
+import { FetchUserNotifications, UserNotificationsSeen } from "../../../api/api"
+import { useOnClickOutside } from "usehooks-ts"
 
 type Notifications = {
+    id: number
     title: string
     message: string
 }
 
 const NotificationIcon = ({ className }: { className?: string}) => {
     const [Notifications, SetNotifications] = useState<Notifications[]>([])
+    const [toggleDropDown, SetToggleDropdown] = useState<boolean>(false)
+
+    const ref = useRef(null);
+
+    useOnClickOutside(ref, () => SetToggleDropdown(false))
+
+    const { data, isPending } = useQuery({
+        queryKey: ["Notifications"],
+        queryFn: () => FetchUserNotifications({ token: readAccessToken()! })
+    })
+
+    useEffect(() => {
+        if (!isPending) {
+            SetNotifications(data!.notifications.sort((a, b) => 
+                a.date_sent.getTime() - b.date_sent.getTime()
+            ).map(notification => {
+                return {
+                    id: notification.id,
+                    title: notification.title,
+                    message: notification.message
+                }
+            }))
+        }
+    }, [isPending])
+
+    const onNotificationButtonClick = () => {
+        SetToggleDropdown(!toggleDropDown)
+
+        UserNotificationsSeen({ 
+            token: readAccessToken()!, 
+            notification_ids: Notifications.map(notification => notification.id)
+        })
+    }
 
     return (
-        <div className={((className !== undefined) ? className : "") + " cursor-pointer relative"}>
-            <IoIosNotifications size={20} color={'black'}/>
-
-            {
-                (Notifications.length > 0) ?
-                <div className="absolute bg-red-600 rounded-full w-2 h-2 bottom-0 right-0" />
-                : null
-            }   
+        <div ref={ref}>
+            <div className={((className !== undefined) ? className : "") + " cursor-pointer relative"}
+                onClick={onNotificationButtonClick}>
+                <IoIosNotifications size={20} color={'black'}/>
+                {
+                    (Notifications.length > 0) ?
+                    <div className="absolute bg-red-600 rounded-full w-2 h-2 bottom-0 right-0" />
+                    : null
+            }
+            </div>
+            <div className={(toggleDropDown ? "" : "hidden ") + "absolute z-10 w-32 bg-slate-50"}>
+                <ul className="space-y-1">
+                    {
+                        Notifications.map((notification, index) => {
+                            return (
+                                <li key={index} className="text-black shadow">
+                                    <div className="font-semibold">
+                                        {notification.title}
+                                    </div>
+                                    <div>
+                                        {notification.message}
+                                    </div>
+                                </li>
+                            )
+                        })
+                    }
+                </ul>
+            </div>
         </div>
     )
 }

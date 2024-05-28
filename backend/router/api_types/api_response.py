@@ -89,7 +89,7 @@ class UserProfileResponse(BaseModel):
     exams_completed: int
 
 class NotificationResponse(BaseModel):
-    id: str
+    id: int
     sender: Optional[str] = None
     title: str
     message: str

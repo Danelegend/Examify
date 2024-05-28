@@ -146,3 +146,26 @@ def update_notification_as_read(notification_id: int):
         raise e
     finally:
         disconnect(conn)
+
+def notification_belongs_user(notification_id: int, user_id: int) -> bool:
+    """
+    Returns true if the notification_id belongs to the user
+    """
+    try:
+        conn = connect()
+        with conn.cursor() as cur:
+            cur.execute("""
+                        SELECT EXISTS(SELECT 1 FROM notifications WHERE user = %(user_id)s AND id = %(notification_id)s);
+                        """, {
+                            "user_id": user_id, 
+                            "notification_id": notification_id})
+            exists = cur.fetchone()
+
+        log_notification_success("Successfully checked if notification belongs to user")
+    except psycopg2.Error as e:
+        log_notification_error(f"Error checking if notification belongs to user: {e}")
+        raise e
+    finally:
+        disconnect(conn)
+
+    return exists[0] if exists else False

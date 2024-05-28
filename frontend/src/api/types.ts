@@ -141,3 +141,16 @@ export type FetchRecentExamsResponse = {
 export type FetchExamResponse = {
     exam_id: number
 }
+
+export type Notification = {
+    id: number,
+    sender: string | null,
+    title: string,
+    message: string,
+    link: string | null,
+    date_sent: Date
+}
+
+export type FetchNotificationsResponse = {
+    notifications: Notification[]
+}

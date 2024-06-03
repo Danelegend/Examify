@@ -412,3 +412,14 @@ export const UserNotificationsSeen = ({ token, notification_ids }: { token: stri
         })
     }))
 }
+
+export const PostCompletedExam = ({ token, exam_id }: { token: string, exam_id: number }): Promise<Response> => {
+    return AuthorizationMiddleware<Response>(() => fetch(Environment.BACKEND_URL + "/api/exam/" + exam_id.toString() + "/complete", {
+        headers: {
+            'Content-Type': 'application/json',
+            "Authorization": `bearer ${token}`
+        },
+        method: "POST",
+        credentials: 'include'
+    }))
+}

@@ -41,9 +41,9 @@ const isZeroTime = (time: Time) => {
 
 const Timer = () => {
     const [Time, SetTime] = useState<Time>({
-        second: 10,
+        second: 0,
         minute: 0,
-        hour: 0
+        hour: 3
     })
 
     const [TimerRunning, SetRunTimer] = useState<boolean>(false)

@@ -1,41 +1,25 @@
-import { useEffect, useState } from "react";
-import Environment from "../../../../constants";
-import { FetchError } from "../../../util/utility";
-import { useQuery } from "@tanstack/react-query";
 import SchoolLogoCard from "./SchoolLogoCard";
 import useScript from "../../../hooks/useScript";
-import { FetchLogos } from "../../../api/api";
 
 const doubleArray = (arr: any[]) => {
     return arr.concat(arr)
 }
 
+const GetSchoolLogos = () => {
+    return [
+        "school_logos/grammar.png",
+        "school_logos/knox.png",
+        "school_logos/manly.png",
+        "school_logos/nsb.png",
+        "school_logos/nsg.png",
+        "school_logos/ruse.png",
+        "school_logos/sb.png",
+        "school_logos/sg.png",
+    ]
+}
+
 const SchoolLogoCarousel = ({ className }: { className: string}) => {
-    const [Images, SetImages] = useState<string[]>([]);
-
     useScript("//unpkg.com/alpinejs")
-
-    const { data, isPending, error } = useQuery({
-        queryKey: ["Images"],
-        queryFn: () => FetchLogos(),
-    })
-
-    useEffect(() => {
-        if (error) {
-            if (error instanceof FetchError) {
-                switch((error as FetchError).status) {
-                    case 500:
-                        break
-                    default:
-                        break
-                }
-            }
-        }
-
-        if (!isPending) {
-            SetImages(data!.logos)
-        }
-    }, [error, isPending])
 
     return (
     <div x-data="{}"
@@ -47,10 +31,10 @@ const SchoolLogoCarousel = ({ className }: { className: string}) => {
             className={className + " w-full inline-flex flex-nowrap overflow-hidden [mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-128px),transparent_100%)]"} >
         <ul x-ref="logos" className="flex items-center justify-center md:justify-start [&_li]:mx-8 [&_img]:max-w-none animate-infinite-scroll">
             {
-                doubleArray(Images).map((image, index) => {
+                doubleArray(GetSchoolLogos()).map((image, index) => {
                     return (
                         <li key={index}>
-                            <SchoolLogoCard logo={Environment.BACKEND_URL + "/api/logo/" + image} schoolName={image} />
+                            <SchoolLogoCard logo={window.location.origin + '/' + image} schoolName={image} />
                         </li>
                     )
                 })

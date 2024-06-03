@@ -146,7 +146,7 @@ const ExamDisplay = () => {
 
     return (
         schoolFilterPending || subjectFilterPending ? 
-        <div className="">
+        <div className="h-screen w-screen flex items-center justify-center">
             <l-dot-spinner
                 size="35"
                 speed="1"
@@ -209,12 +209,14 @@ const ExamDisplay = () => {
                 }
                 {
                     isPending ? 
-                    <l-waveform
-                        size="35"
-                        stroke="3.5"
-                        speed="1"
-                        color="black"
-                    />
+                    <div className="flex justify-center">
+                        <l-waveform
+                            size="35"
+                            stroke="3.5"
+                            speed="1"
+                            color="black"
+                        />
+                    </div>
                     : 
                     <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-x-4 gap-y-12 pt-10 pb-16">
                         {

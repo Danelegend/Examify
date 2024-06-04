@@ -96,7 +96,7 @@ CREATE TABLE completed_exams (
     PRIMARY KEY             (account, exam, date_completed),
     FOREIGN KEY             (account) REFERENCES accounts(id),
     FOREIGN KEY             (exam) REFERENCES exams(id)
-)
+);
 
 CREATE TABLE notifications (
     id                      BIGSERIAL,

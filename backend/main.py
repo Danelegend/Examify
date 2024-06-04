@@ -9,6 +9,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from database.linker import DatabaseSetup
 
+from functionality.scripts.reinsert_exams import reinsert_exams
+
 from logger import Logger
 
 from router import admin, auth, exam, exams, logo, user
@@ -72,9 +74,13 @@ app.include_router(user.router, prefix="/api/user", tags=["user"])
 
 @app.get("/db/setup", status_code=status.HTTP_200_OK)
 async def db_setup(password: str = ""):
-    if password != "@JudyMansell13!":
-        return
+    if password != "@JudyMansell13!": return
     
     db_setup = DatabaseSetup()
     db_setup.main()
 
+@app.get("/db/insert/exams", status_code=status.HTTP_200_OK)
+async def db_insert_exams(password: str = ""):
+    if password != "@JudyMansell13!": return
+
+    return reinsert_exams()

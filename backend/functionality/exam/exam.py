@@ -11,8 +11,6 @@ from database.helpers.exam import check_exam_exists, get_exam, get_exam_id_from_
 from database.helpers.favourite import check_if_user_favourite_exam_exists, delete_user_favourite_exam, get_exam_likes_count, insert_user_favourite_exam
 from database.helpers.recent import insert_user_recently_viewed_exam
 
-URL = "http://localhost:8080"
-
 def GetExamId(school: str, year: int, type: str) -> int:
     """
     Gets an exam given school, year and type

@@ -62,6 +62,9 @@ def SubmitReviewExam(school: str, exam_type: str, year: int, subject: str, file_
     # Down the file from google drive
     move_file_from_review_to_current(file_location, new_file_name)
 
+    InsertExam(school, exam_type, year, subject, new_file_name)
+
+def InsertExam(school: str, exam_type: str, year: int, subject: str, file_location: str):
     # Get or create the school object
     school_id = get_or_create_school(school)
 
@@ -70,7 +73,7 @@ def SubmitReviewExam(school: str, exam_type: str, year: int, subject: str, file_
         school=school_id,
         exam_type=ExamType.MapNameToPrefix(exam_type),
         year=year,
-        file_location=new_file_name,
+        file_location=file_location,
         subject=subject
     ))
 

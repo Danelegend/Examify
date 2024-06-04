@@ -1,5 +1,15 @@
 import os
 
+from pydantic import BaseModel
+
+from functionality.admin.admin import InsertExam
+
+class ParsedExam(BaseModel):
+    school: str
+    year: int
+    subject: str
+    exam_type: str
+
 def reinsert_exams():
     # Get all the files in the folder
     current_exam_directory = os.environ.get("CURRENT_EXAMS_DIRECTORY")
@@ -7,12 +17,17 @@ def reinsert_exams():
     # Get all the files in the directory
     files = os.listdir(current_exam_directory)
 
-    parsed_files = []
-
     for file_name in files:
-        parsed_files.append(_parse_filename(file_name))
+        parsed_file = _parse_filename(file_name)
 
-    return parsed_files
+        InsertExam(
+            parsed_file.school,
+            parsed_file.exam_type,
+            parsed_file.year,
+            parsed_file.subject,
+            file_name
+        )
+
 
 def _parse_filename(file_name: str):
     """
@@ -23,9 +38,9 @@ def _parse_filename(file_name: str):
     first_split = file_name.split('-')
     second_split = first_split[1].split('_')
 
-    return {
-        'school': first_split[0],
-        'year': second_split[0],
-        'subject': second_split[1],
-        'exam_type': second_split[2]
-    }
+    return ParsedExam(
+        school=first_split[0],
+        year=int(second_split[0]),
+        subject=second_split[1],
+        exam_type=second_split[2]
+    )

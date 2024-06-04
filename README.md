@@ -53,3 +53,11 @@ MVP:
   - /exam/pdf/:exam_id [GET]
   - /exam/:exam_id/favourite [POST, DELETE]
   - /exam/:exam_id/recent [POST]
+
+  # Analytics
+  FREE:
+   - PI chart of completed exams by subject (/api/user/analytics/subject)
+   - Activity tracking of exams over the week (/api/user/analytics/activity)
+  PAID:
+   - Tailored exam recommendations based on topics (/)
+   - PI chart analysis of concepts (/api/user/analytics/concept)

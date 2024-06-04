@@ -2,6 +2,8 @@ from typing import List
 
 import psycopg2
 
+from database.db_types.db_response import CompletedExamsResponse
+
 from logger import Logger
 
 from database.helpers import connect, disconnect
@@ -43,7 +45,7 @@ def insert_user_completed_exam(user_id: int, exam_id: int):
     finally:
         disconnect(conn)
 
-def get_user_completed_exams(user_id: int, size=10) -> List[int]:
+def get_user_completed_exams(user_id: int, size=10) -> List[CompletedExamsResponse]:
     """
     Gets a user's completed exams from the database
     """
@@ -52,7 +54,7 @@ def get_user_completed_exams(user_id: int, size=10) -> List[int]:
         with conn.cursor() as cur:
             cur.execute(
                 """
-                SELECT exam FROM completed_exams 
+                SELECT exam, date_completed FROM completed_exams 
                 WHERE account = %(account)s 
                 ORDER BY date_completed DESC 
                 LIMIT %(size)s;
@@ -68,5 +70,8 @@ def get_user_completed_exams(user_id: int, size=10) -> List[int]:
         raise e
     finally:
         disconnect(conn)
-    
-    return [exam[0] for exam in exams] if exams else []
+
+    return [CompletedExamsResponse(
+        exam=exam_id,
+        date_complete=date_complete
+    ) for exam_id, date_complete in exams]

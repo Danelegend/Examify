@@ -39,3 +39,7 @@ class NotificationResponse(BaseModel):
     message: str
     link: Optional[str] = None
     date_sent: datetime
+
+class CompletedExamsResponse(BaseModel):
+    exam: int
+    date_complete: datetime

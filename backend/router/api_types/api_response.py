@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from typing import List, Optional
+from typing import Dict, List, Optional
 from pydantic import AwareDatetime, BaseModel
 
 ################################################################################
@@ -98,3 +98,9 @@ class NotificationResponse(BaseModel):
 
 class UserNotificationsResponse(BaseModel):
     notifications: List[NotificationResponse]
+
+class UserAnalyticsCompletedSubjectExamsResponse(BaseModel):
+    results: Dict[str, int]
+
+class UserAnalyticsActivityResponse(BaseModel):
+    results: Dict[datetime, Dict[str, int]]

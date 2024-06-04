@@ -5,6 +5,7 @@ import { FetchError, handle403, readAccessToken } from "../../../util/utility"
 import { useQuery } from "@tanstack/react-query"
 import { waveform } from "ldrs"
 import { FetchFavouriteExams } from "../../../api/api"
+import { useWindowSize } from "usehooks-ts"
 
 const FavouriteExamsDisplay = () => {
     const [FavouriteExams, SetFavouriteExams] = useState<ExamCardProps[]>([])
@@ -12,6 +13,8 @@ const FavouriteExamsDisplay = () => {
     const [FavouritePosition, SetFavouritePosition] = useState<number>(0)
 
     const handleAuthorizationError = handle403()
+
+    const size = useWindowSize();
 
     const GetFavouriteIndex = (pos: number) => {
         return (FavouritePosition + pos) % FavouriteExams.length
@@ -92,28 +95,20 @@ const FavouriteExamsDisplay = () => {
                                 FavouriteExams.length <= 3 ? null :
                                 <MdArrowBackIos size={32} color="black" className="cursor-pointer" onClick={handleLeftFavouriteClick}/>
                             }
-                            <div className="grid grid-cols-1 md:grid-cols-3 grow">
-                                {
-                                    (FavouriteExams.length === 0) ? 
-                                    <div className="text-center md:col-start-2">
-                                        No Favourite Exams
-                                        <br/>
-                                        <br/>
-                                        Lets go find some!
-                                    </div>:
-                                    (FavouriteExams.length === 1) ? <ExamCard {...FavouriteExams[GetFavouriteIndex(0)]}  className="col-start-2"/> :
-                                    (FavouriteExams.length === 2) ? 
-                                    <>
-                                        <ExamCard {...FavouriteExams[GetFavouriteIndex(0)]} />
-                                        <ExamCard {...FavouriteExams[GetFavouriteIndex(1)]} />
-                                    </> :
-                                    <>
-                                        <ExamCard {...FavouriteExams[GetFavouriteIndex(0)]} />
-                                        <ExamCard {...FavouriteExams[GetFavouriteIndex(1)]} />
-                                        <ExamCard {...FavouriteExams[GetFavouriteIndex(2)]} />
-                                    </>
-                                }
-
+                            <div className="">
+                                <div className="flex overflow-hidden">
+                                    <div className="flex">
+                                        {FavouriteExams.map((item, index) => (
+                                            <div
+                                                key={index}
+                                                className="flex-none w-full"
+                                                style={{ width: `${100 / Math.ceil(size.width / 1000)}%` }}
+                                            >
+                                                <ExamCard {...FavouriteExams[GetFavouriteIndex(index)]} />
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
                             </div>
                             {
                                 FavouriteExams.length <= 3 ? null :

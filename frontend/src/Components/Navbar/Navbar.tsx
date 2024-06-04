@@ -3,18 +3,19 @@ import LoggedOutNavbar from "./Components/Medium/LoggedOutNavbar";
 import { UserContext } from "../../context/user-context";
 import LoggedInNavbar from "./Components/Medium/LoggedInNavbar";
 import { useMutation } from "@tanstack/react-query";
-import { GetTokenRefresh } from "../../api/api";
-import { readExpiration, removeAccessToken, storeAccessToken, storeExpiration } from "../../util/utility";
-import { Link } from "react-router-dom";
+import { GetTokenRefresh, UserLogout } from "../../api/api";
+import { readAccessToken, readExpiration, removeAccessToken, storeAccessToken, storeExpiration } from "../../util/utility";
+import { Link, Navigation, useNavigate } from "react-router-dom";
 import { useWindowSize } from "usehooks-ts";
 import { MdMenu } from "react-icons/md";
+import { ModalContext } from "../../context/modal-context";
 
 type NavigationType = {
     title: string,
     link: string
 } 
 
-const NAVIGATION_OPTIONS: Array<NavigationType> = [
+const LOGGED_OUT_NAV_OPTIONS: Array<NavigationType> = [
     {
         title: "Home",
         link: "/"
@@ -41,16 +42,65 @@ const NAVIGATION_OPTIONS: Array<NavigationType> = [
     }
 ]
 
+const LOGGED_IN_NAV_OPTIONS: Array<NavigationType> = [
+    {
+        title: "Dashboard",
+        link: "/dashboard"
+    },
+    {
+        title: "Exams",
+        link: "/exams"
+    },
+    {
+        title: "Upload",
+        link: "/upload"
+    },
+    {
+        title: "Contact Us",
+        link: "/contact"
+    },
+    {
+        title: "Notifications",
+        link: "/notification"
+    },
+]
+
+
+
 const SmallNavbar = ({ accessToken }: { accessToken: string | null }) => {
     const [isMenuOpen, SetMenuOpen] = useState<boolean>(false);
 
-    const handleLoginClick = () => {
+    const { SetDisplayLogin } = useContext(ModalContext)
+    const { setAccessToken } = useContext(UserContext)
 
+    const navigate = useNavigate()
+
+    const handleLoginClick = () => {
+        SetDisplayLogin(true)
     }
+
+    const { mutateAsync: LogoutMutation } = useMutation({
+        mutationFn: UserLogout,
+        onSuccess: () => {
+            removeAccessToken()
+            setAccessToken(null)
+            navigate("/")
+        },
+    })
+
 
     const handleLogoutClick = () => {
-
+        try {
+            LogoutMutation({
+                token: readAccessToken()!
+            })
+        } catch (e) {
+            console.error(e)
+        }
     }
+
+    
+    const NAVIGATION_OPTIONS = accessToken === null ? LOGGED_OUT_NAV_OPTIONS : LOGGED_IN_NAV_OPTIONS
 
     return (
         <>

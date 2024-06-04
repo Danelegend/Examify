@@ -53,3 +53,10 @@ class ExamFilterRequest(BaseModel):
     school: Optional[List[str]] = None
     year: Optional[List[int]] = None
     exam_type: Optional[List[ExamTypes]] = None
+
+class NotificationCreationRequest(BaseModel):
+    user_id: int
+    sender_id: Optional[int] = None
+    title: str
+    message: str
+    link: Optional[str] = None

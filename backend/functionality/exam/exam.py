@@ -6,6 +6,7 @@ from functionality.token import get_user_id
 from functionality.types import ExamType
 from functionality.security import FileLocationAccessible
 
+from database.helpers.completed import insert_user_completed_exam
 from database.helpers.exam import check_exam_exists, get_exam, get_exam_id_from_schoool_year_type
 from database.helpers.favourite import check_if_user_favourite_exam_exists, delete_user_favourite_exam, get_exam_likes_count, insert_user_favourite_exam
 from database.helpers.recent import insert_user_recently_viewed_exam
@@ -103,3 +104,10 @@ def ExamFavouriteOfUser(access_token: str, exam_id: int) -> bool:
     user_id = get_user_id(access_token)
 
     return check_if_user_favourite_exam_exists(user_id, exam_id)
+
+def AddUserCompletedExam(user_id: int, exam_id: int):
+    """
+    Given a user_id and exam id, denotes that this exam hass been completed
+    by the user
+    """
+    insert_user_completed_exam(user_id, exam_id)

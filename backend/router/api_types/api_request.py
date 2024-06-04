@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import List, Optional
 from pydantic import AwareDatetime, BaseModel
 
 ################################################################################
@@ -64,3 +64,5 @@ class ExamsEndpointRequest(BaseModel):
 ################################################################################
 #################################     User     #################################
 ################################################################################
+class NotificationsSeenRequest(BaseModel):
+    notifications: List[int]

@@ -1,6 +1,6 @@
 import Environment from "../../constants"
 import { FetchError, readExpiration, storeAccessToken, storeExpiration } from "../util/utility"
-import { AdminExamReviewDeleteRequest, AdminExamReviewSubmitRequest, ExamUploadRequest, FetchExamResponse, FetchExamsRequest, FetchExamsResponse, FetchExamSubjectsResponse, FetchFavouriteExamsResponse, FetchLogosResponse, FetchRecentExamsResponse, FetchSchoolsResponse, FetchUserResponse, UserLoginRequest, UserProfileEditRequest, UserRegistrationRequest, UserRegistrationResponse } from "./types"
+import { AdminExamReviewDeleteRequest, AdminExamReviewSubmitRequest, ExamUploadRequest, FetchExamResponse, FetchExamsRequest, FetchExamsResponse, FetchExamSubjectsResponse, FetchFavouriteExamsResponse, FetchLogosResponse, FetchNotificationsResponse, FetchRecentExamsResponse, FetchSchoolsResponse, FetchUserResponse, UserLoginRequest, UserProfileEditRequest, UserRegistrationRequest, UserRegistrationResponse } from "./types"
 
 export type UserAuthentication = {
     expiration: Date,
@@ -379,4 +379,47 @@ export const FetchExam = ({ school, year, exam_type }: { school: string, year: n
             throw new FetchError(res)
         }
     })
+}
+
+export const FetchUserNotifications = ({ token }: { token: string }): Promise<FetchNotificationsResponse> => {
+    return AuthorizationMiddleware<FetchNotificationsResponse>(() => fetch(Environment.BACKEND_URL + "/api/user/notifications", {
+        headers: {
+            'Content-Type': 'application/json',
+            "Authorization": `bearer ${token}`
+        },
+        method: "GET",
+        credentials: 'include'
+    }).then(async (res) => {
+        const data = await res.json()
+
+        if (res.ok) {
+            return data
+        } else {
+            throw new FetchError(res)
+        }
+    }))
+}
+
+export const UserNotificationsSeen = ({ token, notification_ids }: { token: string, notification_ids: number[] }): Promise<Response> => {
+    return AuthorizationMiddleware<Response>(() => fetch(Environment.BACKEND_URL + "/api/user/notifications/seen", {
+        method: "PUT",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `bearer ${token}`
+        },
+        body: JSON.stringify({
+            notifications: notification_ids
+        })
+    }))
+}
+
+export const PostCompletedExam = ({ token, exam_id }: { token: string, exam_id: number }): Promise<Response> => {
+    return AuthorizationMiddleware<Response>(() => fetch(Environment.BACKEND_URL + "/api/exam/" + exam_id.toString() + "/complete", {
+        headers: {
+            'Content-Type': 'application/json',
+            "Authorization": `bearer ${token}`
+        },
+        method: "POST",
+        credentials: 'include'
+    }))
 }

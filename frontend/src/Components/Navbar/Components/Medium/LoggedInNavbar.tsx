@@ -5,6 +5,8 @@ import { useContext } from "react";
 import { UserContext } from "../../../../context/user-context";
 import { NavigationButton } from "../NavButton";
 import { UserLogout } from "../../../../api/api";
+import { IoIosNotifications } from "react-icons/io";
+import NotificationIcon from "../Notification";
 
 const LoggedInNavbar = () => {
     const { setAccessToken } = useContext(UserContext)
@@ -39,7 +41,8 @@ const LoggedInNavbar = () => {
                     <NavigationButton link="/contact" title="Contact" />
                 </div>
 
-                <div className="justify-start items-center inline-flex">
+                <div className="justify-start items-center inline-flex space-x-4">
+                    <NotificationIcon />
                     <div className="text-sky-500 text-sm font-bold font-['Montserrat'] leading-7 tracking-tight cursor-pointer pr-10 md:pr-12" onClick={handleLogoutClick}>
                         Logout
                     </div>

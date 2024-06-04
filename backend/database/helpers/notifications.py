@@ -29,7 +29,7 @@ def insert_notification(notification_request: NotificationCreationRequest):
         with conn.cursor() as cur:
             cur.execute(
                 """
-                INSERT INTO notifications (user, sender, title, message, link)
+                INSERT INTO notifications (receiver, sender, title, message, link)
                 VALUES (%(user)s, %(sender)s, %(title)s, %(message)s, %(link)s);
                 """, 
                 {
@@ -58,9 +58,9 @@ def get_user_notifications(user_id: int) -> List[NotificationResponse]:
         with conn.cursor() as cur:
             cur.execute(
                 """
-                SELECT id, user, sender, title, message, link, date_sent
+                SELECT id, receiver, sender, title, message, link, date_sent
                 FROM notifications
-                WHERE user = %(user)s
+                WHERE receiver = %(user)s
                 """, {
                     'user': user_id
                 }
@@ -94,9 +94,9 @@ def get_user_unread_notifications(user_id: int) -> List[NotificationResponse]:
         with conn.cursor() as cur:
             cur.execute(
                 """
-                SELECT id, user, sender, title, message, link, date_sent
+                SELECT id, receiver, sender, title, message, link, date_sent
                 FROM notifications
-                WHERE user = %(user)s AND read = FALSE;
+                WHERE receiver = %(user)s AND read = FALSE;
                 """, {
                     'user': user_id
                 }
@@ -155,7 +155,7 @@ def notification_belongs_user(notification_id: int, user_id: int) -> bool:
         conn = connect()
         with conn.cursor() as cur:
             cur.execute("""
-                        SELECT EXISTS(SELECT 1 FROM notifications WHERE user = %(user_id)s AND id = %(notification_id)s);
+                        SELECT EXISTS(SELECT 1 FROM notifications WHERE receiver = %(user_id)s AND id = %(notification_id)s);
                         """, {
                             "user_id": user_id, 
                             "notification_id": notification_id})

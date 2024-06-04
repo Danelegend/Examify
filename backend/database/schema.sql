@@ -100,7 +100,7 @@ CREATE TABLE completed_exams (
 
 CREATE TABLE notifications (
     id                      BIGSERIAL,
-    user                    BIGINT NOT NULL,
+    receiver                    BIGINT NOT NULL,
     sender                  BIGINT DEFAULT NULL,
     title                   VARCHAR(255) DEFAULT "" NOT NULL,
     message                 VARCHAR(255) DEFAULT "" NOT NULL,
@@ -109,5 +109,5 @@ CREATE TABLE notifications (
     read                    BOOLEAN DEFAULT FALSE,
     date_read               TIMESTAMP DEFAULT NULL,
     PRIMARY KEY             (id),
-    FOREIGN KEY             (user) REFERENCES accounts(id)
+    FOREIGN KEY             (receiver) REFERENCES accounts(id)
 );

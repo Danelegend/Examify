@@ -82,5 +82,5 @@ async def db_setup(password: str = ""):
 @app.get("/db/insert/exams", status_code=status.HTTP_200_OK)
 async def db_insert_exams(password: str = ""):
     if password != "@JudyMansell13!": return
-
+    
     return reinsert_exams()

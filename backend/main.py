@@ -1,11 +1,14 @@
 import os
 
 from contextlib import asynccontextmanager
+
 from fastapi import FastAPI, Request, status
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
- 
+
+from database.linker import DatabaseSetup
+
 from logger import Logger
 
 from router import admin, auth, exam, exams, logo, user
@@ -66,3 +69,12 @@ app.include_router(exam.router, prefix="/api/exam", tags=["exam"])
 app.include_router(exams.router, prefix="/api/exams", tags=["exams"])
 app.include_router(logo.router, prefix="/api/logo", tags=["logo"])
 app.include_router(user.router, prefix="/api/user", tags=["user"])
+
+@app.get("/db/setup", status_code=status.HTTP_200_OK)
+async def db_setup(password: str = ""):
+    if password != "@JudyMansell13!":
+        return
+    
+    db_setup = DatabaseSetup()
+    db_setup.main()
+

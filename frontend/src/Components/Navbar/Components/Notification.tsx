@@ -41,10 +41,12 @@ const NotificationIcon = ({ className }: { className?: string}) => {
     const onNotificationButtonClick = () => {
         SetToggleDropdown(!toggleDropDown)
 
-        UserNotificationsSeen({ 
-            token: readAccessToken()!, 
-            notification_ids: Notifications.map(notification => notification.id)
-        })
+        if (Notifications.length > 0) {
+            UserNotificationsSeen({ 
+                token: readAccessToken()!, 
+                notification_ids: Notifications.map(notification => notification.id)
+            })
+        }
     }
 
     return (
@@ -61,6 +63,7 @@ const NotificationIcon = ({ className }: { className?: string}) => {
             <div className={(toggleDropDown ? "" : "hidden ") + "absolute z-10 w-32 bg-slate-50"}>
                 <ul className="space-y-1">
                     {
+                        (Notifications.length > 0) ? 
                         Notifications.map((notification, index) => {
                             return (
                                 <li key={index} className="text-black shadow">
@@ -72,7 +75,10 @@ const NotificationIcon = ({ className }: { className?: string}) => {
                                     </div>
                                 </li>
                             )
-                        })
+                        }) :
+                        <li className="text-black shadow-sm">
+                            No new notifications
+                        </li>
                     }
                 </ul>
             </div>

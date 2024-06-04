@@ -21,3 +21,14 @@ class TestTimeBucket:
 
         assert result == expected
     
+    def test_8_days_ago_period_7():
+        today = datetime.now()
+        prev_time = today - timedelta(days=8)
+
+        period = 7
+
+        result = _calculate_time_bucket(prev_time, period)
+        expected = today - timedelta(7*2)
+
+        assert result == expected
+    

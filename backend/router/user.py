@@ -3,7 +3,7 @@ from fastapi import APIRouter, Security, status
 
 from functionality.token import get_user_id
 from functionality.notifications.notifications import get_notifications, mark_notifications_seen
-from functionality.user.analytics import get_user_subject_analytics
+from functionality.user.analytics import get_user_activity_analytics, get_user_subject_analytics
 
 from router import HTTPBearer401
 from router.api_types.api_response import UserAnalyticsActivityResponse, UserAnalyticsCompletedSubjectExamsResponse, UserNotificationsResponse, UserProfileResponse
@@ -35,9 +35,15 @@ async def get_user_analytics_for_subjects(token: Annotated[str, Security(HTTPBea
     result = get_user_subject_analytics(user_id)
 
     return UserAnalyticsCompletedSubjectExamsResponse(
-        results = result
+        analytics=result
     )
 
 @router.get("/analytics/activity", status_code=status.HTTP_200_OK, response_model=UserAnalyticsActivityResponse)
 async def get_user_analytics_for_activity(token: Annotated[str, Security(HTTPBearer401())]) -> UserAnalyticsActivityResponse:
-    pass
+    user_id = get_user_id(token)
+
+    result = get_user_activity_analytics(user_id)
+
+    return UserAnalyticsActivityResponse(
+        analytics=result
+    )

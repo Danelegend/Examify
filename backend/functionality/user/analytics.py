@@ -1,6 +1,6 @@
 import math
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Dict
 
 from database.helpers.completed import get_user_completed_exams
@@ -35,14 +35,17 @@ def _calculate_time_bucket(time: datetime, period: int) -> datetime:
 
     Ie. If a period is 7 days, and today is Monday, all days up to last
     Tuesday should fit in a bucket denoted by Tuesday's date
+    
+    Determine how many days ago the time was from today
     """
-    # Determine number of days since 2000
-    # Today - 4 * Ceil(Num days since / 4) 
-    # M T W T F S S M T W T
+    number_days_since = (datetime.now() - time).days
+    
+    # Determine which number bucket
+    bucket_num = math.floor(number_days_since / period + 1)
 
-    number_days_since = (time - datetime(1970, 1, 1)).days
+    num_days = period * bucket_num
 
-    return datetime.now() - period * math.ceil(number_days_since / period)
+    return datetime.now() - timedelta(days=num_days)
 
 
 def get_user_activity_analytics(user_id: int, period=7) -> Dict[datetime, Dict[str, int]]:
@@ -58,3 +61,13 @@ def get_user_activity_analytics(user_id: int, period=7) -> Dict[datetime, Dict[s
         exam = get_exam(user_complete_exam.exam)
 
         subject = SubjectType.MapPrefixToName(exam.subject)
+        date_complete = user_complete_exam.date_complete
+
+        bucket_date = _calculate_time_bucket(date_complete, period)
+
+        if bucket_date not in result:
+            result[bucket_date] = {}
+
+        result[bucket_date][subject] = result[bucket_date].get(subject, 0) + 1
+
+    return result

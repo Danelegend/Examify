@@ -100,7 +100,7 @@ class UserNotificationsResponse(BaseModel):
     notifications: List[NotificationResponse]
 
 class UserAnalyticsCompletedSubjectExamsResponse(BaseModel):
-    results: Dict[str, int]
+    analytics: Dict[str, int]
 
 class UserAnalyticsActivityResponse(BaseModel):
-    results: Dict[datetime, Dict[str, int]]
+    analytics: Dict[datetime, Dict[str, int]]

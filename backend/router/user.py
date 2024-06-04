@@ -25,7 +25,7 @@ async def get_user_notifications(token: Annotated[str, Security(HTTPBearer401())
     )
 
 @router.put("/notifications/seen", status_code=status.HTTP_200_OK)
-async def user_notifications_seen(token: Annotated[str, Security(HTTPBearer401)], request: NotificationsSeenRequest):
+async def user_notifications_seen(token: Annotated[str, Security(HTTPBearer401())], request: NotificationsSeenRequest):
     mark_notifications_seen(token, request.notifications)
 
 @router.get("/analytics/subject", status_code=status.HTTP_200_OK, response_model=UserAnalyticsCompletedSubjectExamsResponse)

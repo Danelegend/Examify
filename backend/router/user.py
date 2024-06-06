@@ -39,8 +39,8 @@ async def get_user_analytics_for_subjects(token: Annotated[str, Security(HTTPBea
     return UserAnalyticsCompletedSubjectExamsResponse(
         analytics=[ExamsComplete(
             subject=subject,
-            number_complete=number
-        ) for subject, number in result]
+            number_complete=result[subject]
+        ) for subject in result]
     )
 
 @router.get("/analytics/activity", status_code=status.HTTP_200_OK, response_model=UserAnalyticsActivityResponse)
@@ -59,5 +59,5 @@ async def get_user_analytics_for_activity(token: Annotated[str, Security(HTTPBea
         ) for subject, number in exams_complete]
 
     return UserAnalyticsActivityResponse(
-        analytics=[(date, exams_complete) for date, exams_complete in date_to_exams_complete]
+        analytics=[(date, date_to_exams_complete[date]) for date in date_to_exams_complete]
     )

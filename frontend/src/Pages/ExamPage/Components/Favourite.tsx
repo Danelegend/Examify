@@ -1,10 +1,17 @@
 import { RiHeartFill, RiHeartLine } from 'react-icons/ri';
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { readAccessToken } from '../../../util/utility';
-import { DeleteFavourite, PostFavourite } from '../../../api/api';
+import { DeleteFavourite, FetchUserFavouritedExam, PostFavourite } from '../../../api/api';
+import { useQuery } from '@tanstack/react-query';
 
 const FavouriteIcon = ({ exam_id }: { exam_id: number} ) => {
     const [Favourite, SetFavourite] = useState<boolean>(false)
+
+    const { data, isPending, isError } = useQuery({
+        queryKey: ['Favourite'],
+        queryFn: () => FetchUserFavouritedExam({ token: readAccessToken()!, exam_id: exam_id}),
+        retry: 0
+    })
 
     const click = () => {
         const token = readAccessToken()
@@ -17,6 +24,17 @@ const FavouriteIcon = ({ exam_id }: { exam_id: number} ) => {
 
         SetFavourite(!Favourite)
     }
+
+    useEffect(() => {
+        if (isError) {
+            SetFavourite(false)
+            return
+        }
+
+        if (!isPending) {
+            SetFavourite(data!.valueOf())
+        }
+    }, [isPending, isError])
 
     return Favourite ?
         <RiHeartFill size={40} color="red" className="cursor-pointer" onClick={click} />

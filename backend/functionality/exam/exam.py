@@ -6,7 +6,7 @@ from functionality.token import get_user_id
 from functionality.types import ExamType
 from functionality.security import FileLocationAccessible
 
-from database.helpers.completed import insert_user_completed_exam, remove_user_completed_exam
+from database.helpers.completed import get_user_completed_exams, insert_user_completed_exam, remove_user_completed_exam
 from database.helpers.exam import check_exam_exists, get_exam, get_exam_id_from_schoool_year_type
 from database.helpers.favourite import check_if_user_favourite_exam_exists, delete_user_favourite_exam, get_exam_likes_count, insert_user_favourite_exam
 from database.helpers.recent import insert_user_recently_viewed_exam
@@ -40,6 +40,12 @@ def GetExamLikes(exam_id: int):
     """
     
     return get_exam_likes_count(exam_id)
+
+def GetFavouriteExam(user_id: int, exam_id: int):
+    """
+    Determines whether the given exam is a favourite of the user
+    """
+    return check_if_user_favourite_exam_exists(user_id, exam_id)
 
 def AddFavouriteExam(access_token: str, exam_id: int):
     """
@@ -102,6 +108,13 @@ def ExamFavouriteOfUser(access_token: str, exam_id: int) -> bool:
     user_id = get_user_id(access_token)
 
     return check_if_user_favourite_exam_exists(user_id, exam_id)
+
+def GetUserCompletedExam(user_id: int, exam_id: int) -> bool:
+    """
+    Given a user id and exam id, determines whether the user has
+    completed the exam
+    """
+    return get_user_completed_exams(user_id, exam_id)
 
 def AddUserCompletedExam(user_id: int, exam_id: int):
     """

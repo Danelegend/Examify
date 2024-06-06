@@ -1,10 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TiTickOutline, TiTick } from "react-icons/ti";
 import { readAccessToken } from "../../../util/utility";
-import { DeleteCompletedExam, PostCompletedExam } from "../../../api/api";
+import { DeleteCompletedExam, FetchUserCompletedExam, PostCompletedExam } from "../../../api/api";
+import { useQuery } from "@tanstack/react-query";
 
 const CompleteIcon = ({ exam_id }: { exam_id: number }) => {
     const [Complete, SetComplete] = useState<boolean>(false)
+
+    const { data, isPending, isError } = useQuery({
+        queryKey: ['Complete'],
+        queryFn: () => FetchUserCompletedExam({ token: readAccessToken()!, exam_id: exam_id }),
+        retry: 0
+    })
 
     const click = () => {
         const token = readAccessToken()
@@ -16,6 +23,17 @@ const CompleteIcon = ({ exam_id }: { exam_id: number }) => {
         Complete ? DeleteCompletedExam({ exam_id: exam_id, token: token }) : PostCompletedExam({ exam_id: exam_id, token: token })
         SetComplete(!Complete)
     }
+
+    useEffect(() => {
+        if (isError) {
+            SetComplete(false)
+            return
+        }
+
+        if (!isPending) {
+            SetComplete(data!.valueOf())
+        }
+    }, [isPending, isError])
 
     return (
         Complete ?

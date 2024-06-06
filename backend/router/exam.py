@@ -5,7 +5,7 @@ from fastapi.responses import FileResponse
 
 from errors import AuthenticationError, DuplicationError, ValidationError
 
-from functionality.exam.exam import AddFavouriteExam, AddRecentlyViewedExam, AddUserCompletedExam, GetExamId, GetExamPdf, RemoveFavouriteExam
+from functionality.exam.exam import AddFavouriteExam, AddRecentlyViewedExam, AddUserCompletedExam, GetExamId, GetExamPdf, GetFavouriteExam, GetUserCompletedExam, RemoveFavouriteExam, RemoveUserCompletedExam
 from functionality.token import get_user_id
 
 from router import HTTPBearer401
@@ -33,7 +33,16 @@ async def get_exam_pdf(exam_id: int) -> FileResponse:
     except Exception as e:
         print(str(e))
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)) from e
-    
+
+@router.get("/{exam_id}/favourite", status_code=status.HTTP_200_OK)
+async def get_favourite_exam(exam_id: int, token: Annotated[str, Security(HTTPBearer401())]) -> Response:
+    try:
+        user_id = get_user_id(token)
+    except AuthenticationError as a:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, details=a.message) from a
+
+    return GetFavouriteExam(user_id, exam_id)
+
 @router.post("/{exam_id}/favourite", status_code=status.HTTP_200_OK)
 async def add_favourite_exam(exam_id: int, token: Annotated[str, Security(HTTPBearer401())]) -> Response:
     try:
@@ -73,6 +82,15 @@ async def add_recent_exam(exam_id: int, token: Annotated[str, Security(HTTPBeare
     except DuplicationError as d:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=d.message) from d
 
+@router.get("/{exam_id}/complete", status_code=status.HTTP_200_OK)
+async def get_completed_exam(exam_id: int, token: Annotated[str, Security(HTTPBearer401())]) -> bool:
+    try:
+        user_id = get_user_id(token)
+    except AuthenticationError as a:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, details=a.message) from a
+
+    return GetUserCompletedExam(user_id, exam_id)
+
 @router.post("/{exam_id}/complete", status_code=status.HTTP_200_OK)
 async def add_completed_exam(exam_id: int, token: Annotated[str, Security(HTTPBearer401())]) -> Response:
     try:
@@ -89,4 +107,4 @@ async def remove_completed_exam(exam_id: int, token: Annotated[str, Security(HTT
     except AuthenticationError as a:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, details=a.message) from a
 
-    
+    RemoveUserCompletedExam(user_id, exam_id)

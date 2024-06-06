@@ -475,3 +475,41 @@ export const FetchUserActivityAnalytics = ({ token }: { token: string }): Promis
         }
     }))
 }
+
+export const FetchUserCompletedExam = ({ token, exam_id }: { token: string, exam_id: number }): Promise<Boolean> => {
+    return AuthorizationMiddleware<Boolean>(() => fetch(Environment.BACKEND_URL + "/api/exam/" + exam_id.toString() + "/complete", {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `bearer ${token}`
+        },
+        method: "GET",
+        credentials: 'include'
+    }).then(async (res) => {
+        const data = await res.json()
+
+        if (res.ok) {
+            return data
+        } else {
+            throw new FetchError(res)
+        }
+    }))
+}
+
+export const FetchUserFavouritedExam = ({ token, exam_id }: { token: string, exam_id: number }): Promise<Boolean> => {
+    return AuthorizationMiddleware<Boolean>(() => fetch(Environment.BACKEND_URL + "/api/exam/" + exam_id.toString() + "/favourite", {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `bearer ${token}`
+        },
+        method: "GET",
+        credentials: 'include'
+    }).then(async (res) => {
+        const data = await res.json()
+
+        if (res.ok) {
+            return data
+        } else {
+            throw new FetchError(res)
+        }
+    }))
+}

@@ -100,3 +100,22 @@ def remove_user_completed_exam(user_id: int, exam_id: int):
         raise e
     finally:
         disconnect(conn)
+
+def check_if_user_complete_exam_exists(user_id: int, exam_id: int) -> bool:
+    """
+    Checks if the user complete exam entry exists in DB
+    """
+    try:
+        conn = connect()
+        with conn.cursor() as cur:
+            cur.execute("SELECT EXISTS(SELECT 1 FROM completed_exams WHERE account = %(account)s AND exam = %(exam)s);", {"account": user_id, "exam": exam_id})
+            exists = cur.fetchone()
+
+        log_completed_exams_success("Finished checking if the User Completed Exam exists in Database")
+    except psycopg2.Error as e:
+        log_completed_exams_error(f"Error checking if the User Completed Exam exists: {e}")
+        raise e
+    finally:
+        disconnect(conn)
+
+    return exists[0] if exists else False

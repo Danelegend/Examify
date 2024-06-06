@@ -110,7 +110,7 @@ const SubjectAnalyticsPieChart = () => {
 
     useEffect(() => {
         if (!isPending) {
-            //SetCompletedExams(data!.analytics)
+          SetCompletedExams(data!.analytics)
         }
     }, [isPending, data])
 

@@ -1,6 +1,6 @@
 import Environment from "../../constants"
 import { FetchError, readExpiration, storeAccessToken, storeExpiration } from "../util/utility"
-import { AdminExamReviewDeleteRequest, AdminExamReviewSubmitRequest, ExamUploadRequest, FetchExamResponse, FetchExamsRequest, FetchExamsResponse, FetchExamSubjectsResponse, FetchFavouriteExamsResponse, FetchLogosResponse, FetchNotificationsResponse, FetchRecentExamsResponse, FetchSchoolsResponse, FetchUserResponse, UserLoginRequest, UserProfileEditRequest, UserRegistrationRequest, UserRegistrationResponse } from "./types"
+import { AdminExamReviewDeleteRequest, AdminExamReviewSubmitRequest, ExamUploadRequest, FetchExamResponse, FetchExamsRequest, FetchExamsResponse, FetchExamSubjectsResponse, FetchFavouriteExamsResponse, FetchLogosResponse, FetchNotificationsResponse, FetchRecentExamsResponse, FetchSchoolsResponse, FetchUserActivityAnalyticsResponse, FetchUserResponse, FetchUserSubjectAnalyticsResponse, UserLoginRequest, UserProfileEditRequest, UserRegistrationRequest, UserRegistrationResponse } from "./types"
 
 export type UserAuthentication = {
     expiration: Date,
@@ -17,8 +17,11 @@ const AuthorizationMiddleware: AuthorizationMiddlewareType = (func) => {
             credentials: "include"
         }).then(async (res) => {
             const data: UserAuthentication = await res.json()
+            
+            console.log(data)
 
             if (res.ok) {
+                console.log("Here")
                 storeAccessToken(data.access_token)
                 storeExpiration(data.expiration)
 
@@ -421,5 +424,54 @@ export const PostCompletedExam = ({ token, exam_id }: { token: string, exam_id: 
         },
         method: "POST",
         credentials: 'include'
+    }))
+}
+
+export const DeleteCompletedExam = ({ token, exam_id }: { token: string, exam_id: number}): Promise<Response> => {
+    return AuthorizationMiddleware<Response>(() => fetch(Environment.BACKEND_URL + "/api/exam/" + exam_id.toString() + "/complete", {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `bearer ${token}`
+        },
+        method: "DELETE",
+        credentials: 'include'
+    }))
+} 
+
+export const FetchUserSubjectAnalytics = ({ token }: { token: string }): Promise<FetchUserSubjectAnalyticsResponse> => {
+    return AuthorizationMiddleware<FetchUserSubjectAnalyticsResponse>(() => fetch(Environment.BACKEND_URL + "/api/user/analytics/subject", {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `bearer ${token}`
+        },
+        method: "GET",
+        credentials: 'include'
+    }).then(async (res) => {
+        const data = await res.json()
+
+        if (res.ok) {
+            return data
+        } else {
+            throw new FetchError(res)
+        }
+    }))
+}
+
+export const FetchUserActivityAnalytics = ({ token }: { token: string }): Promise<FetchUserActivityAnalyticsResponse> => {
+    return AuthorizationMiddleware<FetchUserActivityAnalyticsResponse>(() => fetch(Environment.BACKEND_URL + "/api/user/analytics/activity", {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `bearer ${token}`
+        },
+        method: "GET",
+        credentials: 'include'
+    }).then(async (res) => {
+        const data = await res.json()
+
+        if (res.ok) {
+            return data
+        } else {
+            throw new FetchError(res)
+        }
     }))
 }

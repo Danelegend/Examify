@@ -6,7 +6,7 @@ from functionality.token import get_user_id
 from functionality.types import ExamType
 from functionality.security import FileLocationAccessible
 
-from database.helpers.completed import insert_user_completed_exam
+from database.helpers.completed import insert_user_completed_exam, remove_user_completed_exam
 from database.helpers.exam import check_exam_exists, get_exam, get_exam_id_from_schoool_year_type
 from database.helpers.favourite import check_if_user_favourite_exam_exists, delete_user_favourite_exam, get_exam_likes_count, insert_user_favourite_exam
 from database.helpers.recent import insert_user_recently_viewed_exam
@@ -109,3 +109,10 @@ def AddUserCompletedExam(user_id: int, exam_id: int):
     by the user
     """
     insert_user_completed_exam(user_id, exam_id)
+
+def RemoveUserCompletedExam(user_id: int, exam_id: int):
+    """
+    Given a user id and exam id, removes any nature of this exam being
+    completed by the user
+    """
+    remove_user_completed_exam(user_id, exam_id)

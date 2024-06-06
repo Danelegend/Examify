@@ -154,3 +154,19 @@ export type Notification = {
 export type FetchNotificationsResponse = {
     notifications: Notification[]
 }
+
+export type ExamsComplete = {
+    subject: string,
+    number_complete: number
+}
+
+export type FetchUserSubjectAnalyticsResponse = {
+    analytics: ExamsComplete[]
+}
+
+export type FetchUserActivityAnalyticsResponse = {
+    analytics: {
+        date: Date
+        completed_exams: ExamsComplete[]
+    }[]
+}

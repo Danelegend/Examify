@@ -78,7 +78,7 @@ def GetRecentlyViewedExams(access_token: str) -> List[ExamDetails]:
                 school_name=exam.school,
                 type=ExamType.MapPrefixToName(exam.exam_type),
                 year=exam.year,
-                favourite=False,
+                favourite=ExamFavouriteOfUser(access_token, exam),
                 upload_date=datetime_to_string(exam.date_uploaded),
                 likes=exam.likes,
                 subject=SubjectType.MapPrefixToName(exam.subject)

@@ -60,7 +60,7 @@ const NotificationIcon = ({ className }: { className?: string}) => {
                     : null
             }
             </div>
-            <div className={(toggleDropDown ? "" : "hidden ") + "absolute z-10 w-32 bg-slate-50"}>
+            <div className={(toggleDropDown ? "" : "hidden ") + "mt-2 absolute z-10 w-32 bg-slate-50"}>
                 <ul className="space-y-1">
                     {
                         (Notifications.length > 0) ? 
@@ -76,7 +76,7 @@ const NotificationIcon = ({ className }: { className?: string}) => {
                                 </li>
                             )
                         }) :
-                        <li className="text-black shadow-sm">
+                        <li className="text-black shadow-sm text-sm py-2 px-4">
                             No new notifications
                         </li>
                     }

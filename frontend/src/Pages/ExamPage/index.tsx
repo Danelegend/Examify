@@ -12,6 +12,8 @@ import { UserContext } from "../../context/user-context";
 import { FetchError, readAccessToken } from "../../util/utility";
 import { FetchExam, PostRecentlyViewedExam } from "../../api/api"
 import Timer from "./Components/Timer"
+import CompleteIcon from "./Components/Complete"
+import FavouriteIcon from "./Components/Favourite"
 
 const ExamPage = () => {
     const [Fullscreen, SetFullscreen] = useState(false)
@@ -66,19 +68,6 @@ const ExamPage = () => {
         }
     }, [isPending, error])
 
-    /*
-    <div className="flex items-center justify-center">
-                <div className="flex-1"/>
-                <div className="border-1 border-black">
-                    <ExamDisplay examId={data!.exam_id} />
-                </div>
-                <div className="flex-1"/>
-                <div className="mr-auto">
-                    <Timer />
-                </div>
-            </div>
-    */
-
     dotSpinner.register()
 
     return (
@@ -104,7 +93,17 @@ const ExamPage = () => {
                     <ExamDisplay examId={data!.exam_id} />
                     <div className="flex-1">
                         <div className="flex justify-center">
-                            <Timer />
+                            <div className="flex-col space-y-4">
+                                <Timer />
+                                <div className="flex justify-evenly">
+                                    <div className="my-auto">
+                                        <CompleteIcon exam_id={data!.exam_id}/>
+                                    </div>
+                                    <div className="my-auto">
+                                        <FavouriteIcon exam_id={data!.exam_id}/>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

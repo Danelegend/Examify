@@ -5,6 +5,9 @@ import { FetchError, handle403, readAccessToken } from "../../util/utility";
 import FavouriteExamsDisplay from "./Components/FavouriteExams";
 import RecentExamsDisplay from "./Components/RecentExams";
 import { FetchUserProfile } from "../../api/api";
+import SubjectAnalyticsPieChart from "./Components/UserSubjectAnalyticsPieChart";
+import ActivityAnalyticsDisplay from "./Components/UserActivityAnalytics";
+import Planner from "./Components/Planner";
 
 
 type UserProfile = {
@@ -55,12 +58,12 @@ const StudentDashboardPage = () => {
     
 
     return (userProfileIsPending) ? 
-    <div className="flex h-96 min-w-screen justify-center items-center">
+    <div className="flex min-h-screen min-w-screen justify-center items-center">
         <l-waveform
         size="35"
         stroke="3.5"
         speed="1" 
-        color="white" 
+        color="black" 
         /> 
     </div>
     : 
@@ -69,17 +72,23 @@ const StudentDashboardPage = () => {
             <div className="text-black text-center text-xl mt-6 font-bold">
                 Welcome back {UserProfile?.name}
             </div>
-            <div className="grid grid-cols-4 mx-32 gap-4 pt-4">
-                <FavouriteExamsDisplay />
-                <RecentExamsDisplay />
-                <div>
-                    <div className="text-black text-xl text-center">
-                        Exams Completed: {UserProfile?.exams_completed}
-                    </div>
+            <div className="grid grid-cols-4 mx-32 gap-x-4 gap-y-12 pt-4">
+                <div className="col-span-3">
+                    <FavouriteExamsDisplay />
+                </div>
+                <div className="row-span-3">
+                    <RecentExamsDisplay />
                 </div>
                 <div>
-
+                    <SubjectAnalyticsPieChart />
                 </div>
+                {
+                    /*
+                <div className="col-span-2">
+                    <Planner />
+                </div>
+                */
+                }
             </div>
         </div>
     )

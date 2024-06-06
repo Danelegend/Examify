@@ -4,12 +4,27 @@ import { useEffect, useState } from "react";
 import { FetchError, handle403, readAccessToken } from "../../../util/utility";
 import { useQuery } from "@tanstack/react-query";
 import { FetchRecentExams } from "../../../api/api";
+import { useWindowSize } from "usehooks-ts";
+
+const SplitAndShuffleArray = (array: ExamCardProps[], size: number, start: number): ExamCardProps[] => {
+    var newArr = []
+
+    for (var i = start; i < array.length && newArr.length < size; ++i) {
+        newArr.push(array[i])
+    }
+
+    for (var i = 0; i < start && newArr.length < size; ++i) {
+        newArr.push(array[i])
+    }
+
+    return newArr;
+}
 
 const RecentExamsDisplay = () => {
     const [RecentExams, SetRecentExams] = useState<ExamCardProps[]>([])
     const [RecentlyViewedPosition, SetRecentlyViewedPosition] = useState<number>(0)
 
-    const handleAuthorizationError = handle403()
+    const size = useWindowSize();
 
     const handleUpRecentlyViewedClick = () => {
         if (RecentlyViewedPosition === 0) {
@@ -38,46 +53,30 @@ const RecentExamsDisplay = () => {
 
     useEffect(() => {
         if (!recentIsPending) {
-            if (recentError) {
-                console.log(recentError)
-
-                if (recentError instanceof FetchError) {
-                    switch ((recentError as FetchError).status) {
-                        case 500:
-                            break
-                        case 403:
-                            handleAuthorizationError()
-                            break
-                        default:
-                            break
-                    }
+            SetRecentExams(recentData!.exams.map((exam) => {
+                return {
+                    id: exam.id,
+                    school: exam.school_name,
+                    year: exam.year,
+                    type: exam.type,
+                    difficulty: 1,
+                    favourite: exam.favourite,
+                    subject: exam.subject,
+                    likes: exam.likes,
+                    uploadDate: exam.upload_date
                 }
-            } else {
-                SetRecentExams(recentData.exams.map((exam) => {
-                    return {
-                        id: exam.id,
-                        school: exam.school_name,
-                        year: exam.year,
-                        type: exam.type,
-                        difficulty: 1,
-                        favourite: exam.favourite,
-                        subject: exam.subject,
-                        likes: exam.likes,
-                        uploadDate: exam.upload_date
-                    }
-                }))
-            }
+            }))
         }
-    })
+    }, [recentIsPending])
 
     return (
-        <div className="bg-blue-500 row-span-3">
+        <div className="bg-blue-500">
                     <div className="text-center text-xl font-semibold py-2">
                         Recently Viewed Exams
                     </div>
                     <div className="flex flex-col gap-3 content-center my-2">
                         {
-                            RecentExams.length <= 3 ? null :
+                            RecentExams.length <= Math.ceil(size.height / 1000) ? null :
                             <MdArrowBackIos size={32} color="black" style={{transform: "rotate(90deg)"}}className="cursor-pointer self-center" onClick={handleUpRecentlyViewedClick}/>
                         }
                     
@@ -88,24 +87,25 @@ const RecentExamsDisplay = () => {
                                 <br/>
                                 <br/>
                                 Lets go find some!
-                            </div>:
-                            (RecentExams.length === 1) ? <ExamCard {...RecentExams[GetRecentlyViewedIndex(0)]} className="col-start-2"/> :
-                            (RecentExams.length === 2) ? 
-                            <>
-                                <ExamCard {...RecentExams[GetRecentlyViewedIndex(0)]} />
-                                <ExamCard {...RecentExams[GetRecentlyViewedIndex(1)]} />
-                            </> :
-                            <>
-                                <ExamCard {...RecentExams[GetRecentlyViewedIndex(0)]} />
-                                <ExamCard {...RecentExams[GetRecentlyViewedIndex(1)]} />
-                                <ExamCard {...RecentExams[GetRecentlyViewedIndex(2)]} />
-                            </>
+                            </div>
+                            :
+                            <div className="flex-col space-y-6">
+                                {
+                                    SplitAndShuffleArray(RecentExams, Math.ceil(size.width / 1000), RecentlyViewedPosition).map(
+                                        (exam, index) => 
+                                            <div key={index}>
+                                                <ExamCard {...exam} />
+                                            </div>
+                                    )
+                                }
+                            </div>
+                            
                         }
                         {
-                            RecentExams.length <= 3 ? null :
+                            RecentExams.length <= Math.ceil(size.height / 1000) ? null :
                             <MdArrowBackIos size={32} color="black" style={{transform: "rotate(270deg)"}} className="cursor-pointer self-center" onClick={handleDownRecentlyViewedClick}/>
                         }
-                        
+                        <div className="mb-6"/>
                     </div>
                 </div>
     )

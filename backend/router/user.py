@@ -6,7 +6,7 @@ from functionality.notifications.notifications import get_notifications, mark_no
 from functionality.user.analytics import get_user_activity_analytics, get_user_subject_analytics
 
 from router import HTTPBearer401
-from router.api_types.api_response import UserAnalyticsActivityResponse, UserAnalyticsCompletedSubjectExamsResponse, UserNotificationsResponse, UserProfileResponse
+from router.api_types.api_response import ExamsComplete, UserAnalyticsActivityResponse, UserAnalyticsCompletedSubjectExamsResponse, UserNotificationsResponse, UserProfileResponse
 from router.api_types.api_request import NotificationsSeenRequest
 
 router = APIRouter()
@@ -35,7 +35,10 @@ async def get_user_analytics_for_subjects(token: Annotated[str, Security(HTTPBea
     result = get_user_subject_analytics(user_id)
 
     return UserAnalyticsCompletedSubjectExamsResponse(
-        analytics=result
+        analytics=[ExamsComplete(
+            subject=subject,
+            number_complete=number
+        ) for subject, number in result]
     )
 
 @router.get("/analytics/activity", status_code=status.HTTP_200_OK, response_model=UserAnalyticsActivityResponse)
@@ -44,6 +47,15 @@ async def get_user_analytics_for_activity(token: Annotated[str, Security(HTTPBea
 
     result = get_user_activity_analytics(user_id)
 
+    # Get map of datetime to list
+    date_to_exams_complete = {}
+
+    for date, exams_complete in result:
+        date_to_exams_complete[date] = [ExamsComplete(
+            subject=subject,
+            number_complete=number
+        ) for subject, number in exams_complete]
+
     return UserAnalyticsActivityResponse(
-        analytics=result
+        analytics=[(date, exams_complete) for date, exams_complete in date_to_exams_complete]
     )

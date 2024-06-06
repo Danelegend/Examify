@@ -75,3 +75,28 @@ def get_user_completed_exams(user_id: int, size=10) -> List[CompletedExamsRespon
         exam=exam_id,
         date_complete=date_complete
     ) for exam_id, date_complete in exams]
+
+def remove_user_completed_exam(user_id: int, exam_id: int):
+    """
+    Given a user id and an exam id for a user, deletes a corresponding
+    marking of exam completion
+    """
+    try:
+        conn = connect()
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                DELETE FROM completed_exams
+                WHERE account = %(account)s AND exam = %(exam)s
+                """, {
+                    'account': user_id,
+                    'exam': exam_id
+                })
+        conn.commit()
+        log_completed_exams_success("Succesffully removed completed exam denotion")
+    except psycopg2.Error as e:
+        log_completed_exams_error(f"Error removing completed exam from Database: {e}")
+        conn.rollback()
+        raise e
+    finally:
+        disconnect(conn)

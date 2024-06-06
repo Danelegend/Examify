@@ -81,3 +81,12 @@ async def add_completed_exam(exam_id: int, token: Annotated[str, Security(HTTPBe
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, details=a.message) from a
 
     AddUserCompletedExam(user_id, exam_id)
+
+@router.delete("/{exam_id}/complete", status_code=status.HTTP_200_OK)
+async def remove_completed_exam(exam_id: int, token: Annotated[str, Security(HTTPBearer401())]) -> Response:
+    try:
+        user_id = get_user_id(token)
+    except AuthenticationError as a:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, details=a.message) from a
+
+    

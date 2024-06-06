@@ -7,6 +7,20 @@ import { waveform } from "ldrs"
 import { FetchFavouriteExams } from "../../../api/api"
 import { useWindowSize } from "usehooks-ts"
 
+const SplitAndShuffleArray = (array: ExamCardProps[], size: number, start: number): ExamCardProps[] => {
+    var newArr = []
+
+    for (var i = start; i < array.length && newArr.length < size; ++i) {
+        newArr.push(array[i])
+    }
+
+    for (var i = 0; i < start && newArr.length < size; ++i) {
+        newArr.push(array[i])
+    }
+
+    return newArr;
+}
+
 const FavouriteExamsDisplay = () => {
     const [FavouriteExams, SetFavouriteExams] = useState<ExamCardProps[]>([])
 
@@ -77,7 +91,7 @@ const FavouriteExamsDisplay = () => {
     waveform.register();
 
     return (
-        <div className="bg-white col-span-3">
+        <div className="bg-white">
                     <div className="text-black text-center text-xl font-semibold">
                         Favourite Exams
                     </div>
@@ -92,26 +106,25 @@ const FavouriteExamsDisplay = () => {
                             /> :
                         <>  
                             {
-                                FavouriteExams.length <= 3 ? null :
+                                FavouriteExams.length <= Math.ceil(size.width / 1000) ? null :
                                 <MdArrowBackIos size={32} color="black" className="cursor-pointer" onClick={handleLeftFavouriteClick}/>
                             }
                             <div className="">
                                 <div className="flex overflow-hidden">
                                     <div className="flex">
-                                        {FavouriteExams.map((item, index) => (
-                                            <div
-                                                key={index}
-                                                className="flex-none w-full"
-                                                style={{ width: `${100 / Math.ceil(size.width / 1000)}%` }}
-                                            >
-                                                <ExamCard {...FavouriteExams[GetFavouriteIndex(index)]} />
-                                            </div>
-                                        ))}
+                                        {
+                                            SplitAndShuffleArray(FavouriteExams, Math.ceil(size.width / 1000), FavouritePosition).map(
+                                                    (exam, index) => 
+                                                    <div key={index}>
+                                                        <ExamCard {...exam} />
+                                                    </div>
+                                            )
+                                        }
                                     </div>
                                 </div>
                             </div>
                             {
-                                FavouriteExams.length <= 3 ? null :
+                                FavouriteExams.length <= Math.ceil(size.width / 1000) ? null :
                                 <MdArrowBackIos size={32} color="black" style={{transform: "rotate(180deg)"}} className="cursor-pointer" onClick={handleRightFavouriteClick}/>
                             }
                         </>

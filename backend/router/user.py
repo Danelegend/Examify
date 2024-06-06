@@ -34,6 +34,8 @@ async def get_user_analytics_for_subjects(token: Annotated[str, Security(HTTPBea
 
     result = get_user_subject_analytics(user_id)
 
+    print(result)
+
     return UserAnalyticsCompletedSubjectExamsResponse(
         analytics=[ExamsComplete(
             subject=subject,

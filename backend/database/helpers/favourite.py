@@ -67,7 +67,7 @@ def delete_user_favourite_exam(user_id: int, exam_id: int):
     finally:
         disconnect(conn)
 
-def check_if_user_favourite_exam_exists(user_id: int, exam_id: int) ->bool:
+def check_if_user_favourite_exam_exists(user_id: int, exam_id: int) -> bool:
     """
     Checks if the user favourite exam exists in DB
     """

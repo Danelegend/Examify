@@ -107,14 +107,14 @@ def ExamFavouriteOfUser(access_token: str, exam_id: int) -> bool:
     # Check that the token is valid and get the user
     user_id = get_user_id(access_token)
 
-    return check_if_user_complete_exam_exists(user_id, exam_id)
+    return check_if_user_favourite_exam_exists(user_id, exam_id)
 
 def GetUserCompletedExam(user_id: int, exam_id: int) -> bool:
     """
     Given a user id and exam id, determines whether the user has
     completed the exam
     """
-    return get_user_completed_exams(user_id, exam_id)
+    return check_if_user_complete_exam_exists(user_id, exam_id)
 
 def AddUserCompletedExam(user_id: int, exam_id: int):
     """

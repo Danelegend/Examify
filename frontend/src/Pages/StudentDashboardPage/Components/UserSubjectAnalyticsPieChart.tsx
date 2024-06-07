@@ -101,9 +101,9 @@ const SubjectAnalyticsPieChart = () => {
         queryFn: () => FetchUserSubjectAnalytics({ token: readAccessToken()! })
     })
 
-    const loadChart = () => {
+    const loadChart = (exams: ExamsComplete[]) => {
         if (document.getElementById("donut-chart") && typeof ApexCharts !== 'undefined') {
-            const chart = new ApexCharts(document.getElementById("donut-chart"), getChartOptions(CompletedExams));
+            const chart = new ApexCharts(document.getElementById("donut-chart"), getChartOptions(exams));
             chart.render();
           }
     }
@@ -111,21 +111,23 @@ const SubjectAnalyticsPieChart = () => {
     useEffect(() => {
         if (!isPending) {
           SetCompletedExams(data!.analytics)
+          loadChart(data!.analytics)
         }
     }, [isPending, data])
-
-    loadChart()
 
     return (
         <div className="border-2 border-black p-2">
             {
-              (CompletedExams.length > 0) ?
-              <div className="py-6" id="donut-chart" />
-              :
-              <div className="flex">
-                <div className="m-auto text-black">
-                  No Completed Exams
-                </div>
+              
+              <div className="py-6" id="donut-chart">
+                {
+                  (CompletedExams.length > 0) ? null :
+                    <div className="flex">
+                      <div className="m-auto text-black">
+                        No Completed Exams
+                      </div>
+                    </div>
+                }
               </div>
             }
             

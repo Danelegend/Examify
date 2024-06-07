@@ -17,11 +17,8 @@ const AuthorizationMiddleware: AuthorizationMiddlewareType = (func) => {
             credentials: "include"
         }).then(async (res) => {
             const data: UserAuthentication = await res.json()
-            
-            console.log(data)
 
             if (res.ok) {
-                console.log("Here")
                 storeAccessToken(data.access_token)
                 storeExpiration(data.expiration)
 

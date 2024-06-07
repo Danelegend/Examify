@@ -35,7 +35,7 @@ async def get_exam_pdf(exam_id: int) -> FileResponse:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)) from e
 
 @router.get("/{exam_id}/favourite", status_code=status.HTTP_200_OK)
-async def get_favourite_exam(exam_id: int, token: Annotated[str, Security(HTTPBearer401())]) -> Response:
+async def get_favourite_exam(exam_id: int, token: Annotated[str, Security(HTTPBearer401())]) -> bool:
     try:
         user_id = get_user_id(token)
     except AuthenticationError as a:

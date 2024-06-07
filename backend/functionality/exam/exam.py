@@ -6,7 +6,7 @@ from functionality.token import get_user_id
 from functionality.types import ExamType
 from functionality.security import FileLocationAccessible
 
-from database.helpers.completed import get_user_completed_exams, insert_user_completed_exam, remove_user_completed_exam
+from database.helpers.completed import check_if_user_complete_exam_exists, get_user_completed_exams, insert_user_completed_exam, remove_user_completed_exam
 from database.helpers.exam import check_exam_exists, get_exam, get_exam_id_from_schoool_year_type
 from database.helpers.favourite import check_if_user_favourite_exam_exists, delete_user_favourite_exam, get_exam_likes_count, insert_user_favourite_exam
 from database.helpers.recent import insert_user_recently_viewed_exam
@@ -107,7 +107,7 @@ def ExamFavouriteOfUser(access_token: str, exam_id: int) -> bool:
     # Check that the token is valid and get the user
     user_id = get_user_id(access_token)
 
-    return check_if_user_favourite_exam_exists(user_id, exam_id)
+    return check_if_user_complete_exam_exists(user_id, exam_id)
 
 def GetUserCompletedExam(user_id: int, exam_id: int) -> bool:
     """

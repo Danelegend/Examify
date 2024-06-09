@@ -3,7 +3,7 @@ import { FetchUserSubjectAnalytics } from "../../../api/api"
 import { readAccessToken } from "../../../util/utility"
 import { useEffect, useState } from "react"
 import { ExamsComplete } from "../../../api/types"
-import * as ApexCharts from "apexcharts"
+import ApexCharts from 'apexcharts'
 
 
 const getChartOptions = (CompletedExams: ExamsComplete[]) => {
@@ -117,7 +117,6 @@ const SubjectAnalyticsPieChart = () => {
 
     return (
         <div className="border-2 border-black p-2">
-            <script src="https://cdn.jsdelivr.net/npm/apexcharts"/>
             {
               <div className="py-6" id="donut-chart">
                 {

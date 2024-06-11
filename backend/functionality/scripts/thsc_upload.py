@@ -159,7 +159,7 @@ def _upload_item(item: DataItem):
 
 
 def steal_thsc():
-    items = _load_dataitems("./data/links.json")
+    items = _load_dataitems("data/links.json")
 
     items = filter(lambda item: CODES[item.code][0] == 12, items)
     items = map(lambda item: DataItem(

@@ -134,9 +134,11 @@ def _download_file(link: str, file_name: str):
 
     download_path = os.path.join(loc, file_name)
 
-    logger.Logger.log_backend("THSC Uploader", f"Downloading to {download_path}")
+    url = link.replace(" ", "%20")
 
-    urllib.request.urlretrieve(link, download_path)
+    logger.Logger.log_backend("THSC Uploader", f"Downloading to {download_path} from {url}")
+
+    urllib.request.urlretrieve(url, download_path)
 
     logger.Logger.log_backend("THSC Uploader", "Download Complete!")
 

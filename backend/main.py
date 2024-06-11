@@ -10,6 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from database.linker import DatabaseSetup
 
 from functionality.scripts.reinsert_exams import reinsert_exams
+from functionality.scripts.thsc_upload import steal_thsc
 
 from logger import Logger
 
@@ -84,3 +85,9 @@ async def db_insert_exams(password: str = ""):
     if password != "@JudyMansell13!": return
 
     reinsert_exams()
+
+@app.get("/db/insert/thsc", status_code=status.HTTP_200_OK)
+async def db_insert_thsc_exams(password: str = ""):
+    if password != "@JudyMansell13!": return
+
+    steal_thsc()

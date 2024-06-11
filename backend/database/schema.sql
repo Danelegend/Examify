@@ -100,7 +100,7 @@ CREATE TABLE completed_exams (
 
 CREATE TABLE notifications (
     id                      BIGSERIAL,
-    receiver                    BIGINT NOT NULL,
+    receiver                BIGINT NOT NULL,
     sender                  BIGINT DEFAULT NULL,
     title                   VARCHAR(255) DEFAULT '' NOT NULL,
     message                 VARCHAR(255) DEFAULT '' NOT NULL,

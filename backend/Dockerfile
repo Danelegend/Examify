@@ -2,12 +2,10 @@ FROM python:3.10-alpine
 
 WORKDIR /app
 
-RUN apk add --no-cache --virtual .build-deps gcc musl-dev \
-&& pip install cython \
-&& apk del .build-deps gcc musl-dev
-
 COPY requirements.txt ./
-RUN pip3 install --no-cache-dir -r requirements.txt
+RUN apk add --no-cache --virtual .build-deps gcc musl-dev \
+&& pip3 install --no-cache-dir -r requirements.txt \
+&& apk del .build-deps gcc musl-dev 
 
 COPY . .
 

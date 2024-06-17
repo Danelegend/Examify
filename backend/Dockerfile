@@ -1,16 +1,9 @@
-FROM python:3.8.10-alpine
+FROM python:3.10-slim
 
 WORKDIR /app
 
 COPY requirements.txt ./
-RUN apk add --no-cache --virtual .build-deps gcc musl-dev \
-&& apk add curl \
-&& curl –proto ‘=https’ –tlsv1.2 -sSf https://sh.rustup.rs | sh \
-&& source $HOME/.cargo/env \
-&& apk add libffi-dev \
-&& apk add libxml2-dev libxslt-dev \
-&& pip3 install --no-cache-dir -r requirements.txt \
-&& apk del .build-deps gcc musl-dev 
+RUN pip3 install --no-cache-dir -r requirements.txt
 
 COPY . .
 

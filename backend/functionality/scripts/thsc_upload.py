@@ -6,6 +6,8 @@ import requests
 
 from typing import List
 
+import logger
+
 from functionality.admin.admin import GetCurrentExams, InsertExam
 
 class DataItem:
@@ -116,6 +118,9 @@ CODES = {
     1178: (12, "Ancient History"),
 }
 
+def log(message: str):
+    logger.Logger.log_backend("THSC Stealer", message)
+
 def _load_dataitems(loc: str) -> List[DataItem]:
     f = open(loc, 'r')
 
@@ -147,7 +152,7 @@ def _download_file(link: str, file_name: str) -> bool:
 
     data_link = "https://script.google.com/macros/s/AKfycbx69GPoJtf9sSevsUbWtPr46vpa01u4oNkHjFmkkWxmj62AZ0q-/exec?export=data&field="+titlex+"&base="+viewno+"&hash="+hashval
 
-    print("THSC Uploader " + f"Downloading to {download_path} from {url}")
+    log("THSC Uploader " + f"Downloading to {download_path} from {url}")
 
     try:
         data = requests.get(data_link)
@@ -164,7 +169,7 @@ def _download_file(link: str, file_name: str) -> bool:
         pdf.write(base64.b64decode(json['data']))
         pdf.close()
 
-    print("THSC Uploader " + "Download Complete!")
+    log("THSC Uploader " + "Download Complete!")
 
     return True
 
@@ -179,7 +184,7 @@ def _parse_text(data: str):
 
 
 def _upload_item(item: DataItem):
-    print("THSC Uploader " + f"Uploading exam {item.school} {item.year} {item.subject}")
+    log("THSC Uploader " + f"Uploading exam {item.school} {item.year} {item.subject}")
 
     file_name = f"{item.school}-{item.year}_{item.subject}_Trial Exam.pdf"
 
@@ -195,11 +200,11 @@ def _upload_item(item: DataItem):
         file_name
     )
 
-    print("THSC Uploader" + "Upload complete")
+    log("THSC Uploader" + "Upload complete")
 
 
 def steal_thsc():
-    print("Starting")
+    log("Starting")
     
     items = _load_dataitems("./functionality/scripts/data/links.json")
 

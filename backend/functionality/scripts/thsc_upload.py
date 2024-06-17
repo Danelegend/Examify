@@ -6,7 +6,7 @@ import requests
 
 from typing import List
 
-from functionality.admin.admin import GetCurrentExams
+from functionality.admin.admin import GetCurrentExams, InsertExam
 
 class DataItem:
     school: str
@@ -160,13 +160,9 @@ def _download_file(link: str, file_name: str) -> bool:
     if os.path.exists(download_path):
         return False
 
-    """
     with open(download_path, 'wb') as pdf:
         pdf.write(base64.b64decode(json['data']))
         pdf.close()
-    """
-
-    print(json)
 
     print("THSC Uploader " + "Download Complete!")
 
@@ -191,7 +187,6 @@ def _upload_item(item: DataItem):
 
     if not res: return
 
-    """
     InsertExam(
         item.school,
         "Trial Exam",
@@ -199,7 +194,6 @@ def _upload_item(item: DataItem):
         item.subject,
         file_name
     )
-    """
 
     print("THSC Uploader" + "Upload complete")
 

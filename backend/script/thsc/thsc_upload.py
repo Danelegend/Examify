@@ -3,8 +3,6 @@ import os
 
 from typing import List
 
-from functionality.admin.admin import GetCurrentExams
-
 class DataItem:
     school: str
     subject: str

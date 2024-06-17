@@ -20,7 +20,6 @@ incremental==22.10.0
 itemadapter==0.8.0
 itemloaders==1.1.0
 jmespath==1.0.1
-Js2Py==0.74
 lxml==5.2.2
 packaging==24.0
 parsel==1.8.1

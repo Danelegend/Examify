@@ -10,7 +10,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from database.linker import DatabaseSetup
 
 from functionality.scripts.reinsert_exams import reinsert_exams
-from functionality.scripts.thsc_upload import steal_thsc
 
 from logger import Logger
 

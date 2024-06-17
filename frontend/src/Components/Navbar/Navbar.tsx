@@ -163,7 +163,7 @@ const MediumNavbar = ({ accessToken }: { accessToken: string | null }) => {
 const Navbar = () => {
     const size = useWindowSize()
     
-    const { accessToken, setAccessToken } = useContext(UserContext);
+    const { setAccessToken } = useContext(UserContext);
 
     const { mutateAsync: CheckToken } = useMutation({
         mutationFn: GetTokenRefresh,
@@ -187,9 +187,9 @@ const Navbar = () => {
     }
 
     return (size.width >= 720) ? 
-        <MediumNavbar accessToken={accessToken} />
+        <MediumNavbar accessToken={readAccessToken()} />
         :
-        <SmallNavbar accessToken={accessToken} />
+        <SmallNavbar accessToken={readAccessToken()} />
 }
 
 export default Navbar;

@@ -116,3 +116,11 @@ def SHA256(s):
 
 
 print(SHA256('test'))
+
+viewno = "2466"
+titlex = "Sydney Grammar 2014 w. sol"
+hashval = SHA256(viewno)
+
+link = "https://script.google.com/macros/s/AKfycbx69GPoJtf9sSevsUbWtPr46vpa01u4oNkHjFmkkWxmj62AZ0q-/exec?export=data&field="+titlex+"&base="+viewno+"&hash="+hashval
+
+print(link)

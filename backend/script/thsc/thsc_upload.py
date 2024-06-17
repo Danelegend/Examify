@@ -1,5 +1,6 @@
 import json
 import os
+import requests
 
 from typing import List
 
@@ -136,8 +137,17 @@ def _download_file(link: str, file_name: str):
 
     url = link.replace(" ", "%20")
 
+    viewno = url.split("/s/d/")[1].split("/")[0]
+    titlex = url.split("/s/d/")[1].split("/")[1]
+    hashval = SHA256(viewno)
+
+    data_link = "https://script.google.com/macros/s/AKfycbx69GPoJtf9sSevsUbWtPr46vpa01u4oNkHjFmkkWxmj62AZ0q-/exec?export=data&field="+titlex+"&base="+viewno+"&hash="+hashval
+
     print("THSC Uploader " + f"Downloading to {download_path} from {url}")
 
+    data = requests.get(data_link)
+
+    print(data.json())
     # Back convert google script link
     # Get the data and reproduce PDF
 

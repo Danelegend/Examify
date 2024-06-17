@@ -1,3 +1,5 @@
+import base64
+import re
 import json
 import os
 import requests
@@ -132,7 +134,7 @@ def _load_dataitems(loc: str) -> List[DataItem]:
         items.append(item)
     return items
 
-def _download_file(link: str, file_name: str):
+def _download_file(link: str, file_name: str) -> bool:
     loc = os.environ["CURRENT_EXAMS_DIRECTORY"]
 
     download_path = os.path.join(loc, file_name)
@@ -147,13 +149,37 @@ def _download_file(link: str, file_name: str):
 
     print("THSC Uploader " + f"Downloading to {download_path} from {url}")
 
-    data = requests.get(data_link)
-
-    print(data.json())
+    try:
+        data = requests.get(data_link)
+        json = _parse_text(data.text)
+    except:
+        return False
     # Back convert google script link
     # Get the data and reproduce PDF
 
+    if os.path.exists(download_path):
+        return False
+
+    """
+    with open(download_path, 'wb') as pdf:
+        pdf.write(base64.b64decode(json['data']))
+        pdf.close()
+    """
+
+    print(json)
+
     print("THSC Uploader " + "Download Complete!")
+
+    return True
+
+
+def _parse_text(data: str):
+
+    pattern = re.compile(r'downloadfile\((.*?)\)$')
+
+    result = pattern.search(data).group(1)
+
+    return json.loads(result)
 
 
 def _upload_item(item: DataItem):
@@ -161,7 +187,9 @@ def _upload_item(item: DataItem):
 
     file_name = f"{item.school}-{item.year}_{item.subject}_Trial Exam.pdf"
 
-    _download_file(item.link, file_name)
+    res = _download_file(item.link, file_name)
+
+    if not res: return
 
     """
     InsertExam(

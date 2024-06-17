@@ -1,3 +1,8 @@
+import requests
+import re
+import json
+import base64
+
 def SHA256(s):
     def bitshift(x):
         x &= 0xFFFF_FFFF
@@ -115,7 +120,14 @@ def SHA256(s):
     return binb2hex(core_sha256(str2binb(s), len(s) * 8))
 
 
-print(SHA256('test'))
+def _parse_text(data: str):
+
+    pattern = re.compile(r'downloadfile\((.*?)\)$')
+
+    result = pattern.search(data).group(1)
+
+    return json.loads(result)
+    
 
 viewno = "2466"
 titlex = "Sydney Grammar 2014 w. sol"
@@ -123,4 +135,12 @@ hashval = SHA256(viewno)
 
 link = "https://script.google.com/macros/s/AKfycbx69GPoJtf9sSevsUbWtPr46vpa01u4oNkHjFmkkWxmj62AZ0q-/exec?export=data&field="+titlex+"&base="+viewno+"&hash="+hashval
 
-print(link)
+data = requests.get(link)
+
+json_result = _parse_text(data.text)
+
+print(json_result['name'])
+
+with open("test_pdf.pdf", 'wb') as pdf:
+    pdf.write(base64.b64decode(json_result['data']))
+    pdf.close()

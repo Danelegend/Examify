@@ -135,21 +135,35 @@ def get_exams_with_pagination(start: int, size: int, filter: Filter) -> List[Exa
     LEFT JOIN schools s ON e.school = s.id
     """
 
+    where_flag = True
+
     for i in range(len(filter.schools)):
         if i == 0:
-            s += f"\nWHERE s.name = \'{filter.schools[i]}\'"
+            if where_flag:
+                s += f"\nWHERE s.name = \'{filter.schools[i]}\'"
+                where_flag = False
+            else:
+                s+= f" & s.name = \'{filter.schools[i]}\'"
         else:
             s += f" & s.name = \'{filter.schools[i]}\'"
         
     for i in range(len(filter.subjects)):
         if i == 0:
-            s += f"\nWHERE e.subject = \'{filter.subjects[i]}\'"
+            if where_flag:
+                s += f"\nWHERE e.subject = \'{filter.subjects[i]}\'"
+                where_flag = False
+            else:
+                s += f" & e.subject = \'{filter.subjects[i]}\'"
         else:
             s += f" & e.subject = \'{filter.subjects[i]}\'"
         
     for i in range(len(filter.years)):
         if i == 0:
-            s += f"\nWHERE e.year = {filter.years[i]}"
+            if where_flag:
+                s += f"\nWHERE e.year = {filter.years[i]}"
+                where_flag = False
+            else:
+                s += f" & e.year = {filter.years[i]}"
         else:
             s += f" & e.year = {filter.years[i]}"
 

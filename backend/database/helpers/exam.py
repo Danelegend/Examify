@@ -128,19 +128,42 @@ def get_exams_with_pagination(start: int, size: int, filter: Filter) -> List[Exa
     """
     Gets all exams in the bounds start <= exam < start + size
     """
+    s = """
+    SELECT e.id, s.name, e.exam_type, e.year, e.file_location, .date_uploaded, e.subject, COUNT(fe.exam) AS likes
+    FROM exams e
+    LEFT JOIN favourite_exams fe ON e.id = fe.exam
+    LEFT JOIN schools s ON e.school = s.id
+    """
 
+    for i in range(len(filter.schools)):
+        if i == 0:
+            s += "\nWHERE s.name = " + filter.schools[i]
+        else:
+            s += " & s.name = " + filter.schools[i]
+        
+    for i in range(len(filter.subjects)):
+        if i == 0:
+            s += "\nWHERE e.subject = " + filter.subjects[i]
+        else:
+            s += " & e.subject = " + filter.subjects[i]
+        
+    for i in range(len(filter.years)):
+        if i == 0:
+            s += "\nWHERE e.year = " + str(filter.years[i])
+        else:
+            s += " & e.year = " + str(filter.years[i])
+
+    s += """
+        GROUP BY e.id, s.name, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject
+        LIMIT %(size)s OFFSET %(start)s;
+        """
+    
+    log_exam_success(s)
 
     try:
         conn = connect()
         with conn.cursor() as cur:
-            cur.execute("""
-                        SELECT e.id, s.name, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject, COUNT(fe.exam) AS likes
-                        FROM exams e
-                        LEFT JOIN favourite_exams fe ON e.id = fe.exam
-                        LEFT JOIN schools s ON e.school = s.id
-                        GROUP BY e.id, s.name, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject
-                        LIMIT %(size)s OFFSET %(start)s;
-                        """, {
+            cur.execute(s, {
                             'size': size,
                             'start': start
                         })

@@ -137,21 +137,21 @@ def get_exams_with_pagination(start: int, size: int, filter: Filter) -> List[Exa
 
     for i in range(len(filter.schools)):
         if i == 0:
-            s += "\nWHERE s.name = " + filter.schools[i]
+            s += f"\nWHERE s.name = \'{filter.schools[i]}\''"
         else:
-            s += " & s.name = " + filter.schools[i]
+            s += f" & s.name = \'{filter.schools[i]}\'"
         
     for i in range(len(filter.subjects)):
         if i == 0:
-            s += "\nWHERE e.subject = " + filter.subjects[i]
+            s += f"\nWHERE e.subject = \'{filter.subjects[i]}\'"
         else:
-            s += " & e.subject = " + filter.subjects[i]
+            s += f" & e.subject = \'{filter.subjects[i]}\'"
         
     for i in range(len(filter.years)):
         if i == 0:
-            s += "\nWHERE e.year = " + str(filter.years[i])
+            s += f"\nWHERE e.year = {filter.years[i]}"
         else:
-            s += " & e.year = " + str(filter.years[i])
+            s += f" & e.year = {filter.years[i]}"
 
     s += """
         GROUP BY e.id, s.name, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject

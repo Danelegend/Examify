@@ -19,9 +19,9 @@ async def get_exams(exams_request: ExamsEndpointRequest, token: Annotated[Option
     page_length = 20 if page_length < 1 else page_length
 
     try:    
-        filter_config = FilterConfig.Decode("")
+        filter_settings = exams_request.filter
 
-        data = GetExams(token, filter_config, page, page_length)
+        data = GetExams(token, filter_settings, page, page_length)
 
         return ExamsResponse(
             exams=data

@@ -4,7 +4,6 @@ from logger import Logger
 
 from functionality.util import datetime_to_string
 from functionality.token import get_user_id
-from functionality.exams.FilterConfig import FilterConfig
 from functionality.types import ExamType, SubjectType
 from functionality.exam.exam import ExamFavouriteOfUser
 
@@ -14,12 +13,13 @@ from database.helpers.recent import get_user_recently_viewed_exams
 from database.helpers.school import get_schools
 
 from router.api_types.api_response import ExamDetails
+from router.api_types.api_request import Filter
 
-def GetExams(accessToken: Optional[str], filterConfig: FilterConfig, page: int, page_length: int, sortType="DEFAULT") -> List[ExamDetails]:
+def GetExams(accessToken: Optional[str], filter: Filter, page: int, page_length: int, sortType="DEFAULT") -> List[ExamDetails]:
     # Get exams in bounds of (page - 1) * page_length <= x < page * (page_length)
     lower = (page - 1) * page_length
     
-    queryset = get_exams_with_pagination(lower, page_length)
+    queryset = get_exams_with_pagination(lower, page_length, filter)
 
     exams = []
 

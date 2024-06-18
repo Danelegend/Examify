@@ -53,9 +53,13 @@ class ExamFavouriteRequest(BaseModel):
 ################################################################################
 #################################     Exams     ################################
 ################################################################################
+class Filter(BaseModel):
+    schools: List[str]
+    subjects: List[str]
+    years: List[int]
+
 class ExamsEndpointRequest(BaseModel):
-    load: Optional[int] = 0
-    load_size: Optional[int] = 20
+    filter: Filter
 
 ################################################################################
 #################################     Logo     #################################

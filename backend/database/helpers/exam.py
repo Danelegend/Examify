@@ -9,6 +9,8 @@ from database.helpers.school import get_school_by_id
 from database.db_types.db_request import ExamCreationRequest, ExamFilterRequest, ExamTypes
 from database.db_types.db_response import ExamDetailsResponse
 
+from router.api_types.api_request import Filter
+
 def log_exam_success(message: str):
     """
     Logs a successful exam operation
@@ -122,18 +124,21 @@ def get_exams() -> List[ExamDetailsResponse]:
                                 subject=subject,
                                 likes=likes) for id, school, exam_type, year, file_location, date_uploaded, subject, likes in exams]
 
-def get_exams_with_pagination(start: int, size: int) -> List[ExamDetailsResponse]:
+def get_exams_with_pagination(start: int, size: int, filter: Filter) -> List[ExamDetailsResponse]:
     """
     Gets all exams in the bounds start <= exam < start + size
     """
+
+
     try:
         conn = connect()
         with conn.cursor() as cur:
             cur.execute("""
-                        SELECT e.id, e.school, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject, COUNT(fe.exam) AS likes
+                        SELECT e.id, s.name, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject, COUNT(fe.exam) AS likes
                         FROM exams e
                         LEFT JOIN favourite_exams fe ON e.id = fe.exam
-                        GROUP BY e.id, e.school, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject
+                        LEFT JOIN schools s ON e.school = s.id
+                        GROUP BY e.id, s.name, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject
                         LIMIT %(size)s OFFSET %(start)s;
                         """, {
                             'size': size,
@@ -149,7 +154,7 @@ def get_exams_with_pagination(start: int, size: int) -> List[ExamDetailsResponse
         disconnect(conn)
 
     return [ExamDetailsResponse(id=id,
-                                school=get_school_by_id(school).name, 
+                                school=school, 
                                 exam_type=exam_type, 
                                 year=year, 
                                 file_location=file_location, 

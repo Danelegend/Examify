@@ -8,7 +8,7 @@ from functionality.exams.FilterConfig import FilterConfig
 from functionality.types import ExamType, SubjectType
 from functionality.exam.exam import ExamFavouriteOfUser
 
-from database.helpers.exam import get_exam, get_exams
+from database.helpers.exam import get_exam, get_exams_with_pagination
 from database.helpers.favourite import get_user_favourite_exams
 from database.helpers.recent import get_user_recently_viewed_exams
 from database.helpers.school import get_schools
@@ -16,20 +16,14 @@ from database.helpers.school import get_schools
 from router.api_types.api_response import ExamDetails
 
 def GetExams(accessToken: Optional[str], filterConfig: FilterConfig, page: int, page_length: int, sortType="DEFAULT") -> List[ExamDetails]:
-    queryset = get_exams()
+    # Get exams in bounds of (page - 1) * page_length <= x < page * (page_length)
+    lower = (page - 1) * page_length
+    
+    queryset = get_exams_with_pagination(lower, page_length)
 
     exams = []
 
-    # Get exams in bounds of (page - 1) * page_length <= x < page * (page_length)
-
-    lower = (page - 1) * page_length
-    upper = page * page_length
-
-    if lower > len(queryset): return exams
-
-    for i in range(lower, min(upper, len(queryset))):
-        item = queryset[i]
-
+    for item in queryset:
         exams.append(ExamDetails(
             id=item.id,
             school_name=item.school,

@@ -122,6 +122,41 @@ def get_exams() -> List[ExamDetailsResponse]:
                                 subject=subject,
                                 likes=likes) for id, school, exam_type, year, file_location, date_uploaded, subject, likes in exams]
 
+def get_exams_with_pagination(start: int, size: int) -> List[ExamDetailsResponse]:
+    """
+    Gets all exams in the bounds start <= exam < start + size
+    """
+    try:
+        conn = connect()
+        with conn.cursor() as cur:
+            cur.execute("""
+                        SELECT e.id, e.school, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject, COUNT(fe.exam) AS likes
+                        FROM exams e
+                        LEFT JOIN favourite_exams fe ON e.id = fe.exam
+                        GROUP BY e.id, e.school, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject
+                        LIMIT %(size)s OFFSET %(start)s;
+                        """, {
+                            'size': size,
+                            'start': start
+                        })
+            exams = cur.fetchall()
+
+        log_exam_success("Finished getting the Exams from Database in pagination fashion")
+    except psycopg2.Error as e:
+        log_exam_error(f"Error getting the Exams: {e}")
+        raise e
+    finally:
+        disconnect(conn)
+
+    return [ExamDetailsResponse(id=id,
+                                school=get_school_by_id(school).name, 
+                                exam_type=exam_type, 
+                                year=year, 
+                                file_location=file_location, 
+                                date_uploaded=date_uploaded, 
+                                subject=subject,
+                                likes=likes) for id, school, exam_type, year, file_location, date_uploaded, subject, likes in exams]
+
 def get_exams_using_filter(exam_filter_request: ExamFilterRequest) -> List[ExamDetailsResponse]:
     """
     Get a list of exams that meet the filter criteria

@@ -137,7 +137,7 @@ def get_exams_with_pagination(start: int, size: int, filter: Filter) -> List[Exa
 
     for i in range(len(filter.schools)):
         if i == 0:
-            s += f"\nWHERE s.name = \'{filter.schools[i]}\''"
+            s += f"\nWHERE s.name = \'{filter.schools[i]}\'"
         else:
             s += f" & s.name = \'{filter.schools[i]}\'"
         

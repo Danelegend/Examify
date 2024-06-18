@@ -1,3 +1,4 @@
+import { clear } from "localforage"
 import Environment from "../../constants"
 import { FetchError, readExpiration, storeAccessToken, storeExpiration } from "../util/utility"
 import { AdminExamReviewDeleteRequest, AdminExamReviewSubmitRequest, ExamUploadRequest, FetchExamResponse, FetchExamsRequest, FetchExamsResponse, FetchExamSubjectsResponse, FetchFavouriteExamsResponse, FetchLogosResponse, FetchNotificationsResponse, FetchRecentExamsResponse, FetchSchoolsResponse, FetchUserActivityAnalyticsResponse, FetchUserResponse, FetchUserSubjectAnalyticsResponse, UserLoginRequest, UserProfileEditRequest, UserRegistrationRequest, UserRegistrationResponse } from "./types"
@@ -24,6 +25,8 @@ const AuthorizationMiddleware: AuthorizationMiddlewareType = (func) => {
 
                 return func()
             } else {
+                console.log("HERE")
+                clear()
                 throw new FetchError(res)
             }
         })

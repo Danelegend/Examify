@@ -143,9 +143,9 @@ def get_exams_with_pagination(start: int, size: int, filter: Filter) -> List[Exa
                 s += f"\nWHERE s.name = \'{filter.schools[i]}\'"
                 where_flag = False
             else:
-                s+= f" AND s.name = \'{filter.schools[i]}\'"
+                s+= f" OR s.name = \'{filter.schools[i]}\'"
         else:
-            s += f" AND s.name = \'{filter.schools[i]}\'"
+            s += f" OR s.name = \'{filter.schools[i]}\'"
         
     for i in range(len(filter.subjects)):
         if i == 0:
@@ -153,9 +153,9 @@ def get_exams_with_pagination(start: int, size: int, filter: Filter) -> List[Exa
                 s += f"\nWHERE e.subject = \'{filter.subjects[i]}\'"
                 where_flag = False
             else:
-                s += f" AND e.subject = \'{filter.subjects[i]}\'"
+                s += f" OR e.subject = \'{filter.subjects[i]}\'"
         else:
-            s += f" AND e.subject = \'{filter.subjects[i]}\'"
+            s += f" OR e.subject = \'{filter.subjects[i]}\'"
         
     for i in range(len(filter.years)):
         if i == 0:
@@ -163,9 +163,9 @@ def get_exams_with_pagination(start: int, size: int, filter: Filter) -> List[Exa
                 s += f"\nWHERE e.year = {filter.years[i]}"
                 where_flag = False
             else:
-                s += f" AND e.year = {filter.years[i]}"
+                s += f" OR e.year = {filter.years[i]}"
         else:
-            s += f" AND e.year = {filter.years[i]}"
+            s += f" OR e.year = {filter.years[i]}"
 
     s += """
         GROUP BY e.id, s.name, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject

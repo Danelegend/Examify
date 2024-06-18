@@ -123,7 +123,7 @@ const SubjectAnalyticsPieChart = () => {
                   (CompletedExams.length > 0) ? null :
                     <div className="flex">
                       <div className="m-auto text-black">
-                        No Completed Exams
+                        <a href="/exams" className="text-black text-sm">No Completed Exams</a>
                       </div>
                     </div>
                 }

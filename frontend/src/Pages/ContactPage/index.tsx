@@ -12,7 +12,7 @@ const ContactPage = () => {
                         Have a question, suggestion, or just want to say hello? We'd love to hear from you!
                         <br />
                         <br />
-                        You can reach us through the contact form below, or feel free to email us directly at <p className="text-blue-500">test@gmail.com</p>
+                        You can reach us through the contact form below, or feel free to email us directly at <p className="text-blue-500">contact@examify.com.au</p>
 
                         <br />
                         <br />

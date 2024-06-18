@@ -77,7 +77,7 @@ const ExamCard = ({ school, year, type, difficulty, id, favourite, likes, upload
         }
     })
 
-    const FavouriteClick = (e: Event) => {
+    const FavouriteClick = async (e: Event) => {
         e.preventDefault()
         
         if (readAccessToken() === null) {

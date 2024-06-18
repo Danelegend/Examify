@@ -41,11 +41,12 @@ export type UserProfileEditRequest = {
 
 export type FetchExamsRequest = {
     page: number,
+    page_length: number,
     filter: {
         schools: string[],
         subjects: string[],
         years: number[]
-    }
+    },
 }
 
 // RESPONSES

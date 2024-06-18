@@ -18,7 +18,7 @@ const AuthorizationMiddleware: AuthorizationMiddlewareType = (func) => {
         }).then(async (res) => {
             const data: UserAuthentication = await res.json()
 
-            if (res.ok) {
+            if (res.ok && res.status === 200) {
                 storeAccessToken(data.access_token)
                 storeExpiration(data.expiration)
 
@@ -196,7 +196,7 @@ export const FetchUserProfile = ({ token }: { token: string }): Promise<FetchUse
 }
 
 export const FetchExams = ({ token, request }: { token: string | null, request: FetchExamsRequest }): Promise<FetchExamsResponse> => {
-    return fetch(Environment.BACKEND_URL + "/api/exams/", {
+    return fetch(Environment.BACKEND_URL + "/api/exams/?page=" + request.page.toString() + "&page_length=" + request.page_length.toString(), {
         headers: (token === null) ?
         {  
             'Content-Type': 'application/json',
@@ -207,7 +207,6 @@ export const FetchExams = ({ token, request }: { token: string | null, request: 
         },
         method: "POST",
         body: JSON.stringify({
-            page: request.page,
             filter: request.filter
         }),
         credentials: 'include'

@@ -26,6 +26,9 @@ const ExamDisplay = () => {
     
     const [IsDisplayFilter, SetDisplayFilter] = useState<boolean>(false);
     const [IsDisplaySort, SetDisplaySort] = useState<boolean>(false);
+
+    const [CurrentPage, SetCurrentPage] = useState<number>(1);
+    const itemsPerPage = 30
  
     const { setAccessToken } = useContext(UserContext)
 
@@ -55,7 +58,8 @@ const ExamDisplay = () => {
         queryKey: ["Exams"],
         queryFn: () => FetchExams({ token: readAccessToken(), 
                             request: { 
-                                page: 1, 
+                                page: 1,
+                                page_length: 20,
                                 filter: Filter 
                             }})
     })
@@ -135,6 +139,70 @@ const ExamDisplay = () => {
         }
 
     },   [data, isPending, error, subjectFilterPending, schoolFilterPending])
+
+
+    useEffect(() => {
+        FetchExams({ token: readAccessToken(), 
+            request: { 
+                page: CurrentPage,
+                page_length: itemsPerPage,
+                filter: Filter 
+            }}).then((data) => {
+                SetExams([...Exams, ...data.exams.map(exam => {
+                    return {
+                        id: exam.id,
+                        school: exam.school_name,
+                        year: exam.year,
+                        type: exam.type,
+                        difficulty: 1,
+                        favourite: exam.favourite,
+                        uploadDate: exam.upload_date,
+                        likes: exam.likes,
+                        subject: exam.subject
+                    }
+                })])
+            })
+    }, [CurrentPage])
+
+    useEffect(() => {
+        SetCurrentPage(1)
+        FetchExams({ token: readAccessToken(), 
+            request: { 
+                page: 1,
+                page_length: itemsPerPage,
+                filter: Filter 
+            }}).then((data) => {
+                SetExams([...data.exams.map(exam => {
+                    return {
+                        id: exam.id,
+                        school: exam.school_name,
+                        year: exam.year,
+                        type: exam.type,
+                        difficulty: 1,
+                        favourite: exam.favourite,
+                        uploadDate: exam.upload_date,
+                        likes: exam.likes,
+                        subject: exam.subject
+                    }
+                })])
+            })
+    }, [Filter])
+
+    const handleScroll = () => {
+        const scrollY = window.scrollY;
+        const windowHeight = window.innerHeight;
+        const documentHeight = document.documentElement.scrollHeight;
+        if (scrollY + windowHeight >= documentHeight - 100) {
+          SetCurrentPage(CurrentPage + 1);
+        }
+    };
+
+    useEffect(() => {
+        window.addEventListener('scroll', handleScroll);
+        return () => {
+          window.removeEventListener('scroll', handleScroll);
+        };
+      }, [CurrentPage]);
 
     waveform.register();
     dotSpinner.register();
@@ -218,6 +286,7 @@ const ExamDisplay = () => {
                         />
                     </div>
                     : 
+                    <>
                     <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-x-4 gap-y-12 pt-10 pb-16">
                         {
                             Exams.filter(exam => Filter.schools.length === 0 || Filter.schools.includes(exam.school))
@@ -229,6 +298,15 @@ const ExamDisplay = () => {
                                                                 subject={exam.subject}/>)
                         }
                     </div>
+                    <div className="flex justify-center pb-4">
+                        <l-waveform
+                            size="35"
+                            stroke="3.5"
+                            speed="1"
+                            color="black"
+                        />
+                    </div>
+                    </>
                 }
             </div>
         </div>

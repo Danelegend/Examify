@@ -86,7 +86,6 @@ class LogosResponse(BaseModel):
 ################################################################################
 class UserProfileResponse(BaseModel):
     name: str
-    exams_completed: int
 
 class NotificationResponse(BaseModel):
     id: int

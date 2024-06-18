@@ -4,6 +4,7 @@ from fastapi import APIRouter, Security, status
 from functionality.token import get_user_id
 from functionality.notifications.notifications import get_notifications, mark_notifications_seen
 from functionality.user.analytics import get_user_activity_analytics, get_user_subject_analytics
+from functionality.user.user import get_first_name
 
 from router import HTTPBearer401
 from router.api_types.api_response import ExamsComplete, UserAnalyticsActivityResponse, UserAnalyticsCompletedSubjectExamsResponse, UserNotificationsResponse, UserProfileResponse
@@ -12,10 +13,11 @@ from router.api_types.api_request import NotificationsSeenRequest
 router = APIRouter()
 
 @router.get("/profile", status_code=status.HTTP_200_OK, response_model=UserProfileResponse)
-async def get_profile() -> UserProfileResponse:
+async def get_profile(token: Annotated[str, Security(HTTPBearer401())]) -> UserProfileResponse:
+    user_id = get_user_id(token)
+
     return UserProfileResponse(
-        name="Dane",
-        exams_completed=6
+        name=get_first_name(user_id)
     )
 
 @router.get("/notifications", status_code=status.HTTP_200_OK, response_model=UserNotificationsResponse)

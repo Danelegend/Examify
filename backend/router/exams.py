@@ -14,11 +14,14 @@ from router.api_types.api_response import ExamsResponse
 router = APIRouter()
 
 @router.post("/", status_code=status.HTTP_200_OK, response_model=ExamsResponse)
-async def get_exams(exams_request: ExamsEndpointRequest, token: Annotated[Optional[str], Security(OptionalHTTPBearer())]) -> ExamsResponse:
+async def get_exams(exams_request: ExamsEndpointRequest, token: Annotated[Optional[str], Security(OptionalHTTPBearer())], page: int = 1, page_length: int = 20) -> ExamsResponse:
+    page = max(page, 1)
+    page_length = 20 if page_length < 1 else page_length
+
     try:    
         filter_config = FilterConfig.Decode("")
 
-        data = GetExams(token, filter_config)
+        data = GetExams(token, filter_config, page, page_length)
 
         return ExamsResponse(
             exams=data

@@ -15,12 +15,21 @@ from database.helpers.school import get_schools
 
 from router.api_types.api_response import ExamDetails
 
-def GetExams(accessToken: Optional[str], filterConfig: FilterConfig, sortType="DEFAULT") -> List[ExamDetails]:
+def GetExams(accessToken: Optional[str], filterConfig: FilterConfig, page: int, page_length: int, sortType="DEFAULT") -> List[ExamDetails]:
     queryset = get_exams()
 
     exams = []
 
-    for item in queryset:
+    # Get exams in bounds of (page - 1) * page_length <= x < page * (page_length)
+
+    lower = (page - 1) * page_length
+    upper = page * page_length
+
+    if lower > len(queryset): return exams
+
+    for i in range(lower, min(upper, len(queryset))):
+        item = queryset[i]
+
         exams.append(ExamDetails(
             id=item.id,
             school_name=item.school,
@@ -31,6 +40,7 @@ def GetExams(accessToken: Optional[str], filterConfig: FilterConfig, sortType="D
             likes=item.likes,
             subject=SubjectType.MapPrefixToName(item.subject)
         ))
+
     return exams
 
 def GetFavouriteExams(access_token: str) -> List[ExamDetails]:

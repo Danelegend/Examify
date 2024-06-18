@@ -171,8 +171,6 @@ def get_exams_with_pagination(start: int, size: int, filter: Filter) -> List[Exa
         GROUP BY e.id, s.name, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject
         LIMIT %(size)s OFFSET %(start)s;
         """
-    
-    log_exam_success(s)
 
     try:
         conn = connect()

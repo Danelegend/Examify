@@ -129,7 +129,7 @@ def get_exams_with_pagination(start: int, size: int, filter: Filter) -> List[Exa
     Gets all exams in the bounds start <= exam < start + size
     """
     s = """
-    SELECT e.id, s.name, e.exam_type, e.year, e.file_location, .date_uploaded, e.subject, COUNT(fe.exam) AS likes
+    SELECT e.id, s.name, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject, COUNT(fe.exam) AS likes
     FROM exams e
     LEFT JOIN favourite_exams fe ON e.id = fe.exam
     LEFT JOIN schools s ON e.school = s.id

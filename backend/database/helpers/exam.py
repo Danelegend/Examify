@@ -169,6 +169,7 @@ def get_exams_with_pagination(start: int, size: int, filter: Filter) -> List[Exa
 
     s += """
         GROUP BY e.id, s.name, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject
+        ORDER BY e.year DESC
         LIMIT %(size)s OFFSET %(start)s;
         """
 

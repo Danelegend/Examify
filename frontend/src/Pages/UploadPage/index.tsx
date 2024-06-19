@@ -119,8 +119,8 @@ const UploadPage = () => {
     ring.register()
 
     return (
-        <div className="flex flex-col justify-between gap-y-10">
-            <div className="text-black align-middle justify-center mt-4">
+        <div className="flex flex-col justify-between gap-y-10 py-4">
+            <div className="text-black align-middle justify-center">
                 <div className="text-center text-2xl tracking-wide">
                 🎓 Join the Movement to Empower Students! 📚
                 </div>

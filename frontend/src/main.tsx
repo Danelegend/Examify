@@ -4,7 +4,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import './index.css'
 import Layout from './layout';
-import ExamsPage from './Pages/ExamsPage';
+import { ExamsPage, SubjectExamsPage } from './Pages/ExamsPage';
 import ExamPage from './Pages/ExamPage';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import UploadPage from './Pages/UploadPage';
@@ -23,6 +23,7 @@ import AdminReviewExamPage from './Pages/Admin/ReviewExamPage';
 import NotFoundPage from './Pages/NotFoundPage';
 import PrivacyPage from './Pages/PrivacyPage';
 import TosPage from './Pages/TosPage';
+import { Helmet, HelmetProvider } from 'react-helmet-async';
 
 const router = createBrowserRouter([
   {
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
       {
         element: <ExamsPage />,
         path: "exams",
+      },
+      {
+        element: <SubjectExamsPage />,
+        path: "exams/:subject"
       },
       {
         element: <UploadPage />,
@@ -93,7 +98,7 @@ const router = createBrowserRouter([
   },
   {
     element: <ExamPage />,
-    path: "/exam/:school/:year/:exam_type"
+    path: "/exam/:subject/:school/:year/:exam_type"
   },
   {
     element: <NotFoundPage />,
@@ -110,7 +115,12 @@ const App = () => {
     <QueryClientProvider client={queryClient}>
       <GoogleOAuthProvider clientId={"623177653931-inec93uqarv00qs0gvtdd1lrvbekic62.apps.googleusercontent.com"}> 
         <UserContext.Provider value={{ accessToken, setAccessToken }}>
-          <RouterProvider router={router} />
+          <HelmetProvider>
+            <Helmet>
+              <title>Examify | Comprehensive HSC Study Platform</title>
+            </Helmet>
+            <RouterProvider router={router} />
+          </HelmetProvider>
         </UserContext.Provider>
       </GoogleOAuthProvider>
     </QueryClientProvider>

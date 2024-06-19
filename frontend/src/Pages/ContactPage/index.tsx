@@ -1,14 +1,14 @@
 const ContactPage = () => {
     return (
-        <div className="flex flex-col justify-between gap-y-10">
-            <div className="text-black align-middle justify-center mt-4 flex-col gap-y-10 flex">
+        <div className="flex flex-col justify-between gap-y-10 py-4">
+            <div className="text-black align-middle justify-center flex-col gap-y-10 flex">
                 <div>
                     <div className="text-center text-2xl tracking-wide">
                         📩 Get in Touch with Examify! 📩
                     </div>
         
                     <div className="mt-6 md:mx-72">
-                        <p className="break-noraml tracking-normal text-center leading-relaxed text-balance">
+                        <div className="break-noraml tracking-normal text-center leading-relaxed text-balance">
                         Have a question, suggestion, or just want to say hello? We'd love to hear from you!
                         <br />
                         <br />
@@ -24,7 +24,7 @@ const ContactPage = () => {
                         Your feedback is essential in helping us improve Examify and provide the best possible resources for high school students. Don't hesitate to reach out – we're here to help!
                         <br />
                         Thank you for choosing Examify. Let's make learning easier together!
-                        </p>
+                        </div>
                     </div>
                 </div>
                 
@@ -51,8 +51,6 @@ const ContactPage = () => {
                         </p>
                     </div>
                 </div>
-
-                
             </div>
         </div>
     )

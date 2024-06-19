@@ -1,6 +1,6 @@
 import Environment from "../../../constants"
 
-import { useContext, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import ExamDisplay from "./Components/ExamDisplay"
 import ExamFullScreenDisplay from "./Components/ExamFullScreenDisplay"
 import { Link, useParams } from "react-router-dom"
@@ -8,18 +8,16 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { dotSpinner } from 'ldrs';
 
 import { IoMdArrowRoundBack } from "react-icons/io";
-import { UserContext } from "../../context/user-context";
 import { FetchError, readAccessToken } from "../../util/utility";
 import { FetchExam, PostRecentlyViewedExam } from "../../api/api"
 import Timer from "./Components/Timer"
 import CompleteIcon from "./Components/Complete"
 import FavouriteIcon from "./Components/Favourite"
+import { Helmet } from "react-helmet-async"
 
 const ExamPage = () => {
     const [Fullscreen, SetFullscreen] = useState(false)
-
-    const { accessToken } = useContext(UserContext)
-    const { school, year, exam_type } = useParams()
+    const { subject, school, year, exam_type } = useParams()
 
     const queryClient = useQueryClient()
 
@@ -62,7 +60,7 @@ const ExamPage = () => {
         }
 
         if (!isPending) {
-            if (accessToken !== null) {
+            if (readAccessToken() !== null) {
                 RunRecentlyViewed()
             }
         }
@@ -71,6 +69,11 @@ const ExamPage = () => {
     dotSpinner.register()
 
     return (
+        <>
+        <Helmet>
+            <title>{"Examify | " + school + " " + subject + " " + year + " " + exam_type}</title>
+            <meta name="description" content={"A practice HSC exam paper for " + subject + " from " + school + " " + year + " " + exam_type}/>
+        </Helmet>
         <div className="bg-[#F3F5F8] min-h-screen min-w-screen">
         {(isPending) ? 
             <div className="flex justify-center items-center min-h-screen min-w-screen"> 
@@ -111,6 +114,7 @@ const ExamPage = () => {
         </div>
         }
         </div>
+        </>
     )
 }
 

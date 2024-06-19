@@ -4,6 +4,7 @@ import LoginPopup from "./Components/Authentication/Login";
 import { useState } from "react";
 import { ModalContext, ModalDisplayType } from "./context/modal-context";
 import RegisterPopup from "./Components/Authentication/Register";
+import Footer from "./Components/Footer";
 
 const Layout = () => {
     const [Modal, SetModal] = useState<ModalDisplayType>({
@@ -27,7 +28,7 @@ const Layout = () => {
 
     return (
         <ModalContext.Provider value={{ Modal, SetDisplayLogin, SetDisplayRegister }}>
-            <div className="bg-[#F3F5F8] min-h-screen min-w-screen">
+            <div className="bg-[#F3F5F8] min-h-screen min-w-screen flex flex-col justify-between">
                 <Header />
 
                 <Outlet />
@@ -37,7 +38,9 @@ const Layout = () => {
                 {
                     Modal.register ? <RegisterPopup onExit={() => SetDisplayRegister(false)} /> : null
                 }
+                <Footer />
             </div>
+            
         </ModalContext.Provider>
     )
 }

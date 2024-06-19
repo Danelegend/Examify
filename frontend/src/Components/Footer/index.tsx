@@ -6,7 +6,7 @@ const Footer = () => {
     return (
         <footer className="bg-slate-50 border-t">
           <div>
-            <div className="pt-6 pb-4">
+            <div className="pt-6">
               <nav className="text-sm" aria-label="quick links">
                 <ul className="flex justify-center space-x-6">
                   <li>
@@ -26,7 +26,7 @@ const Footer = () => {
                 </ul>
               </nav>
             </div>
-            <div className="flex flex-col items-center border-t border-slate-400/10 py-2 sm:flex-row-reverse sm:justify-between sm:px-4">
+            <div className="flex flex-col items-center border-t border-slate-400/10 pb-2 sm:flex-row-reverse sm:justify-between sm:px-4">
               <div className="flex space-x-6">
                 <Link to={DISCORD_LINK} target="_blank" rel="noopener noreferrer">
                   <div className="group">

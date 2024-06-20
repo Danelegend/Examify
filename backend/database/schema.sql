@@ -67,6 +67,7 @@ CREATE TABLE exams (
     file_location           VARCHAR(255) NOT NULL,
     date_uploaded           TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     subject                 VARCHAR(128) NOT NULL,
+    difficulty              INT NOT NULL DEFAULT 1,
     PRIMARY KEY             (id),
     FOREIGN KEY             (school) REFERENCES schools(id)
 );

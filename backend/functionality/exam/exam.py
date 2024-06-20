@@ -61,7 +61,7 @@ def AddFavouriteExam(access_token: str, exam_id: int):
         raise ValidationError("Exam does not exist")
 
     # Check that the user doesn't already have the exam favourited
-    if ExamFavouriteOfUser(access_token, exam_id):
+    if ExamFavouriteOfUser(user_id, exam_id):
         raise DuplicationError("Exam already favourited")
 
     # Add the exam to the user's favourites
@@ -78,7 +78,7 @@ def RemoveFavouriteExam(access_token: str, exam_id: int):
     if not check_exam_exists(exam_id):
         raise ValidationError("Exam does not exist")
     
-    if not ExamFavouriteOfUser(access_token, exam_id):
+    if not ExamFavouriteOfUser(user_id, exam_id):
         raise ValidationError("Exam not favourited")
     
     delete_user_favourite_exam(user_id, exam_id)
@@ -95,7 +95,7 @@ def AddRecentlyViewedExam(access_token: str, exam_id: int):
 
     insert_user_recently_viewed_exam(user_id, exam_id)
 
-def ExamFavouriteOfUser(access_token: str, exam_id: int) -> bool:
+def ExamFavouriteOfUser(user_id: int, exam_id: int) -> bool:
     """
     access_token is the provided access token
 
@@ -104,8 +104,6 @@ def ExamFavouriteOfUser(access_token: str, exam_id: int) -> bool:
     precondition:
     exam_id is a valid exam id
     """
-    # Check that the token is valid and get the user
-    user_id = get_user_id(access_token)
 
     return check_if_user_favourite_exam_exists(user_id, exam_id)
 

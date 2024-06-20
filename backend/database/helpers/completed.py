@@ -76,6 +76,38 @@ def get_user_completed_exams(user_id: int, size=10) -> List[CompletedExamsRespon
         date_complete=date_complete
     ) for exam_id, date_complete in exams]
 
+def get_user_completed_exams_for_subject(user_id: int, subject: str, size=10) -> List[CompletedExamsResponse]:
+    """
+    Gets a user's completed exams from the database
+    """
+    try:
+        conn = connect()
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                SELECT exam, date_completed FROM completed_exams 
+                WHERE account = %(account)s AND subject = %(subject)s
+                ORDER BY date_completed DESC 
+                LIMIT %(size)s;
+                """, {
+                    'account': user_id,
+                    'size': size,
+                    'subject': subject
+                    })
+            exams = cur.fetchall()
+
+        log_completed_exams_success(f"Finished getting the User Completed Exams for {subject} from Database")
+    except psycopg2.Error as e:
+        log_completed_exams_error(f"Error getting the User Completed Exams for {subject}: {e}")
+        raise e
+    finally:
+        disconnect(conn)
+
+    return [CompletedExamsResponse(
+        exam=exam_id,
+        date_complete=date_complete
+    ) for exam_id, date_complete in exams]
+
 def remove_user_completed_exam(user_id: int, exam_id: int):
     """
     Given a user id and an exam id for a user, deletes a corresponding
@@ -119,3 +151,32 @@ def check_if_user_complete_exam_exists(user_id: int, exam_id: int) -> bool:
         disconnect(conn)
 
     return exists[0] if exists else False
+
+def get_user_completed_subjects(user_id: int) -> List[str]:
+    """
+    Gets the subjects from the exams that the user has completed
+    """
+    try:
+        conn = connect()
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                SELECT DISTINCT e.subject 
+                FROM exams e
+                LEFT JOIN completed_exams ce ON ce.exam = e.id
+                WHERE ce.account = %(account)s;
+                """,
+                {
+                    'account': user_id
+                })
+            
+            subjects = cur.fetchall()
+
+            log_completed_exams_success("Finsihed getting subjects from user completed exams")
+    except psycopg2.Error as e:
+        log_completed_exams_error(f"Error getting the subjects: {e}")
+        raise e
+    finally:
+        disconnect(conn)
+
+    return [subject for subject in subjects]

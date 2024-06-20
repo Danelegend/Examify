@@ -20,6 +20,7 @@ class ExamDetailsResponse(BaseModel):
     date_uploaded: datetime
     subject: str
     likes: int
+    difficulty: int
 
 class UserDetailsResponse(BaseModel):
     first_name: str

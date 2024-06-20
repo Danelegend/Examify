@@ -2,7 +2,7 @@ import datetime
 import os
 import secrets
 import string
-from typing import Tuple
+from typing import Optional, Tuple
 import jwt
 
 from errors import AuthenticationError
@@ -137,7 +137,7 @@ def remove_session(sid: int):
     """
     delete_session(sid)
 
-def get_user_id(access_token: str) -> int:
+def get_user_id(access_token: str) -> Optional[int]:
     """
     Given an access token, gets us the user
     """

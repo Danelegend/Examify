@@ -5,6 +5,7 @@ from errors import AuthenticationError
 
 from functionality.exams.FilterConfig import FilterConfig
 from functionality.exams.exams import GetExams, GetFavouriteExams, GetPopularSchools, GetRecentlyViewedExams
+from functionality.token import get_user_id
 
 from router import HTTPBearer401, OptionalHTTPBearer
 from router.api_types.api_response import ExamSchoolsResponse, ExamSubjectsResponse, FavouriteExamsResponse, RecentExamsResponse
@@ -21,7 +22,9 @@ async def get_exams(exams_request: ExamsEndpointRequest, token: Annotated[Option
     try:    
         filter_settings = exams_request.filter
 
-        data = GetExams(token, filter_settings, page, page_length)
+        user_id = get_user_id(token) if token is not None else None
+
+        data = GetExams(user_id, filter_settings, page, page_length)
 
         return ExamsResponse(
             exams=data

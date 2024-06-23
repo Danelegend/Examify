@@ -47,6 +47,7 @@ export type FetchExamsRequest = {
         subjects: string[],
         years: number[]
     },
+    sort: "relevance" | "newest" | "oldest" | "most liked" | "least liked" | "recently uploaded"
 }
 
 // RESPONSES

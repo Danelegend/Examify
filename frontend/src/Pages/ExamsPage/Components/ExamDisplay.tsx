@@ -15,6 +15,25 @@ type Filter = {
     years: number[]
 }
 
+const MapSortFrontendToBackend = (frontend_sort: string): "relevance" | "newest" | "oldest" | "most liked" | "least liked" | "recently uploaded" => {
+    switch (frontend_sort) {
+        case "Relevance":
+            return "relevance"
+        case "Newest":
+            return "newest"
+        case "Oldest":
+            return "oldest"
+        case "Most Liked":
+            return "most liked"
+        case "Least Liked":
+            return "least liked"
+        case "Recently Uploaded":
+            return "recently uploaded"
+    }
+
+    throw Error()
+}
+
 export const ExamDisplay = () => {
     const [Exams, SetExams] = useState<ExamCardProps[]>([]);
     const [FilterItems, SetFilteritems] = useState<Map<string, MobileFilterItem>>(new Map())
@@ -44,6 +63,12 @@ export const ExamDisplay = () => {
 
     useOnClickOutside([MobileFilterButtonRef, MobileFilterDisplayRef], () => SetDisplayFilter(false))
 
+    const SortStrategy = useRef<string>("Relevance")
+
+    const SetSortStrategy = (sort: string) => {
+        SortStrategy.current = sort
+    }
+
     const { data: schoolFilterData, isPending: schoolFilterPending } = useQuery({
         queryKey: ["SchoolFilters"],
         queryFn: () => FetchSchools()
@@ -60,7 +85,8 @@ export const ExamDisplay = () => {
                             request: { 
                                 page: 1,
                                 page_length: 20,
-                                filter: Filter 
+                                filter: Filter,
+                                sort: MapSortFrontendToBackend(SortStrategy.current!)
                             }})
     })
 
@@ -146,7 +172,8 @@ export const ExamDisplay = () => {
             request: { 
                 page: CurrentPage,
                 page_length: itemsPerPage,
-                filter: Filter 
+                filter: Filter,
+                sort: MapSortFrontendToBackend(SortStrategy.current!)
             }}).then((data) => {
                 SetExams([...Exams, ...data.exams.map(exam => {
                     return {
@@ -170,7 +197,8 @@ export const ExamDisplay = () => {
             request: { 
                 page: 1,
                 page_length: itemsPerPage,
-                filter: Filter 
+                filter: Filter,
+                sort: MapSortFrontendToBackend(SortStrategy.current!)
             }}).then((data) => {
                 SetExams([...data.exams.map(exam => {
                     return {
@@ -235,7 +263,7 @@ export const ExamDisplay = () => {
                             <DesktopFilter title={"Year"} items={FilterItems.get("Year")!.items} update={FilterItems.get("Year")!.updateFunction} search={true}/>
                         </div>  
                         <div className="col-start-3 col-span-1 flex justify-end my-2 mx-4">
-                            <DesktopSort exams={Exams} setExams={SetExams} relevant={isPending ? [] : data!.exams.map(exam => {
+                            <DesktopSort exams={Exams} setExams={SetExams} setSort={SetSortStrategy} relevant={isPending ? [] : data!.exams.map(exam => {
                                 return {
                                     id: exam.id,
                                     school: exam.school_name,
@@ -342,6 +370,12 @@ export const SubjectExamDisplay = ({ subject }: { subject: string }) => {
 
     useOnClickOutside([MobileFilterButtonRef, MobileFilterDisplayRef], () => SetDisplayFilter(false))
 
+    const SortStrategy = useRef<null | string>(null)
+
+    const SetSortStrategy = (sort: string) => {
+        SortStrategy.current = sort
+    }
+
     const { data: schoolFilterData, isPending: schoolFilterPending } = useQuery({
         queryKey: ["SchoolFilters"],
         queryFn: () => FetchSchools()
@@ -353,7 +387,8 @@ export const SubjectExamDisplay = ({ subject }: { subject: string }) => {
                             request: { 
                                 page: 1,
                                 page_length: 20,
-                                filter: Filter 
+                                filter: Filter,
+                                sort: MapSortFrontendToBackend(SortStrategy.current!)
                             }})
     })
 
@@ -424,7 +459,8 @@ export const SubjectExamDisplay = ({ subject }: { subject: string }) => {
             request: { 
                 page: CurrentPage,
                 page_length: itemsPerPage,
-                filter: Filter 
+                filter: Filter,
+                sort: MapSortFrontendToBackend(SortStrategy.current!)
             }}).then((data) => {
                 SetExams([...Exams, ...data.exams.map(exam => {
                     return {
@@ -448,7 +484,8 @@ export const SubjectExamDisplay = ({ subject }: { subject: string }) => {
             request: { 
                 page: 1,
                 page_length: itemsPerPage,
-                filter: Filter 
+                filter: Filter,
+                sort: MapSortFrontendToBackend(SortStrategy.current!)
             }}).then((data) => {
                 SetExams([...data.exams.map(exam => {
                     return {
@@ -512,7 +549,7 @@ export const SubjectExamDisplay = ({ subject }: { subject: string }) => {
                             <DesktopFilter title={"Year"} items={FilterItems.get("Year")!.items} update={FilterItems.get("Year")!.updateFunction} search={true}/>
                         </div>  
                         <div className="col-start-3 col-span-1 flex justify-end my-2 mx-4">
-                            <DesktopSort exams={Exams} setExams={SetExams} relevant={isPending ? [] : data!.exams.map(exam => {
+                            <DesktopSort exams={Exams} setExams={SetExams} setSort={SetSortStrategy} relevant={isPending ? [] : data!.exams.map(exam => {
                                 return {
                                     id: exam.id,
                                     school: exam.school_name,

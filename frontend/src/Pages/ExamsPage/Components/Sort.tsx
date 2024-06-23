@@ -5,6 +5,7 @@ import { ExamCardProps } from "../../../Components/ExamCards"
 type SortProps = {
     exams: ExamCardProps[],
     setExams: (exams: ExamCardProps[]) => void,
+    setSort: (sort: string) => void,
     relevant: ExamCardProps[]
 }
 
@@ -50,10 +51,10 @@ const sortExams = (method: string, relevant: Array<ExamCardProps>, exams: Array<
     }
 }
 
-export const DesktopSort = ({ exams, setExams, relevant }: SortProps) => {
+export const DesktopSort = ({ exams, setExams, setSort, relevant }: SortProps) => {
     const [CurrentSort, SetCurrentSort] = useState<string>("Relevance")
     const [IsOpen, SetIsOpen] = useState<boolean>(false)
-
+    
     const dropdownRef = useRef(null)
 
     const toggle = () => {
@@ -61,6 +62,11 @@ export const DesktopSort = ({ exams, setExams, relevant }: SortProps) => {
     }
 
     useOnClickOutside(dropdownRef, () => SetIsOpen(false))
+
+    const SetSort = (sort: string) => {
+        setSort(sort)
+        SetCurrentSort(sort)
+    }
 
     return (
         <div className="flex flex-row items-center space-x-2 text-black">
@@ -79,7 +85,7 @@ export const DesktopSort = ({ exams, setExams, relevant }: SortProps) => {
                         {
                             SORT_METHODS.map((sort, index) => (
                                 <SortItem key={index} method={sort} index={index} onSelect={() => {
-                                    SetCurrentSort(sort)
+                                    SetSort(sort)
                                     SetIsOpen(false)
                                     sortExams(sort, relevant, exams, setExams)
                                 }}/>

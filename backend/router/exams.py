@@ -21,7 +21,7 @@ async def get_exams(exams_request: ExamsEndpointRequest, token: Annotated[Option
     try:    
         filter_settings = exams_request.filter
 
-        data = GetExams(token, filter_settings, page, page_length)
+        data = GetExams(token, filter_settings, page, page_length, exams_request.sort)
 
         return ExamsResponse(
             exams=data

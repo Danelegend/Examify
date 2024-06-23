@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Literal, Optional
 from pydantic import AwareDatetime, BaseModel
 
 ################################################################################
@@ -60,6 +60,7 @@ class Filter(BaseModel):
 
 class ExamsEndpointRequest(BaseModel):
     filter: Filter
+    sort: Literal["relevance", "newest", "oldest", "most liked", "least liked", "recently uploaded"]
 
 ################################################################################
 #################################     Logo     #################################

@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Literal, Optional
 
 import psycopg2
 
@@ -124,7 +124,7 @@ def get_exams() -> List[ExamDetailsResponse]:
                                 subject=subject,
                                 likes=likes) for id, school, exam_type, year, file_location, date_uploaded, subject, likes in exams]
 
-def get_exams_with_pagination(start: int, size: int, filter: Filter) -> List[ExamDetailsResponse]:
+def get_exams_with_pagination(start: int, size: int, filter: Filter, sort: Literal["relevance", "newest", "oldest", "most liked", "least liked", "recently uploaded"]) -> List[ExamDetailsResponse]:
     """
     Gets all exams in the bounds start <= exam < start + size
     """
@@ -169,7 +169,31 @@ def get_exams_with_pagination(start: int, size: int, filter: Filter) -> List[Exa
 
     s += """
         GROUP BY e.id, s.name, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject
-        ORDER BY e.year DESC
+        """
+    
+    def sql_from_sort_strategy(sort: str):
+        ret = "ORDER BY "
+
+        if sort == "relevance":
+            ret += "e.year DESC"
+        elif sort == "newest":
+            ret += "e.year DESC"
+        elif sort == "oldest":
+            ret += "e.year ASC"
+        elif sort == "most liked":
+            ret += "likes DESC"
+        elif sort == "least liked":
+            ret += "likes ASC"
+        elif sort == "recently uploaded":
+            ret += "e.date_uploaded DESC"
+        else:
+            raise Exception()
+
+        return ret
+    
+    s += sql_from_sort_strategy(sort)
+
+    s += """
         LIMIT %(size)s OFFSET %(start)s;
         """
 

@@ -15,11 +15,11 @@ from database.helpers.school import get_schools
 from router.api_types.api_response import ExamDetails
 from router.api_types.api_request import Filter
 
-def GetExams(accessToken: Optional[str], filter: Filter, page: int, page_length: int, sortType="DEFAULT") -> List[ExamDetails]:
+def GetExams(accessToken: Optional[str], filter: Filter, page: int, page_length: int, sort: str="relevance") -> List[ExamDetails]:
     # Get exams in bounds of (page - 1) * page_length <= x < page * (page_length)
     lower = (page - 1) * page_length
     
-    queryset = get_exams_with_pagination(lower, page_length, filter)
+    queryset = get_exams_with_pagination(lower, page_length, filter, sort)
 
     exams = []
 

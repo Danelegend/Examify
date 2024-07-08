@@ -24,6 +24,8 @@ import NotFoundPage from './Pages/NotFoundPage';
 import PrivacyPage from './Pages/PrivacyPage';
 import TosPage from './Pages/TosPage';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
+import QuestionPage from './Pages/QuestionPage';
+import QuestionsPage from './Pages/QuestionsPage';
 
 const router = createBrowserRouter([
   {
@@ -36,6 +38,14 @@ const router = createBrowserRouter([
       {
         element: <ExamsPage />,
         path: "exams",
+      },
+      {
+        element: <QuestionsPage />,
+        path: "questions/"
+      },
+      {
+        element: <QuestionPage />,
+        path: "question/:id"
       },
       {
         element: <SubjectExamsPage />,

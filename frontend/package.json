@@ -24,6 +24,7 @@
     "react-fast-scroll-pdf": "^1.1.1",
     "react-helmet-async": "^2.0.5",
     "react-icons": "^5.0.1",
+    "react-latex-next": "^3.0.0",
     "react-pdf": "^7.5.1",
     "react-router-dom": "^6.20.1",
     "react-social-login": "^3.4.17",

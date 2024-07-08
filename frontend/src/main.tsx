@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import './index.css'
+import 'katex/dist/katex.min.css';
+
 import Layout from './layout';
 import { ExamsPage, SubjectExamsPage } from './Pages/ExamsPage';
 import ExamPage from './Pages/ExamPage';

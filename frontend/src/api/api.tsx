@@ -1,7 +1,7 @@
 import { clear } from "localforage"
 import Environment from "../../constants"
 import { FetchError, readExpiration, storeAccessToken, storeExpiration } from "../util/utility"
-import { AdminExamReviewDeleteRequest, AdminExamReviewSubmitRequest, ExamUploadRequest, FetchExamResponse, FetchExamsRequest, FetchExamsResponse, FetchExamSubjectsResponse, FetchFavouriteExamsResponse, FetchLogosResponse, FetchNotificationsResponse, FetchRecentExamsResponse, FetchSchoolsResponse, FetchUserActivityAnalyticsResponse, FetchUserResponse, FetchUserSubjectAnalyticsResponse, UserLoginRequest, UserProfileEditRequest, UserRegistrationRequest, UserRegistrationResponse } from "./types"
+import { AdminExamReviewDeleteRequest, AdminExamReviewSubmitRequest, ExamUploadRequest, FetchExamResponse, FetchExamsRequest, FetchExamsResponse, FetchExamSubjectsResponse, FetchFavouriteExamsResponse, FetchLogosResponse, FetchNotificationsResponse, FetchQuestionSubjectsResponse, FetchQuestionTopicsResponse, FetchRecentExamsResponse, FetchSchoolsResponse, FetchUserActivityAnalyticsResponse, FetchUserResponse, FetchUserSubjectAnalyticsResponse, UserLoginRequest, UserProfileEditRequest, UserRegistrationRequest, UserRegistrationResponse } from "./types"
 
 export type UserAuthentication = {
     expiration: Date,
@@ -511,4 +511,42 @@ export const FetchUserFavouritedExam = ({ token, exam_id }: { token: string, exa
             throw new FetchError(res)
         }
     }))
+}
+
+export const FetchQuestionSubjects = (): Promise<FetchQuestionSubjectsResponse> => {
+    return fetch(Environment.BACKEND_URL + "/api/questions/subjects", {
+        headers: 
+        {  
+            'Content-Type': 'application/json',
+        },
+        method: "GET",
+        credentials: 'include'
+    }).then(async (res) => {
+        const data = await res.json()
+
+        if (res.ok && res.status === 200) {
+            return data
+        } else {
+            throw new FetchError(res, "Bad")
+        }
+    })
+}
+
+export const FetchQuestionTopics = (): Promise<FetchQuestionTopicsResponse> => {
+    return fetch(Environment.BACKEND_URL + "/api/questions/topics", {
+        headers: 
+        {  
+            'Content-Type': 'application/json',
+        },
+        method: "GET",
+        credentials: 'include'
+    }).then(async (res) => {
+        const data = await res.json()
+
+        if (res.ok && res.status === 200) {
+            return data
+        } else {
+            throw new FetchError(res, "Bad")
+        }
+    })
 }

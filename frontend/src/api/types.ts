@@ -172,3 +172,11 @@ export type FetchUserActivityAnalyticsResponse = {
         completed_exams: ExamsComplete[]
     }[]
 }
+
+export type FetchQuestionSubjectsResponse = {
+    subjects: string[]
+}
+
+export type FetchQuestionTopicsResponse = {
+    topics: string[]
+}

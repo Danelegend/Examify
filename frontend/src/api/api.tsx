@@ -1,7 +1,7 @@
 import { clear } from "localforage"
 import Environment from "../../constants"
 import { FetchError, readExpiration, storeAccessToken, storeExpiration } from "../util/utility"
-import { AdminExamReviewDeleteRequest, AdminExamReviewSubmitRequest, ExamUploadRequest, FetchExamResponse, FetchExamsRequest, FetchExamsResponse, FetchExamSubjectsResponse, FetchFavouriteExamsResponse, FetchLogosResponse, FetchNotificationsResponse, FetchQuestionSubjectsResponse, FetchQuestionTopicsResponse, FetchRecentExamsResponse, FetchSchoolsResponse, FetchUserActivityAnalyticsResponse, FetchUserResponse, FetchUserSubjectAnalyticsResponse, UserLoginRequest, UserProfileEditRequest, UserRegistrationRequest, UserRegistrationResponse } from "./types"
+import { AdminExamReviewDeleteRequest, AdminExamReviewSubmitRequest, ExamUploadRequest, FetchExamResponse, FetchExamsRequest, FetchExamsResponse, FetchExamSubjectsResponse, FetchFavouriteExamsResponse, FetchLogosResponse, FetchNotificationsResponse, FetchQuestionResponse, FetchQuestionsRequest, FetchQuestionsResponse, FetchQuestionSubjectsResponse, FetchQuestionTopicsResponse, FetchRecentExamsResponse, FetchSchoolsResponse, FetchUserActivityAnalyticsResponse, FetchUserResponse, FetchUserSubjectAnalyticsResponse, PostUserQuestionAnswerRequest, UserLoginRequest, UserProfileEditRequest, UserRegistrationRequest, UserRegistrationResponse } from "./types"
 
 export type UserAuthentication = {
     expiration: Date,
@@ -513,6 +513,33 @@ export const FetchUserFavouritedExam = ({ token, exam_id }: { token: string, exa
     }))
 }
 
+export const FetchQuestions = ({ token, request }: { token: string | null, request: FetchQuestionsRequest }): Promise<FetchQuestionsResponse> => {
+    return fetch(Environment.BACKEND_URL + "/api/questions/", {
+        headers: ( token === null ? 
+        {
+            'Content-Type': 'application/json'
+        }
+        :
+        {
+            'Content-Type': 'application/json',
+            'Authorization': `bearer ${token}`
+        }),
+        method: "POST",
+        credentials: 'include',
+        body: JSON.stringify({
+            filter: request.filter
+        })
+    }).then(async (res) => {
+        const data = await res.json()
+
+        if (res.ok && res.status === 200) {
+            return data
+        } else {
+            throw new FetchError(res, "Bad")
+        }
+    })
+}
+
 export const FetchQuestionSubjects = (): Promise<FetchQuestionSubjectsResponse> => {
     return fetch(Environment.BACKEND_URL + "/api/questions/subjects", {
         headers: 
@@ -549,4 +576,38 @@ export const FetchQuestionTopics = (): Promise<FetchQuestionTopicsResponse> => {
             throw new FetchError(res, "Bad")
         }
     })
+}
+
+export const FetchQuestion = ({ question_id }: { question_id: number }): Promise<FetchQuestionResponse> => {
+    return fetch(Environment.BACKEND_URL + "/api/question/" + question_id.toString(), {
+        headers: 
+        {  
+            'Content-Type': 'application/json',
+        },
+        method: "GET",
+        credentials: 'include'
+    }).then(async (res) => {
+        const data = await res.json()
+
+        if (res.ok && res.status === 200) {
+            return data
+        } else {
+            throw new FetchError(res, "Bad")
+        }
+    })
+}
+
+export const PostUserQuestionAnswer = ({ token, request }: { token: string, request: PostUserQuestionAnswerRequest}): Promise<Response> => {
+    return AuthorizationMiddleware<Response>(() => fetch(Environment.BACKEND_URL + "/api/question/" + request.question_id.toString() + "/answer", {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `bearer ${token}`
+        },
+        method: "POST",
+        credentials: 'include',
+        body: JSON.stringify({
+            question_id: request.question_id,
+            answer: request.answer
+        })
+    }))
 }

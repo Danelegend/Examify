@@ -180,3 +180,39 @@ export type FetchQuestionSubjectsResponse = {
 export type FetchQuestionTopicsResponse = {
     topics: string[]
 }
+
+export type FetchQuestionsRequest = {
+    filter: {
+        subjects: string[]
+        topics: string[]
+        grades: number[]
+    }
+}
+
+export type FetchQuestionsResponse = {
+    questions: {
+        id: number,
+        subject: string,
+        topic: string,
+        title: string,
+        grade: number,
+        difficulty: number
+    }[]
+}
+
+export type FetchQuestionResponse = {
+    id: number
+    subject: string
+    topic: string
+    title: string
+    grade: number
+    difficulty: number
+    question: string
+    answers: string[]
+    image_locations: string[]
+}
+
+export type PostUserQuestionAnswerRequest = {
+    question_id: number
+    answer: string[]
+}

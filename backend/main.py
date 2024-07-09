@@ -86,3 +86,11 @@ async def db_insert_exams(password: str = ""):
     if password != "@JudyMansell13!": return
 
     reinsert_exams()
+
+@app.get("/db/schema/migrate", status_code=status.HTTP_200_OK)
+async def db_schema_update(migration: int = 0, password: str = ""):
+    if password != "@JudyMansell13!": return
+    if migration < 1: return
+
+    db_setup = DatabaseSetup()
+    db_setup.run_migration(migration)

@@ -9,7 +9,7 @@ from database.helpers.school import get_school_by_id
 from database.db_types.db_request import ExamCreationRequest, ExamFilterRequest, ExamTypes
 from database.db_types.db_response import ExamDetailsResponse
 
-from router.api_types.api_request import Filter
+from router.api_types.api_request import ExamsFilter
 
 def log_exam_success(message: str):
     """
@@ -124,7 +124,7 @@ def get_exams() -> List[ExamDetailsResponse]:
                                 subject=subject,
                                 likes=likes) for id, school, exam_type, year, file_location, date_uploaded, subject, likes in exams]
 
-def get_exams_with_pagination(start: int, size: int, filter: Filter, sort: Literal["relevance", "newest", "oldest", "most liked", "least liked", "recently uploaded"]) -> List[ExamDetailsResponse]:
+def get_exams_with_pagination(start: int, size: int, filter: ExamsFilter, sort: Literal["relevance", "newest", "oldest", "most liked", "least liked", "recently uploaded"]) -> List[ExamDetailsResponse]:
     """
     Gets all exams in the bounds start <= exam < start + size
     """

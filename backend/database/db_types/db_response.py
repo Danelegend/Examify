@@ -43,3 +43,22 @@ class NotificationResponse(BaseModel):
 class CompletedExamsResponse(BaseModel):
     exam: int
     date_complete: datetime
+
+class QuestionCardResponse(BaseModel):
+    id: int
+    subject: str
+    topic: str
+    title: str
+    grade: int
+    difficulty: int
+
+class QuestionsDetailsResponse(BaseModel):
+    id: int
+    subject: str
+    topic: str
+    title: str
+    grade: int
+    difficulty: int
+    question: str
+    answers: List[str]
+    image_locations: List[str]

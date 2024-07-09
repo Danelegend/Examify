@@ -11,3 +11,6 @@ def path_is_parent(parent_path, child_path):
 
     # Compare the common path of the parent and child path with the common path of just the parent path. Using the commonpath method on just the parent path will regularise the path name in the same way as the comparison that deals with both paths, removing any trailing path separator
     return os.path.commonpath([parent_path]) == os.path.commonpath([parent_path, child_path])
+
+def is_admin(user_id: int) -> bool:
+    return True

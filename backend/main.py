@@ -13,7 +13,7 @@ from functionality.scripts.reinsert_exams import reinsert_exams
 
 from logger import Logger
 
-from router import admin, auth, exam, exams, logo, user
+from router import admin, auth, exam, exams, logo, question, questions, user
 
 @asynccontextmanager
 async def lifespan(app: FastAPI): # pylint: disable=W0621
@@ -71,6 +71,8 @@ app.include_router(exam.router, prefix="/api/exam", tags=["exam"])
 app.include_router(exams.router, prefix="/api/exams", tags=["exams"])
 app.include_router(logo.router, prefix="/api/logo", tags=["logo"])
 app.include_router(user.router, prefix="/api/user", tags=["user"])
+app.include_router(question.router, prefix="/api/question", tags=["question"])
+app.include_router(questions.router, prefix="/api/questions", tags=["questions"])
 
 @app.get("/db/setup", status_code=status.HTTP_200_OK)
 async def db_setup(password: str = ""):

@@ -118,7 +118,8 @@ CREATE TABLE questions (
     subject                 TEXT NOT NULL,
     topic                   TEXT NOT NULL,
     question                TEXT NOT NULL,
-    answer                  TEXT NOT NULL,
+    grade                   INT NOT NULL,
+    difficulty              INT NOT NULL,
     PRIMARY KEY             (id),
     FOREIGN KEY             (exam) REFERENCES exams(id)
 );

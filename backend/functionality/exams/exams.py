@@ -13,9 +13,9 @@ from database.helpers.recent import get_user_recently_viewed_exams
 from database.helpers.school import get_schools
 
 from router.api_types.api_response import ExamDetails
-from router.api_types.api_request import Filter
+from router.api_types.api_request import ExamsFilter
 
-def GetExams(accessToken: Optional[str], filter: Filter, page: int, page_length: int, sort: str="relevance") -> List[ExamDetails]:
+def GetExams(accessToken: Optional[str], filter: ExamsFilter, page: int, page_length: int, sort: str="relevance") -> List[ExamDetails]:
     # Get exams in bounds of (page - 1) * page_length <= x < page * (page_length)
     lower = (page - 1) * page_length
     

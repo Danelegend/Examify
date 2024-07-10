@@ -1,5 +1,4 @@
 import os
-import argparse
 from typing import List, Tuple, Optional, Any
 from psycopg2 import Error, sql
 
@@ -132,6 +131,28 @@ class DatabaseSetup:
             self.clear_tables(tables)
         finally:
             self.log_success("Finished with the database")
+
+    def run_migration(self, migration_num: int):
+        """
+        Runs a specific migration
+        """
+        self.log_success("Attemping to find migration")
+
+        migration_file = "migration_" + str(migration_num).rjust(3, '0') + ".sql"
+
+        try:
+            conn = connect()
+            with conn.cursor() as cur:
+                with open(os.path.join(os.getcwd(), "database/migrations/" + migration_file), encoding="utf8") as file:
+                    cur.execute(file.read())
+            conn.commit()
+            self.log_success("done injecting schema")
+        except Error as err:
+            self.log_error(f"database error while injecting schema: {err}")
+            raise err
+        finally:
+            disconnect(conn)
+
 
 if __name__ == "__main__":
     db_setup = DatabaseSetup()

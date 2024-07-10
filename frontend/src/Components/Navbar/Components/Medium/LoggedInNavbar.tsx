@@ -5,7 +5,6 @@ import { useContext } from "react";
 import { UserContext } from "../../../../context/user-context";
 import { NavigationButton } from "../NavButton";
 import { UserLogout } from "../../../../api/api";
-import { IoIosNotifications } from "react-icons/io";
 import NotificationIcon from "../Notification";
 
 const LoggedInNavbar = () => {
@@ -37,6 +36,7 @@ const LoggedInNavbar = () => {
                 <div className="self-stretch justify-start items-center gap-[21px] inline-flex text-base font-['Montserrat']">
                     <NavigationButton link="/dashboard" title="Dashboard" />
                     <NavigationButton link="/exams" title="Exams" />
+                    <NavigationButton link="/questions" title="Questions" />
                     <NavigationButton link="/upload" title="Upload" />
                     <NavigationButton link="/contact" title="Contact" />
                 </div>

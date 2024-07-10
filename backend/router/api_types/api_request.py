@@ -53,13 +53,13 @@ class ExamFavouriteRequest(BaseModel):
 ################################################################################
 #################################     Exams     ################################
 ################################################################################
-class Filter(BaseModel):
+class ExamsFilter(BaseModel):
     schools: List[str]
     subjects: List[str]
     years: List[int]
 
 class ExamsEndpointRequest(BaseModel):
-    filter: Filter
+    filter: ExamsFilter
     sort: Literal["relevance", "newest", "oldest", "most liked", "least liked", "recently uploaded"]
 
 ################################################################################
@@ -71,3 +71,31 @@ class ExamsEndpointRequest(BaseModel):
 ################################################################################
 class NotificationsSeenRequest(BaseModel):
     notifications: List[int]
+
+################################################################################
+#################################     Questions     ############################
+################################################################################
+class QuestionsFilter(BaseModel):
+    subjects: List[str]
+    topics: List[str]
+    grades: List[int]
+
+class QuestionsRequest(BaseModel):
+    filter: QuestionsFilter
+
+################################################################################
+#################################     Question      ############################
+################################################################################
+class QuestionCreationRequest(BaseModel):
+    title: str
+    subject: str
+    topic: str
+    grade: int
+    difficulty: int
+    question: str
+    answers: List[str]
+    images: List[str]
+
+class QuestionAnswerRequest(BaseModel):
+    question_id: int
+    answers: List[str]

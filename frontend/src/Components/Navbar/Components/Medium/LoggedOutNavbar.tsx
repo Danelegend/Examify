@@ -1,5 +1,4 @@
 import { useContext } from "react";
-import { Link } from "react-router-dom";
 import { ModalContext } from "../../../../context/modal-context";
 import { NavigationButton } from "../NavButton";
 
@@ -17,8 +16,8 @@ const LoggedOutNavbar = () => {
     return (
         <>
                 <div className="self-stretch justify-start items-center gap-5 inline-flex text-base font-['Montserrat']">
-                    <NavigationButton link="/" title="About" />
                     <NavigationButton link="/exams" title="Exams" />
+                    <NavigationButton link="/questions" title="Questions" />
                     <NavigationButton link="/upload" title="Upload" />
                     <NavigationButton link="/contact" title="Contact" />
                 </div>

@@ -107,3 +107,38 @@ class UserAnalyticsCompletedSubjectExamsResponse(BaseModel):
 
 class UserAnalyticsActivityResponse(BaseModel):
     analytics: List[Tuple[datetime, List[ExamsComplete]]]
+
+################################################################################
+#################################     Questions     ############################
+################################################################################
+class QuestionCard(BaseModel):
+    id: int
+    subject: str
+    topic: str
+    title: str
+    grade: int
+    difficulty: int
+
+class QuestionsResponse(BaseModel):
+    questions: List[QuestionCard]
+
+class QuestionsSubjectsResponse(BaseModel):
+    subjects: List[str]
+
+class QuestionsTopicsResponse(BaseModel):
+    topics: List[str]
+
+################################################################################
+#################################     Question      ############################
+################################################################################
+
+class QuestionResponse(BaseModel):
+    id: int
+    subject: str
+    topic: str
+    title: str
+    grade: int
+    difficulty: int
+    question: str
+    answers: List[str]
+    image_locations: List[str]

@@ -1,6 +1,6 @@
 import { forwardRef, useRef, useState } from "react"
 import { useOnClickOutside } from "usehooks-ts"
-import { ExamCardProps } from "../../../Components/ExamCards"
+import { ExamCardProps } from "./ExamCards"
 
 type SortProps = {
     exams: ExamCardProps[],

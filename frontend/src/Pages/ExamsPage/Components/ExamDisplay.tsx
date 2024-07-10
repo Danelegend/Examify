@@ -3,9 +3,9 @@ import ExamCard, { ExamCardProps } from "../../../Components/ExamCards";
 import { useQuery } from "@tanstack/react-query";
 import { FetchError, readAccessToken, removeAccessToken } from "../../../util/utility";
 import { UserContext } from "../../../context/user-context";
-import { DesktopFilter, MobileFilter, MobileFilterDisplay, MobileFilterItem } from "./Filter";
+import { DesktopFilter, MobileFilter, MobileFilterDisplay, MobileFilterItem } from "../../../Components/Filter";
 import { FetchExams, FetchExamSubjects, FetchSchools } from "../../../api/api";
-import { DesktopSort, MobileSort, MobileSortDisplay } from "./Sort";
+import { DesktopSort, MobileSort, MobileSortDisplay } from "../../../Components/Sort";
 import { waveform, dotSpinner } from "ldrs"
 import { useOnClickOutside, useWindowSize } from "usehooks-ts";
 

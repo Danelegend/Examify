@@ -60,3 +60,13 @@ class NotificationCreationRequest(BaseModel):
     title: str
     message: str
     link: Optional[str] = None
+
+class QuestionCreationRequest(BaseModel):
+    subject: str
+    topic: str
+    title: str
+    grade: int
+    difficulty: int
+    question: str
+    answers: List[str]
+    image_locations: List[str]

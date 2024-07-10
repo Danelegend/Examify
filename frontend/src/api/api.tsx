@@ -199,7 +199,7 @@ export const FetchUserProfile = ({ token }: { token: string }): Promise<FetchUse
 }
 
 export const FetchExams = ({ token, request }: { token: string | null, request: FetchExamsRequest }): Promise<FetchExamsResponse> => {
-    return fetch(Environment.BACKEND_URL + "/api/exams/?page=" + request.page.toString() + "&page_length=" + request.page_length.toString(), {
+    return fetch(`${Environment.BACKEND_URL}/api/exams/?page=${request.page}&page_length=${request.page_length}`, {
         headers: (token === null) ?
         {  
             'Content-Type': 'application/json',
@@ -210,7 +210,12 @@ export const FetchExams = ({ token, request }: { token: string | null, request: 
         },
         method: "POST",
         body: JSON.stringify({
-            filter: request.filter
+            filter: {
+                schools: request.filter.schools,
+                subjects: request.filter.subjects,
+                years: request.filter.years,   
+            },
+            sort: request.sort
         }),
         credentials: 'include'
     }).then(async (res) => {

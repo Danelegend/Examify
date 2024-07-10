@@ -1,12 +1,12 @@
 from typing import Annotated
 from fastapi import APIRouter, HTTPException, Response, Security, status, UploadFile, Form, File
 
-from functionality.admin.admin import DeleteCurrentExam, DeleteReviewExam, GetCurrentExams, GetExamsToReview, SubmitReviewExam, UploadExam, ValidateToken
+from functionality.admin.admin import DeleteCurrentExam, DeleteReviewExam, GetCurrentExams, GetExamsToReview, SubmitReviewExam, UpdateExam, UploadExam, ValidateToken
 from functionality.authentication.authentication import GetUserPermissions
 
 from router import HTTPBearer401
-from router.api_types.api_request import DeleteReviewExamRequest, SubmitReviewExamRequest, UploadExamRequest
-from router.api_types.api_response import CurrentExamsResponse, ReviewExamsResponse
+from router.api_types.api_request import DeleteReviewExamRequest, SubmitReviewExamRequest, UpdateExamRequest, UploadExamRequest
+from router.api_types.api_response import CurrentExamsResponse, ReviewExamsResponse, UpdateExamResponse
 
 router = APIRouter()
 
@@ -68,3 +68,15 @@ async def upload_exam(
                     file)
     
     return Response(status_code=status.HTTP_200_OK)
+
+@router.put("/exam/{exam_id}", status_code=status.HTTP_200_OK, response_model=UpdateExamResponse)
+async def update_exam(request: UpdateExamRequest, exam_id: int, token: Annotated[str, Security(HTTPBearer401())]) -> UpdateExamResponse:
+    TokenValidation(token)
+
+    success, message = UpdateExam(exam_id, 
+                                  request.school, 
+                                  request.year, 
+                                  request.exam_type, 
+                                  request.subject)
+
+    return UpdateExamResponse(success=success, message=message)

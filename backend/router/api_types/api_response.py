@@ -23,6 +23,10 @@ class ReviewExamResponse(BaseModel):
 class ReviewExamsResponse(BaseModel):
     exams: List[ReviewExamResponse]
 
+class UpdateExamResponse(BaseModel):
+    success: bool
+    message: str
+
 ################################################################################
 #################################     Auth     #################################
 ################################################################################

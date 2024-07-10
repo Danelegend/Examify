@@ -5,8 +5,8 @@ import psycopg2
 from logger import Logger
 
 from database.helpers import connect, disconnect
-from database.helpers.school import get_school_by_id
-from database.db_types.db_request import ExamCreationRequest, ExamFilterRequest, ExamTypes
+from database.helpers.school import get_or_create_school, get_school_by_id
+from database.db_types.db_request import ExamCreationRequest, ExamFilterRequest, ExamTypes, ExamUpdateRequest
 from database.db_types.db_response import ExamDetailsResponse
 
 from router.api_types.api_request import ExamsFilter
@@ -314,3 +314,39 @@ def check_exam_exists(exam_id: int) -> bool:
         disconnect(conn)
     
     return exists[0]
+
+def update_exam(request: ExamUpdateRequest) -> None:
+    """
+    Updates the exam in the database
+    """
+    def construct_query(request: ExamUpdateRequest) -> str:
+        s = "UPDATE exams SET "
+
+        if request.school:
+            s += f"school = {get_or_create_school(request.school)}, "
+        if request.exam_type:
+            s += f"exam_type = '{request.exam_type}', "
+        if request.year:
+            s += f"year = {request.year}, "
+        if request.subject:
+            s += f"subject = '{request.subject}', "
+
+        s = s[:-2]
+
+        s += f" WHERE id = {request.id};"
+
+        return s
+
+    try:
+        conn = connect()
+        with conn.cursor() as cur:
+            s = construct_query(request)
+            cur.execute(s)
+        conn.commit()
+        log_exam_success("Finished updating the Exam in Database")
+    except psycopg2.Error as e:
+        log_exam_error(f"Error updating the Exam: {e}")
+        conn.rollback()
+        raise e
+    finally:
+        disconnect(conn)

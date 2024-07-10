@@ -20,6 +20,12 @@ class UploadExamRequest(BaseModel):
     exam_type: str
     subject: str
 
+class UpdateExamRequest(BaseModel):
+    school: Optional[str] = None
+    year: Optional[int] = None
+    exam_type: Optional[str] = None
+    subject: Optional[str] = None
+
 ################################################################################
 #################################     Auth     #################################
 ################################################################################

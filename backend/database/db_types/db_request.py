@@ -70,3 +70,10 @@ class QuestionInsertionRequest(BaseModel):
     question: str
     answers: List[str]
     image_locations: List[str]
+
+class ExamUpdateRequest(BaseModel):
+    id: int
+    school: Optional[str] = None
+    exam_type: Optional[ExamTypes] = None
+    year: Optional[int] = None
+    subject: Optional[str] = None

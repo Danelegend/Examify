@@ -1,5 +1,5 @@
 import os
-from typing import List
+from typing import List, Optional, Tuple
 
 from fastapi import UploadFile
 
@@ -11,8 +11,8 @@ from functionality.google.gdrive import delete_file_from_review, get_files_in_re
 from functionality.authentication.authentication import GetUserPermissions
 from functionality.types import ExamType
 
-from database.db_types.db_request import ExamCreationRequest
-from database.helpers.exam import delete_exam, get_exam, get_exams, insert_exam
+from database.db_types.db_request import ExamCreationRequest, ExamUpdateRequest
+from database.helpers.exam import delete_exam, get_exam, get_exams, insert_exam, update_exam
 from database.helpers.school import get_or_create_school
 
 from router.api_types.api_response import CurrentExamResponse, ReviewExamResponse
@@ -114,3 +114,19 @@ async def UploadExam(school: str, year: int, exam_type: str, subject: str, file:
     upload_file_to_drive(new_path, "review")
 
     os.remove(new_path)
+
+def UpdateExam(exam_id: int, school: Optional[str] = None, year: Optional[int] = None, exam_type: Optional[str] = None, subject: Optional[str] = None) -> Tuple[bool, str]:
+    database_request = ExamUpdateRequest(
+        id=exam_id,
+        school=school,
+        year=year,
+        exam_type=exam_type,
+        subject=subject
+    )
+
+    try:
+        update_exam(database_request)
+        
+        return True, "Update Successful"
+    except Exception as e:
+        return False, str(e)

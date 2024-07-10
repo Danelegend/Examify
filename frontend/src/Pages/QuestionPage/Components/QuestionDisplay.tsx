@@ -1,8 +1,11 @@
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { TiTick } from "react-icons/ti"
 import { ImCross } from "react-icons/im";
 import { useScreen } from "usehooks-ts"
 import Latex from "react-latex-next";
+import { FetchQuestion, PostUserQuestionAnswer } from "../../../api/api";
+import { readAccessToken } from "../../../util/utility";
+import { useQuery } from "@tanstack/react-query";
 
 type QuestionDisplayProps = {
     id: number
@@ -14,12 +17,14 @@ type QuestionProps = {
 
 type SolutionInputProps = {
     solution: string[]
+    question_id: number
 }
 
 type Question = {
     subject: string
     topic: string
     title: string
+    grade: number
     difficulty: number
     question: QuestionDataType
     solutions: SolutionDataType
@@ -34,27 +39,37 @@ type SolutionDataType = {
     solutions: string[]
 }
 
-const QUESTION: Question = {
-    subject: "Maths Extension 2",
-    topic: "Complex Numbers",
-    title: "Solve for x in 1x + 2 = 3",
-    difficulty: 2,
-    question: {
-        question: "Solve for $x$ in $1x + 2 = 3$"
-    },
-    solutions: {
-        solutions: ["x = 1", "1"]
-    }
-}
-
 const QuestionDisplay = ({ id }: QuestionDisplayProps) => {
-    const [QuestionData, SetQuestionData] = useState<Question | null>(QUESTION)
+    const [QuestionData, SetQuestionData] = useState<Question | null>(null)
+
+    const { data, isPending } = useQuery({
+        queryKey: ["Question", id],
+        queryFn: () => FetchQuestion({ question_id: id })
+    })
+
+    useEffect(() => {
+        if (isPending) return
+    
+        SetQuestionData({
+            subject: data!.subject,
+            topic: data!.topic,
+            title: data!.title,
+            grade: data!.grade,
+            difficulty: data!.difficulty,
+            question: {
+                question: data!.question
+            },
+            solutions: {
+                solutions: data!.answers
+            }
+        })
+    }, [data, isPending])
 
     return (
         <div className="flex flex-col space-y-24">
             <Question question={QuestionData!.question.question}/>
             <div className="flex justify-center">
-                <SolutionInput solution={QuestionData!.solutions.solutions}/>
+                <SolutionInput solution={QuestionData!.solutions.solutions} question_id={id}/>
             </div>
         </div>
     )
@@ -74,7 +89,7 @@ const Question = ({ question }: QuestionProps) => {
     )
 }
 
-const SolutionInput = ({ solution }: SolutionInputProps) => {
+const SolutionInput = ({ solution, question_id }: SolutionInputProps) => {
     const [Answer, SetAnswer] = useState<string>("")
     const [isCorrect, SetIsCorrect] = useState<boolean | null>(null)
 
@@ -89,6 +104,15 @@ const SolutionInput = ({ solution }: SolutionInputProps) => {
             SetIsCorrect(true)
         } else {
             SetIsCorrect(false)
+        }
+
+        const token = readAccessToken()
+
+        if (token !== null) {
+            PostUserQuestionAnswer({ 
+                token: token, 
+                request: { question_id: question_id, answer: [Answer] } 
+            })
         }
     }
 

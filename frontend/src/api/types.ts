@@ -182,6 +182,8 @@ export type FetchQuestionTopicsResponse = {
 }
 
 export type FetchQuestionsRequest = {
+    page: number,
+    page_length: number,
     filter: {
         subjects: string[]
         topics: string[]

@@ -514,7 +514,7 @@ export const FetchUserFavouritedExam = ({ token, exam_id }: { token: string, exa
 }
 
 export const FetchQuestions = ({ token, request }: { token: string | null, request: FetchQuestionsRequest }): Promise<FetchQuestionsResponse> => {
-    return fetch(Environment.BACKEND_URL + "/api/questions/", {
+    return fetch(Environment.BACKEND_URL + "/api/questions/?page=" + request.page.toString() + "&page_length=" + request.page_length.toString(), {
         headers: ( token === null ? 
         {
             'Content-Type': 'application/json'

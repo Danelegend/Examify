@@ -1,38 +1,18 @@
 import { useEffect, useState } from "react";
-import { LoadingQuestionCard, QuestionCard, QuestionCardProps, TitleCard } from "./QuestionCard";
+import { LoadingQuestionCard, QuestionCard, TitleCard } from "./QuestionCard";
 import { DesktopFilter } from "../../../Components/Filter";
-import { FetchQuestionSubjects, FetchQuestionTopics } from "../../../api/api";
+import { FetchQuestions, FetchQuestionSubjects, FetchQuestionTopics } from "../../../api/api";
 import { useQuery } from "@tanstack/react-query";
+import { readAccessToken } from "../../../util/utility";
 
-const DUMMY_QUESTIONS: QuestionCardProps[] = [
-    {
-        id: 1,
-        title: "Test",
-        subject: "Maths Extension 2",
-        topic: "Complex Numbers",
-        grade: 12,
-        difficulty: 2,
-        index: 1
-    },
-    {
-        id: 2,
-        title: "Test",
-        subject: "Maths Extension 2",
-        topic: "Proofs",
-        grade: 12,
-        difficulty: 5,
-        index: 2
-    },
-    {
-        id: 3,
-        title: "Test",
-        subject: "Maths Extension 2",
-        topic: "Vectors",
-        grade: 12,
-        difficulty: 4,
-        index: 3
-    },
-]
+type Question = {
+    id: number,
+    title: string,
+    subject: string,
+    topic: string,
+    grade: number,
+    difficulty: number
+}
 
 type SortStrategy = "ASC_DIFF" | "DES_DIFF" | "ID"
 
@@ -46,14 +26,29 @@ const QuestionsDisplay = () => {
     /*
         Questions Display deals with displaying questions as well as filter the filter and the like
     */
-   const [Questions, SetQuestions] = useState<QuestionCardProps[]>(DUMMY_QUESTIONS)
-   const [isLoading, SetLoading] = useState<boolean>(true)
+   const [Questions, SetQuestions] = useState<Question[]>([])
    const [SortStrategy, SetSortStrategy] = useState<SortStrategy>("ID")
+
+    const [CurrentPage, SetCurrentPage] = useState<number>(1);
+    const itemsPerPage = 50;
 
    const [Filter, SetFilter] = useState<Filter>({
          subject: [],
          topic: [],
          grade: []
+    })
+
+    const { data: questionsData, isPending: questionsPending } = useQuery({
+        queryKey: ["Questions"],
+        queryFn: () => FetchQuestions({ token: readAccessToken(), request: {
+            page: CurrentPage,
+            page_length: itemsPerPage,
+            filter: {
+                subjects: Filter.subject,
+                topics: Filter.topic,
+                grades: Filter.grade
+            }
+        }})
     })
 
     const { data: subjectFilterData, isPending: subjectFilterPending } = useQuery({
@@ -100,6 +95,63 @@ const QuestionsDisplay = () => {
         }))
     }, [SortStrategy])
 
+    useEffect(() => {
+        if (questionsPending) return
+
+        SetQuestions(questionsData!.questions.map(question => {
+            return {
+                id: question.id,
+                title: question.title,
+                subject: question.subject,
+                topic: question.topic,
+                grade: question.grade,
+                difficulty: question.difficulty
+            }
+        }))
+    }, [questionsData, questionsPending])
+
+    useEffect(() => {
+        SetCurrentPage(1)
+        FetchQuestions({ token: readAccessToken(), 
+            request: {
+                page: 1,
+                page_length: itemsPerPage,
+                filter: {
+                    subjects: Filter.subject,
+                    topics: Filter.topic,
+                    grades: Filter.grade
+                }
+            }
+        }).then((data) => {
+            SetQuestions([...data.questions.map(question => {
+                return {
+                    id: question.id,
+                    title: question.title,
+                    subject: question.subject,
+                    topic: question.topic,
+                    grade: question.grade,
+                    difficulty: question.difficulty
+                }
+            })])
+        })
+    }, [Filter])
+
+    const handleScroll = () => {
+        const scrollY = window.scrollY;
+        const windowHeight = window.innerHeight;
+        const documentHeight = document.documentElement.scrollHeight;
+        if (scrollY + windowHeight >= documentHeight - 100) {
+          SetCurrentPage(CurrentPage + 1);
+        }
+    };
+
+    useEffect(() => {
+        window.addEventListener('scroll', handleScroll);
+        return () => {
+          window.removeEventListener('scroll', handleScroll);
+        };
+      }, [CurrentPage]);
+
     return (
         <div>
             <h1 className="text-3xl font-bold text-black text-center mt-16 mb-4">Questions</h1>
@@ -123,7 +175,7 @@ const QuestionsDisplay = () => {
                     />
                 </li>
                 {
-                    isLoading ?
+                    questionsPending ?
                     [...Array(30)].fill(0).map((_, index) => {
                         return (
                             <li key={index}>

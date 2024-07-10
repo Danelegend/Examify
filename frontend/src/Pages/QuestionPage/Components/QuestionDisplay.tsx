@@ -71,13 +71,13 @@ const QuestionDisplay = ({ id }: QuestionDisplayProps) => {
     return (
         <div className="flex flex-col space-y-24">
             {
+                QuestionData === null
+                ?
                 <l-dot-spinner
                     size="35"
                     speed="1"
                     color="black"
-                />
-                ?
-                null :
+                /> :
                 <>
                     <Question question={QuestionData!.question.question}/>
                     <div className="flex justify-center">

@@ -2,7 +2,7 @@ from typing import Annotated
 from fastapi import APIRouter, HTTPException, Security, status
 
 from functionality.token import get_user_id
-from functionality.questions.questions import get_question_details, insert_question, submit_user_answer
+from functionality.questions.questions import get_question_details, question_insert, submit_user_answer
 from functionality.authentication.authentication import GetUserPermissions
 
 from router import HTTPBearer401
@@ -22,9 +22,9 @@ async def create_question(question: QuestionCreationRequest, token: Annotated[st
     AdminTokenValidation(token)
     
     try:
-        insert_question(question)
+        question_insert(question)
     except Exception as e:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="An error occurred") from e
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"An error occurred: {e}") from e
     
 @router.get("/{question_id}", status_code=status.HTTP_200_OK, response_model=QuestionResponse)
 async def get_question(question_id: int) -> QuestionResponse:

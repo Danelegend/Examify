@@ -20,16 +20,27 @@ const AdminPage = () => {
         navigate("/admin/exams/review")
     }
 
+    const QuestionsButtonClick = () => {
+        navigate("/admin/questions")
+    }
+
     return (
         <div className="text-center">
             <h1 className="text-slate-100">Admin Page</h1>
-            <div className="flex justify-center space-x-24 mt-64">
-                <PageButton onClick={CurrentExamsButtonClick}>
-                    Current Exams
-                </PageButton>
-                <PageButton onClick={ReviewExamsButtonClick}>
-                    Review Exams
-                </PageButton>
+            <div className="flex flex-col space-y-8">
+                <div className="flex justify-center space-x-24 mt-64">
+                    <PageButton onClick={CurrentExamsButtonClick}>
+                        Current Exams
+                    </PageButton>
+                    <PageButton onClick={ReviewExamsButtonClick}>
+                        Review Exams
+                    </PageButton>
+                </div>
+                <div className="flex justify-center">
+                    <PageButton onClick={QuestionsButtonClick}>
+                        Questions
+                    </PageButton>
+                </div>
             </div>
         </div>
     )

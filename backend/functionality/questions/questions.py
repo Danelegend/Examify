@@ -1,7 +1,7 @@
 from typing import List, Optional
 
 from database.helpers.questions import get_question, get_questions_with_pagination, get_subjects, get_topics, insert_question, insert_user_answers
-from database.db_types.db_request import QuestionCreationRequest
+from database.db_types.db_request import QuestionInsertionRequest
 
 from router.api_types.api_request import QuestionCreationRequest, QuestionsFilter
 from router.api_types.api_response import QuestionCard, QuestionResponse
@@ -10,7 +10,7 @@ def question_insert(question: QuestionCreationRequest) -> int:
     """
     Inserts a new question in the database
     """
-    question_id = insert_question(QuestionCreationRequest(
+    question_id = insert_question(QuestionInsertionRequest(
         subject=question.subject,
         topic=question.topic,
         title=question.title,

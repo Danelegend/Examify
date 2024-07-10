@@ -5,7 +5,7 @@ import psycopg2
 from logger import Logger
 
 from database.helpers import connect, disconnect
-from database.db_types.db_request import QuestionCreationRequest
+from database.db_types.db_request import QuestionInsertionRequest
 from database.db_types.db_response import QuestionCardResponse, QuestionsDetailsResponse
 
 from router.api_types.api_request import QuestionsFilter
@@ -23,7 +23,7 @@ def log_question_error(message: str):
     """
     Logger.log_database_error("Questions", message)
 
-def insert_question(question: QuestionCreationRequest) -> int:
+def insert_question(question: QuestionInsertionRequest) -> int:
     """
     Inserts a new question in the database
     """

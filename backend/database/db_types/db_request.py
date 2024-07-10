@@ -61,7 +61,7 @@ class NotificationCreationRequest(BaseModel):
     message: str
     link: Optional[str] = None
 
-class QuestionCreationRequest(BaseModel):
+class QuestionInsertionRequest(BaseModel):
     subject: str
     topic: str
     title: str

@@ -6,6 +6,7 @@ import Latex from "react-latex-next";
 import { FetchQuestion, PostUserQuestionAnswer } from "../../../api/api";
 import { readAccessToken } from "../../../util/utility";
 import { useQuery } from "@tanstack/react-query";
+import { dotSpinner } from "ldrs"
 
 type QuestionDisplayProps = {
     id: number
@@ -65,12 +66,25 @@ const QuestionDisplay = ({ id }: QuestionDisplayProps) => {
         })
     }, [data, isPending])
 
+    dotSpinner.register()
+
     return (
         <div className="flex flex-col space-y-24">
-            <Question question={QuestionData!.question.question}/>
-            <div className="flex justify-center">
-                <SolutionInput solution={QuestionData!.solutions.solutions} question_id={id}/>
-            </div>
+            {
+                <l-dot-spinner
+                    size="35"
+                    speed="1"
+                    color="black"
+                />
+                ?
+                null :
+                <>
+                    <Question question={QuestionData!.question.question}/>
+                    <div className="flex justify-center">
+                        <SolutionInput solution={QuestionData!.solutions.solutions} question_id={id}/>
+                    </div>
+                </>
+            }
         </div>
     )
 }

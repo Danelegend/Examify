@@ -184,7 +184,7 @@ def get_question(question_id: int) -> QuestionsDetailsResponse:
         difficulty=difficulty,
         question=question,
         answers=answers,
-        question_images=question_images
+        image_locations=question_images
     )
 
 def get_subjects() -> List[str]:

@@ -1,6 +1,8 @@
 from typing import Annotated
 from fastapi import APIRouter, HTTPException, Security, status
 
+from logger import Logger
+
 from functionality.token import get_user_id
 from functionality.questions.questions import get_question_details, question_insert, submit_user_answer
 from functionality.authentication.authentication import GetUserPermissions
@@ -13,9 +15,11 @@ from router.api_types.api_response import QuestionResponse
 router = APIRouter()
 
 def AdminTokenValidation(token: str):
+    Logger.log_backend("Validating admin token")
     if GetUserPermissions(token) != "ADM":
+        Logger.log_backend("Token is not admin")
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User is not an admin")
-
+    Logger.log_backend("Token is admin")
 
 @router.post("/", status_code=status.HTTP_200_OK)
 async def create_question(question: QuestionCreationRequest, token: Annotated[str, Security(HTTPBearer401())]):

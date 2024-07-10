@@ -27,7 +27,7 @@ def insert_question(question: QuestionCreationRequest) -> int:
     """
     Inserts a new question in the database
     """
-
+    log_question_success("Beginning inserting the Question into Database")
     try:
         conn = connect()
         with conn.cursor() as cur:

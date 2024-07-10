@@ -6,8 +6,7 @@ CREATE TABLE questions (
     question                TEXT NOT NULL,
     grade                   INT NOT NULL,
     difficulty              INT NOT NULL,
-    PRIMARY KEY             (id),
-    FOREIGN KEY             (exam) REFERENCES exams(id)
+    PRIMARY KEY             (id)
 );
 
 CREATE TABLE answers (

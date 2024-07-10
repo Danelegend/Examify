@@ -40,6 +40,10 @@ type SolutionDataType = {
     solutions: string[]
 }
 
+type ViewSolutionProps = {
+    solution: string
+}
+
 const QuestionDisplay = ({ id }: QuestionDisplayProps) => {
     const [QuestionData, SetQuestionData] = useState<Question | null>(null)
 
@@ -81,7 +85,7 @@ const QuestionDisplay = ({ id }: QuestionDisplayProps) => {
                 <>
                     <Question question={QuestionData!.question.question}/>
                     <div className="flex justify-center">
-                        <SolutionInput solution={QuestionData!.solutions.solutions} question_id={id}/>
+                        <ViewSolution solution={QuestionData!.solutions.solutions[0]}/>
                     </div>
                 </>
             }
@@ -178,6 +182,35 @@ const SolutionInput = ({ solution, question_id }: SolutionInputProps) => {
                     </div>
                 </button>
             </div>
+        </div>
+    )
+}
+
+const ViewSolution = ({ solution }: ViewSolutionProps) => {
+    const [DisplaySolution, SetDisplaySolution] = useState<boolean>(false)
+    
+    const size = useScreen();
+
+    return (
+        <div className="space-y-4">
+            <div>
+                <button onClick={() => SetDisplaySolution(!DisplaySolution)} className={(DisplaySolution ? "bg-red-300" : "bg-green-300") + " "}>
+                    {
+                        DisplaySolution ? "Hide Solution" : "View Solution"
+                    }
+                </button>
+            </div>
+            {
+                DisplaySolution ?
+                <div className={(size.width > 760) ? "" : ""}>
+                    <div className={((size.width > 760) ? "py-10" : "py-6") + " flex justify-center bg-white"}>
+                        <div className="text-2xl font-medium">
+                            <Latex>{solution}</Latex>
+                        </div>
+                    </div>
+                </div>
+                : null
+            }
         </div>
     )
 }

@@ -15,11 +15,11 @@ from router.api_types.api_response import QuestionResponse
 router = APIRouter()
 
 def AdminTokenValidation(token: str):
-    Logger.log_backend("Validating admin token")
+    Logger.log_backend("Question", "Validating admin token")
     if GetUserPermissions(token) != "ADM":
-        Logger.log_backend("Token is not admin")
+        Logger.log_backend("Question", "Token is not admin")
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User is not an admin")
-    Logger.log_backend("Token is admin")
+    Logger.log_backend("Question", "Token is admin")
 
 @router.post("/", status_code=status.HTTP_200_OK)
 async def create_question(question: QuestionCreationRequest, token: Annotated[str, Security(HTTPBearer401())]):

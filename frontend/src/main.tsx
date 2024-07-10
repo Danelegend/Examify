@@ -28,6 +28,7 @@ import TosPage from './Pages/TosPage';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import QuestionPage from './Pages/QuestionPage';
 import QuestionsPage from './Pages/QuestionsPage';
+import AdminQuestionsPage from './Pages/Admin/QuestionsPage';
 
 const router = createBrowserRouter([
   {
@@ -101,6 +102,10 @@ const router = createBrowserRouter([
                     path: "review"
                   }
                 ]
+              },
+              {
+                element: <AdminQuestionsPage />,
+                path: "questions"
               }
             ],
           }

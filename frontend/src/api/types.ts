@@ -218,3 +218,14 @@ export type PostUserQuestionAnswerRequest = {
     question_id: number
     answer: string[]
 }
+
+export type PostQuestionRequest = {
+    title: string
+    subject: string
+    topic: string
+    grade: number
+    difficulty: number
+    question: string
+    answers: string[]
+    image_locations: File[]
+}

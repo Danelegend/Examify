@@ -1,7 +1,6 @@
-import { clear } from "localforage"
 import Environment from "../../constants"
-import { FetchError, readExpiration, storeAccessToken, storeExpiration } from "../util/utility"
-import { AdminExamReviewDeleteRequest, AdminExamReviewSubmitRequest, ExamUploadRequest, FetchExamResponse, FetchExamsRequest, FetchExamsResponse, FetchExamSubjectsResponse, FetchFavouriteExamsResponse, FetchLogosResponse, FetchNotificationsResponse, FetchQuestionResponse, FetchQuestionsRequest, FetchQuestionsResponse, FetchQuestionSubjectsResponse, FetchQuestionTopicsResponse, FetchRecentExamsResponse, FetchSchoolsResponse, FetchUserActivityAnalyticsResponse, FetchUserResponse, FetchUserSubjectAnalyticsResponse, PostUserQuestionAnswerRequest, UserLoginRequest, UserProfileEditRequest, UserRegistrationRequest, UserRegistrationResponse } from "./types"
+import { FetchError, readExpiration, removeAccessToken, storeAccessToken, storeExpiration } from "../util/utility"
+import { AdminExamReviewDeleteRequest, AdminExamReviewSubmitRequest, ExamUploadRequest, FetchExamResponse, FetchExamsRequest, FetchExamsResponse, FetchExamSubjectsResponse, FetchFavouriteExamsResponse, FetchLogosResponse, FetchNotificationsResponse, FetchQuestionResponse, FetchQuestionsRequest, FetchQuestionsResponse, FetchQuestionSubjectsResponse, FetchQuestionTopicsResponse, FetchRecentExamsResponse, FetchSchoolsResponse, FetchUserActivityAnalyticsResponse, FetchUserResponse, FetchUserSubjectAnalyticsResponse, PostQuestionRequest, PostUserQuestionAnswerRequest, UserLoginRequest, UserProfileEditRequest, UserRegistrationRequest } from "./types"
 
 export type UserAuthentication = {
     expiration: Date,
@@ -26,7 +25,7 @@ const AuthorizationMiddleware: AuthorizationMiddlewareType = (func) => {
                 return func()
             } else {
                 console.log("HERE")
-                clear()
+                removeAccessToken()
                 throw new FetchError(res)
             }
         })
@@ -39,6 +38,14 @@ export const GetTokenRefresh = (): Promise<Response> => {
     return fetch(Environment.BACKEND_URL + "/api/auth/refresh", {
         method: "GET",
         credentials: "include"
+    }).then(async (res) => {
+        if (res.ok && res.status === 200) {
+            return res
+        } else {
+            removeAccessToken()
+            window.open("/", "_self")
+            throw new FetchError(res)
+        }
     })
 }
 
@@ -613,6 +620,27 @@ export const PostUserQuestionAnswer = ({ token, request }: { token: string, requ
         body: JSON.stringify({
             question_id: request.question_id,
             answer: request.answer
+        })
+    }))
+}
+
+export const PostQuestion = ({ token, request }: { token: string, request: PostQuestionRequest }): Promise<Response> => {
+    return AuthorizationMiddleware<Response>(() => fetch(`${Environment.BACKEND_URL}/api/question/`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `bearer ${token}`
+        },
+        method: "POST",
+        credentials: 'include',
+        body: JSON.stringify({
+            title: request.title,
+            subject: request.subject,
+            topic: request.topic,
+            grade: request.grade,
+            difficulty: request.difficulty,
+            question: request.question,
+            answers: request.answers,
+            images: []
         })
     }))
 }

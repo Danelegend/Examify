@@ -1,12 +1,12 @@
 from typing import List, Optional
 
-from database.helpers.questions import get_question, get_questions_with_pagination, get_subjects, get_topics, insert_user_answers
+from database.helpers.questions import get_question, get_questions_with_pagination, get_subjects, get_topics, insert_question, insert_user_answers
 from database.db_types.db_request import QuestionCreationRequest
 
 from router.api_types.api_request import QuestionCreationRequest, QuestionsFilter
 from router.api_types.api_response import QuestionCard, QuestionResponse
 
-def insert_question(question: QuestionCreationRequest) -> int:
+def question_insert(question: QuestionCreationRequest) -> int:
     """
     Inserts a new question in the database
     """

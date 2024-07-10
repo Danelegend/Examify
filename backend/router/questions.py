@@ -33,8 +33,12 @@ async def get_questions(questions_request: QuestionsRequest, token: Annotated[Op
 
 @router.get("/subjects", status_code=status.HTTP_200_OK, response_model=QuestionsSubjectsResponse)
 async def get_questions_subjects() -> QuestionsSubjectsResponse:
-    return get_question_subjects()
+    return QuestionsSubjectsResponse(
+        subjects=get_question_subjects()
+    )
 
 @router.get("/topics", status_code=status.HTTP_200_OK, response_model=QuestionsTopicsResponse)
 async def get_questions_topics(subject=None) -> QuestionsTopicsResponse:
-    return get_question_topics(subject)
+    return QuestionsTopicsResponse(
+        topics=get_question_topics(subject)
+    )

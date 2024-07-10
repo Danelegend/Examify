@@ -49,18 +49,15 @@ def get_question_cards(user_id: Optional[int], filter: QuestionsFilter, page: in
     lower = (page - 1) * page_length
 
     questions = get_questions_with_pagination(lower, page_length, filter)
-
-    for item in questions:
-        questions.append(QuestionCard(
+    
+    return [QuestionCard(
             id=item.id,
             subject=item.subject,
             topic=item.topic,
             title=item.title,
             grade=item.grade,
             difficulty=item.difficulty
-        ))
-
-    return questions
+        ) for item in questions]
 
 def submit_user_answer(user_id: int, question_id: int, answers: List[str]) -> bool:
     """

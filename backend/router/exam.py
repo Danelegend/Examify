@@ -13,7 +13,7 @@ from router.api_types.api_response import ExamResponse
 
 router = APIRouter()
 
-@router.get("{subject}/{school}/{year}/{type}", status_code=status.HTTP_200_OK, response_model=ExamResponse)
+@router.get("/{subject}/{school}/{year}/{type}", status_code=status.HTTP_200_OK, response_model=ExamResponse)
 async def get_exam(subject: str, school: str, year: int, type: str) -> ExamResponse:
     try:
         try:

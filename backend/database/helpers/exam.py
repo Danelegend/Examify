@@ -296,7 +296,7 @@ def delete_exam(exam_id: int):
     finally:
         disconnect(conn)
 
-def get_exam_id_from_subject_schoool_year_type(subject: str, school: str, year: int, type: ExamTypes) -> Optional[int]:
+def get_exam_id_from_subject_school_year_type(subject: str, school: str, year: int, type: ExamTypes) -> Optional[int]:
     """
     Gets the exam id from school, year and type
     """

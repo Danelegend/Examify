@@ -8,18 +8,18 @@ from functionality.token import get_user_id
 from functionality.types import ExamType
 from functionality.security import FileLocationAccessible
 
-from database.helpers.completed import check_if_user_complete_exam_exists, get_user_completed_exams, insert_user_completed_exam, remove_user_completed_exam
-from database.helpers.exam import check_exam_exists, get_exam, get_exam_id_from_schoool_year_type, insert_exam_flag
+from database.helpers.completed import check_if_user_complete_exam_exists, insert_user_completed_exam, remove_user_completed_exam
+from database.helpers.exam import check_exam_exists, get_exam, get_exam_id_from_subject_school_year_type, insert_exam_flag
 from database.helpers.favourite import check_if_user_favourite_exam_exists, delete_user_favourite_exam, get_exam_likes_count, insert_user_favourite_exam
 from database.helpers.recent import insert_user_recently_viewed_exam
 
-def GetExamId(school: str, year: int, type: str) -> int:
+def GetExamId(subject: str, school: str, year: int, type: str) -> int:
     """
     Gets an exam given school, year and type
     """
     type = ExamType.MapNameToPrefix(type)
 
-    exam_id = get_exam_id_from_schoool_year_type(school, year, type)
+    exam_id = get_exam_id_from_subject_school_year_type(subject, school, year, type)
 
     if exam_id is None:
         raise ValidationError("Exam not found")

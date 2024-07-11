@@ -13,10 +13,10 @@ from router.api_types.api_response import ExamResponse
 
 router = APIRouter()
 
-@router.get("/{school}/{year}/{type}", status_code=status.HTTP_200_OK, response_model=ExamResponse)
-async def get_exam(school: str, year: int, type: str) -> ExamResponse:
+@router.get("{subject}/{school}/{year}/{type}", status_code=status.HTTP_200_OK, response_model=ExamResponse)
+async def get_exam(subject: str, school: str, year: int, type: str) -> ExamResponse:
     try:
-        exam_id = GetExamId(school, year, type)
+        exam_id = GetExamId(subject, school, year, type)
 
         return ExamResponse(
             exam_id=exam_id

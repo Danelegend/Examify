@@ -33,7 +33,8 @@ const ExamPage = () => {
         queryFn: () => FetchExam({
             school: school!,
             year: parseInt(year!),
-            exam_type: exam_type!
+            exam_type: exam_type!,
+            subject: subject
         })
     })
 

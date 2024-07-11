@@ -394,8 +394,8 @@ export const PostRecentlyViewedExam = ({ token, exam_id }: { token: string, exam
     }))
 }
 
-export const FetchExam = ({ school, year, exam_type }: { school: string, year: number, exam_type: string }): Promise<FetchExamResponse> => {
-    return fetch(Environment.BACKEND_URL + "/api/exam/" + school + "/" + year.toString() + "/" + exam_type, {
+export const FetchExam = ({ school, year, exam_type, subject }: { school: string, year: number, exam_type: string, subject: string }): Promise<FetchExamResponse> => {
+    return fetch(`${Environment.BACKEND_URL}/api/exam/${subject}/${school}/${year.toString()}/${exam_type}`, {
         headers: {
             'Content-Type': 'application/json',
         },

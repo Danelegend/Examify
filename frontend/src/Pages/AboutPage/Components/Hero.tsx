@@ -38,9 +38,9 @@ const Hero = () => {
                 </span>{' '}
                 with Examify!
             </h1>
-            <p className="mx-auto mt-16 max-w-2xl text-lg tracking-tight">
+            <h2 className="mx-auto mt-16 max-w-2xl text-lg tracking-tight">
                 The most comprehensive platform for HSC students to access past papers, study resources, and more!
-            </p>
+            </h2>
             <div className="mt-16 flex justify-center space-x-24">
                 <PageButton onClick={examsButtonClick}>
                     Exams

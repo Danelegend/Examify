@@ -3,5 +3,5 @@ CREATE TABLE flagged_exams (
     exam                    BIGINT NOT NULL,
     timestamp               TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY             (id),
-    FOREIGN KEY             (exam) REFERENCES exams(exam),
+    FOREIGN KEY             (exam) REFERENCES exams(exam)
 );

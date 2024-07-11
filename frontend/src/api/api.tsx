@@ -402,11 +402,15 @@ export const FetchExam = ({ school, year, exam_type, subject }: { school: string
         method: "GET",
         credentials: 'include'
     }).then(async (res) => {
+        if (res.status === 404) {
+            return null
+        }
+        
         const data = await res.json()
 
-        if (res.ok)     {
+        if (res.ok && res.status === 200)     {
             return data
-        } else {
+        }  else {
             throw new FetchError(res)
         }
     })

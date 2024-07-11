@@ -91,7 +91,7 @@ export const QuestionCardSkeleton = ({ col1, col2, col3, col4, col5, className }
     className = className === undefined ? "" : className
 
     return (
-        <div className={className + " flex odd:bg-layer-1 even:bg-overlay-1 py-4 px-4"}>
+        <div className={className + " flex flex-wrap odd:bg-layer-1 even:bg-overlay-1 py-4 px-4"}>
             <div className="w-[260px]">
                 {col1}
             </div>

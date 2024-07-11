@@ -34,7 +34,7 @@ const ExamPage = () => {
             school: school!,
             year: parseInt(year!),
             exam_type: exam_type!,
-            subject: subject
+            subject: subject!
         })
     })
 
@@ -93,11 +93,11 @@ const ExamPage = () => {
         }
         {isPending ? 
             <div className="flex justify-center items-center min-h-screen min-w-screen"> 
-            <l-dot-spinner
-                        size="35"
-                        speed="1"
-                        color="black"
-                        /> 
+                <l-dot-spinner
+                            size="35"
+                            speed="1"
+                            color="black"
+                            />
             </div> :
         Fullscreen ? <ExamFullScreenDisplay onExit={onFullScreenExit} fileLoc={Environment.BACKEND_URL + "/api/exam/pdf/" + data!.exam_id.toString()} /> :
         <div className="bg-[#F3F5F8] w-full h-full">
@@ -107,9 +107,15 @@ const ExamPage = () => {
                 </Link>
             </div>
             {
+                
                 data && data !== null ?
                 <DisplayExam AdminButtonClicked={() => SetDisplayAdminPanel(true)} exam_id={data.exam_id} />
-                : null
+                : 
+                <div className="flex justify-center items-center min-h-screen min-w-screen">
+                    <div className="text-2xl">
+                        Exam not found
+                    </div>
+                </div>
             }
         </div>
         }

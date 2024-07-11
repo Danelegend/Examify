@@ -8,7 +8,7 @@ const AdminQuestionsPage = () => {
 
     return (
         <div>
-            <div className="mx-96">
+            <div className="flex justify-center">
                 {
                     isNewQuestionDisplayed ?
                     <QuestionForm onExit={() => SetIsNewQuestionDisplayed(false)} /> :

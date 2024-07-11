@@ -166,7 +166,7 @@ def _update_exam_file_location(original_file_name: str, new_file_name: str):
 
 def UpdateExam(exam_id: int, school: Optional[str] = None, year: Optional[int] = None, exam_type: Optional[str] = None, subject: Optional[str] = None) -> Tuple[bool, str]:
     Logger.log_backend("Admin", f"Updating exam: {exam_id}")
-    exam_details: ExamDetailsResponse = get_exam(id=exam_id)
+    exam_details = get_exam(exam_id)
 
     if exam_details is None:
         return False, "Exam does not exist"

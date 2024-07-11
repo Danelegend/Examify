@@ -186,7 +186,7 @@ def UpdateExam(exam_id: int, school: Optional[str] = None, year: Optional[int] =
         id=exam_id,
         school=school,
         year=year,
-        exam_type=exam_type,
+        exam_type=ExamType.MapNameToPrefix(exam_type),
         subject=subject,
         file_location=new_file_name
     )

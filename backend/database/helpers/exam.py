@@ -93,6 +93,25 @@ def get_exam(exam_id: int) -> ExamDetailsResponse:
                                subject=subject,
                                likes=likes)
 
+def get_exam_id_from_file_location(file_location: str) -> Optional[int]:
+    """
+    Gets the exam id from the file location
+    """
+    try:
+        conn = connect()
+        with conn.cursor() as cur:
+            cur.execute("SELECT id FROM exams WHERE file_location = %(file_location)s;", {"file_location": file_location})
+            exam_id = cur.fetchone()
+
+        log_exam_success("Finished getting the Exam ID from File Location in Database")
+    except psycopg2.Error as e:
+        log_exam_error(f"Error getting the Exam ID from File Location: {e}")
+        raise e
+    finally:
+        disconnect(conn)
+    
+    return exam_id[0] if exam_id else None
+
 def get_exams() -> List[ExamDetailsResponse]:
     """
     Gets all exams from the database
@@ -330,6 +349,8 @@ def update_exam(request: ExamUpdateRequest) -> None:
             s += f"year = {request.year}, "
         if request.subject:
             s += f"subject = '{request.subject}', "
+        if request.file_location:
+            s += f"file_location = '{request.file_location}', "
 
         s = s[:-2]
 
@@ -346,6 +367,24 @@ def update_exam(request: ExamUpdateRequest) -> None:
         log_exam_success("Finished updating the Exam in Database")
     except psycopg2.Error as e:
         log_exam_error(f"Error updating the Exam: {e}")
+        conn.rollback()
+        raise e
+    finally:
+        disconnect(conn)
+
+def insert_exam_flag(exam_id: int) -> None:
+    """
+    Flags an exam in the database
+    """
+
+    try:
+        conn = connect()
+        with conn.cursor() as cur:
+            cur.execute("INSERT INTO flagged_exams (exam) VALUES (%(exam)s);", {"exam": exam_id})
+        conn.commit()
+        log_exam_success("Finished inserting the Exam Flag into Database")
+    except psycopg2.Error as e:
+        log_exam_error(f"Error inserting the Exam Flag: {e}")
         conn.rollback()
         raise e
     finally:

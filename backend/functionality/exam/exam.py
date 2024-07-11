@@ -2,12 +2,14 @@ import os
 
 from errors import DuplicationError, ValidationError
 
+from logger import Logger
+
 from functionality.token import get_user_id
 from functionality.types import ExamType
 from functionality.security import FileLocationAccessible
 
 from database.helpers.completed import check_if_user_complete_exam_exists, get_user_completed_exams, insert_user_completed_exam, remove_user_completed_exam
-from database.helpers.exam import check_exam_exists, get_exam, get_exam_id_from_schoool_year_type
+from database.helpers.exam import check_exam_exists, get_exam, get_exam_id_from_schoool_year_type, insert_exam_flag
 from database.helpers.favourite import check_if_user_favourite_exam_exists, delete_user_favourite_exam, get_exam_likes_count, insert_user_favourite_exam
 from database.helpers.recent import insert_user_recently_viewed_exam
 
@@ -129,3 +131,11 @@ def RemoveUserCompletedExam(user_id: int, exam_id: int):
     completed by the user
     """
     remove_user_completed_exam(user_id, exam_id)
+
+def FlagExam(exam_id: int):
+    """
+    Flags the exam with the given id
+    """
+    Logger.log_backend("Admin", f"Flagging exam, id={exam_id}")
+
+    insert_exam_flag(exam_id)

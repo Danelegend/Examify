@@ -77,3 +77,4 @@ class ExamUpdateRequest(BaseModel):
     exam_type: Optional[ExamTypes] = None
     year: Optional[int] = None
     subject: Optional[str] = None
+    file_location: Optional[str] = None

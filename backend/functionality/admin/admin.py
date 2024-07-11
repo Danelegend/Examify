@@ -7,12 +7,14 @@ from errors import AuthenticationError
 
 from logger import Logger
 
+from functionality.exam.exam import FlagExam
 from functionality.google.gdrive import delete_file_from_review, get_files_in_review, move_file_from_review_to_current, upload_file_to_drive
 from functionality.authentication.authentication import GetUserPermissions
 from functionality.types import ExamType
 
 from database.db_types.db_request import ExamCreationRequest, ExamUpdateRequest
-from database.helpers.exam import delete_exam, get_exam, get_exams, insert_exam, update_exam
+from database.db_types.db_response import ExamDetailsResponse
+from database.helpers.exam import delete_exam, get_exam, get_exam_id_from_file_location, get_exams, insert_exam, insert_exam_flag, update_exam
 from database.helpers.school import get_or_create_school
 
 from router.api_types.api_response import CurrentExamResponse, ReviewExamResponse
@@ -97,10 +99,13 @@ def DeleteCurrentExam(exam_id: int) -> None:
     # Remove the exam record
     delete_exam(exam_id)
 
+def _create_file_name(school: str, year: int, exam_type: str, subject: str) -> str:
+    return f"{school}-{year}_{subject}_{exam_type}.pdf"
+
 async def UploadExam(school: str, year: int, exam_type: str, subject: str, file: UploadFile) -> None:
     # Generate name for the file
 
-    new_file_name = f"{school}-{year}_{subject}_{exam_type}.pdf"
+    new_file_name = _create_file_name(school, year, exam_type, subject)
 
     new_path = os.path.join(REVIEW_EXAMS_DIRECTORY, new_file_name)
 
@@ -115,13 +120,75 @@ async def UploadExam(school: str, year: int, exam_type: str, subject: str, file:
 
     os.remove(new_path)
 
+def _create_temporary_file_name(file_name: str) -> str:
+    file_name_without_extension = file_name.split(".")[0]
+    
+    adder = 0
+
+    while os.path.exists(os.path.join(CURRENT_EXAMS_DIRECTORY, f"{file_name_without_extension}_{adder}.pdf")):
+        adder += 1
+
+    return f"{file_name_without_extension}_{adder}.pdf"
+
+def UpdateExamFileLocation(exam_id: int, new_file_location: str):
+    database_request = ExamUpdateRequest(
+        id=exam_id,
+        file_location=new_file_location
+    )
+
+    update_exam(database_request)
+
+def _update_exam_file_location(original_file_name: str, new_file_name: str):
+    Logger.log_backend("Admin", f"Renaming file: {original_file_name} -> {new_file_name}")
+    
+    # Check if there exists a file with the new name
+    if os.path.exists(os.path.join(CURRENT_EXAMS_DIRECTORY, new_file_name)):
+        Logger.log_backend("Admin", f"File with new name already exists: {new_file_name}")
+
+        flagged_exam_id = get_exam_id_from_file_location(new_file_name)
+
+        FlagExam(flagged_exam_id)
+
+        # Rename this file to a temporary name
+        temp_name = _create_temporary_file_name(new_file_name)
+
+        _update_exam_file_location(new_file_name, temp_name)
+
+    # Rename the file
+    old_path = os.path.join(CURRENT_EXAMS_DIRECTORY, original_file_name)
+    new_path = os.path.join(CURRENT_EXAMS_DIRECTORY, new_file_name)
+
+    os.rename(old_path, new_path)
+
+    UpdateExamFileLocation(flagged_exam_id)
+
+    Logger.log_backend("Admin", f"Successfully renamed file: {old_path} -> {new_path}")
+
 def UpdateExam(exam_id: int, school: Optional[str] = None, year: Optional[int] = None, exam_type: Optional[str] = None, subject: Optional[str] = None) -> Tuple[bool, str]:
+    Logger.log_backend("Admin", f"Updating exam: {exam_id}")
+    exam_details: ExamDetailsResponse = get_exam(id=exam_id)
+
+    if exam_details is None:
+        return False, "Exam does not exist"
+
+    school = school if school is not None else exam_details.school
+    year = year if year is not None else exam_details.year
+    exam_type = exam_type if exam_type is not None else exam_details.exam_type
+    subject = subject if subject is not None else exam_details.subject
+
+    new_file_name = _create_file_name(school, year, exam_type, subject)
+
+    # Compare the new file name with the old one and rename the file if necessary
+    if new_file_name != exam_details.file_location:
+        _update_exam_file_location(exam_details.file_location, new_file_name)
+
     database_request = ExamUpdateRequest(
         id=exam_id,
         school=school,
         year=year,
         exam_type=exam_type,
-        subject=subject
+        subject=subject,
+        file_location=new_file_name
     )
 
     try:

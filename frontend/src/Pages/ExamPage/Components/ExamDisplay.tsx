@@ -1,3 +1,4 @@
+import * as React from "react";
 import Environment from "../../../../constants";
 import PdfDisplay from "../../../Components/PdfDisplay/PdfDisplay";
 
@@ -11,4 +12,4 @@ const ExamDisplay = ({ examId }: ExamDisplayProps) => {
     )
 } 
 
-export default ExamDisplay;
+export default React.memo(ExamDisplay);

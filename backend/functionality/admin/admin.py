@@ -138,7 +138,7 @@ def UpdateExamFileLocation(exam_id: int, new_file_location: str):
 
     update_exam(database_request)
 
-def _update_exam_file_location(original_file_name: str, new_file_name: str):
+def _update_exam_file_location(exam_id: int, original_file_name: str, new_file_name: str):
     Logger.log_backend("Admin", f"Renaming file: {original_file_name} -> {new_file_name}")
     
     # Check if there exists a file with the new name
@@ -152,7 +152,7 @@ def _update_exam_file_location(original_file_name: str, new_file_name: str):
         # Rename this file to a temporary name
         temp_name = _create_temporary_file_name(new_file_name)
 
-        _update_exam_file_location(new_file_name, temp_name)
+        _update_exam_file_location(flagged_exam_id, new_file_name, temp_name)
 
     # Rename the file
     old_path = os.path.join(CURRENT_EXAMS_DIRECTORY, original_file_name)
@@ -160,7 +160,7 @@ def _update_exam_file_location(original_file_name: str, new_file_name: str):
 
     os.rename(old_path, new_path)
 
-    UpdateExamFileLocation(flagged_exam_id)
+    UpdateExamFileLocation(exam_id, new_file_name)
 
     Logger.log_backend("Admin", f"Successfully renamed file: {old_path} -> {new_path}")
 
@@ -180,7 +180,7 @@ def UpdateExam(exam_id: int, school: Optional[str] = None, year: Optional[int] =
 
     # Compare the new file name with the old one and rename the file if necessary
     if new_file_name != exam_details.file_location:
-        _update_exam_file_location(exam_details.file_location, new_file_name)
+        _update_exam_file_location(exam_id, exam_details.file_location, new_file_name)
 
     database_request = ExamUpdateRequest(
         id=exam_id,

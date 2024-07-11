@@ -21,6 +21,14 @@ export type ExamUploadRequest = {
     subject: string
 }
 
+export type ExamUpdateRequest = {
+    exam_id: number,
+    school: string,
+    year: number,
+    subject: string,
+    exam_type: string
+}
+
 export type UserRegistrationRequest = {
     first_name: string,
     last_name: string,

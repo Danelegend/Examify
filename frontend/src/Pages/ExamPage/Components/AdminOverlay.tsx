@@ -1,4 +1,6 @@
 import { useState } from "react"
+import { PutExamUpdate } from "../../../api/api"
+import { readAccessToken } from "../../../util/utility"
 
 type AdminButtonProps = {
     onClick: () => void
@@ -25,9 +27,30 @@ type ExamData = {
     exam_type: string
 }
 
+const SUBJECTS = {
+    "Maths Extension 2": "MX2",
+    "Maths Extension 1": "MX1",
+    "Maths Advanced": "MA",
+    "Maths Standard 2": "MS2",
+    "Chemistry": "CHEM",
+    "Physics": "PHY",
+    "Biology": "BIO"
+}
+
+const EXAM_TYPE = {
+    "Trial Exam": "TRI",
+    "HSC Exam": "HSC",
+    "Topic Test": "TOP",
+    "Half Yearly Exam": "HAE",
+    "Term 1 Test": "T_1",
+    "Term 2 Test": "T_2",
+    "Term 3 Test": "T_3",
+    "Term 4 Test": "T_4"
+}
+
 export const AdminButton = ({ onClick }: AdminButtonProps) => {
     return (
-        <button onClick={onClick} className="">
+        <button onClick={onClick} className="bg-gray-300 hover:bg-gray-400">
             Configure Exam
         </button>
     )
@@ -43,7 +66,18 @@ export const AdminPanel = ({ exam_id, exam_data, onExit }: AdminPanelProps) => {
     })
 
     const onSubmit = async () => {
+        PutExamUpdate({
+            token: readAccessToken()!,
+            request: {
+                exam_id: ExamForm.exam_id,
+                subject: ExamForm.subject,
+                school: ExamForm.school,
+                year: ExamForm.year,
+                exam_type: ExamForm.exam_type
+            }
+        })
 
+        onExit()
     }
     
     return (
@@ -69,18 +103,26 @@ export const AdminPanel = ({ exam_id, exam_data, onExit }: AdminPanelProps) => {
                             </div>
                             <div className="col-span-2" key={"subject"}>
                                 <label className="block mb-2 text-sm font-medium text-gray-900">Subject</label>
-                                <input type="text" onChange={(e) => SetExamForm({...ExamForm, subject: e.target.value})} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"/>
+                                <input type="text" value={ExamForm.subject} onChange={(e) => SetExamForm({...ExamForm, subject: e.target.value})} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"/>
                             </div>
                             <div className="col-span-2" key={"year"}>
                                 <label className="block mb-2 text-sm font-medium text-gray-900">Year</label>
-                                <input type="text" onChange={(e) => SetExamForm({...ExamForm, year: e.target.valueAsNumber})} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" />
+                                <input type="number" value={ExamForm.year} onChange={(e) => SetExamForm({...ExamForm, year: e.target.valueAsNumber})} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" />
                             </div>
-                            <div className="col-span-1" key={"exam_type"}>
+                            <div className="col-span-2" key={"exam_type"}>
                                 <label className="block mb-2 text-sm font-medium text-gray-900">Exam Type</label>
-                                <input type="number" onChange={(e) => SetExamForm({...ExamForm, exam_type: e.target.value})} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"/>
+                                <select value={ExamForm.exam_type} onChange={(e) => SetExamForm({...ExamForm, exam_type: e.target.value})} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5">
+                                    {
+                                        Object.keys(EXAM_TYPE).map((exam_type, index) => {
+                                            return <option key={index} value={EXAM_TYPE[exam_type]}>
+                                                        {exam_type}
+                                                    </option>
+                                        })
+                                    }
+                                </select>
                             </div>
                         </div>
-                        <div className="flex justify-center">
+                        <div className="flex justify-center border-t pt-2">
                             <div className="text-white inline-flex items-center bg-green-400 focus:ring-4 focus:outline-none focus:ring-green-400 font-medium rounded-lg text-sm px-5 py-2.5 text-center cursor-pointer" onClick={onSubmit}>
                                 Submit
                             </div>

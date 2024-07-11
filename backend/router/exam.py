@@ -16,14 +16,13 @@ router = APIRouter()
 @router.get("/{subject}/{school}/{year}/{type}", status_code=status.HTTP_200_OK, response_model=ExamResponse)
 async def get_exam(subject: str, school: str, year: int, type: str) -> ExamResponse:
     try:
-        try:
-            exam_id = GetExamId(subject, school, year, type)
-        except ValidationError as v:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=v.message) from v
-
+        exam_id = GetExamId(subject, school, year, type)
+        
         return ExamResponse(
             exam_id=exam_id
         )
+    except ValidationError as v:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=v.message) from v
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="An error occurred") from e
     

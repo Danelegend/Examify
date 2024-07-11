@@ -362,6 +362,7 @@ def update_exam(request: ExamUpdateRequest) -> None:
         conn = connect()
         with conn.cursor() as cur:
             s = construct_query(request)
+            Logger.log_debug(s)
             cur.execute(s)
         conn.commit()
         log_exam_success("Finished updating the Exam in Database")
@@ -376,7 +377,6 @@ def insert_exam_flag(exam_id: int) -> None:
     """
     Flags an exam in the database
     """
-
     try:
         conn = connect()
         with conn.cursor() as cur:

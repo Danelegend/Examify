@@ -194,6 +194,10 @@ def UpdateExam(exam_id: int, school: Optional[str] = None, year: Optional[int] =
     try:
         update_exam(database_request)
         
+        after_exam = get_exam(exam_id)
+
+        Logger.log_debug(f"Subject from {exam_details.subject} to {after_exam.subject}")
+
         return True, "Update Successful"
     except Exception as e:
         return False, str(e)

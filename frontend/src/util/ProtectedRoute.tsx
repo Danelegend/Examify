@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query"
-import Environment from "../../constants"
-import { FetchError, readAccessToken } from "./utility"
+import { readAccessToken } from "./utility"
 import { Navigate, Outlet, useNavigate } from "react-router-dom"
 import { useEffect } from "react"
+import { FetchPermissions } from "../api/api"
 
 export const ProtectedRoute = () => {
     const hasAccessToken = readAccessToken() !== null
@@ -17,27 +17,9 @@ export const AdminProtectedRoute = () => {
     
     const navigate = useNavigate()
 
-    const fetchPermissions = () => {
-        return fetch(Environment.BACKEND_URL + "/api/auth/permissions", {
-            headers: { 
-                'Authorization': `bearer ${AccessToken}`
-            },
-            method: 'GET',
-            credentials: 'include'
-        }).then(async res => {
-            const data = await res.json()
-
-            if (res.ok) {
-                return data
-            } else {
-                throw new FetchError(res)
-            }
-        })
-    }
-
     const { data, isPending, error } = useQuery({
         queryKey: ['Permissions'],
-        queryFn: fetchPermissions
+        queryFn: () => FetchPermissions({ token: (AccessToken === null ? "" : AccessToken) })
     })
 
     useEffect(() => {

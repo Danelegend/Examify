@@ -1,6 +1,6 @@
 import Environment from "../../constants"
 import { FetchError, readExpiration, removeAccessToken, storeAccessToken, storeExpiration } from "../util/utility"
-import { AdminExamReviewDeleteRequest, AdminExamReviewSubmitRequest, ExamUploadRequest, FetchExamResponse, FetchExamsRequest, FetchExamsResponse, FetchExamSubjectsResponse, FetchFavouriteExamsResponse, FetchLogosResponse, FetchNotificationsResponse, FetchQuestionResponse, FetchQuestionsRequest, FetchQuestionsResponse, FetchQuestionSubjectsResponse, FetchQuestionTopicsResponse, FetchRecentExamsResponse, FetchSchoolsResponse, FetchUserActivityAnalyticsResponse, FetchUserResponse, FetchUserSubjectAnalyticsResponse, PostQuestionRequest, PostUserQuestionAnswerRequest, UserLoginRequest, UserProfileEditRequest, UserRegistrationRequest } from "./types"
+import { AdminExamReviewDeleteRequest, AdminExamReviewSubmitRequest, ExamUploadRequest, FetchExamResponse, FetchExamsRequest, FetchExamsResponse, FetchExamSubjectsResponse, FetchFavouriteExamsResponse, FetchLogosResponse, FetchNotificationsResponse, FetchPermissionsResponse, FetchQuestionResponse, FetchQuestionsRequest, FetchQuestionsResponse, FetchQuestionSubjectsResponse, FetchQuestionTopicsResponse, FetchRecentExamsResponse, FetchSchoolsResponse, FetchUserActivityAnalyticsResponse, FetchUserResponse, FetchUserSubjectAnalyticsResponse, PostQuestionRequest, PostUserQuestionAnswerRequest, UserLoginRequest, UserProfileEditRequest, UserRegistrationRequest } from "./types"
 
 export type UserAuthentication = {
     expiration: Date,
@@ -24,7 +24,6 @@ const AuthorizationMiddleware: AuthorizationMiddlewareType = (func) => {
 
                 return func()
             } else {
-                console.log("HERE")
                 removeAccessToken()
                 throw new FetchError(res)
             }
@@ -102,6 +101,24 @@ export const EditUserProfileData = ({ token, request }: { token: string, request
             school_year: request.school_year,
             school: request.school
         })
+    }))
+}
+
+export const FetchPermissions = ({ token }: { token: string | null }): Promise<FetchPermissionsResponse> => {
+    return AuthorizationMiddleware<FetchPermissionsResponse>(() => fetch(Environment.BACKEND_URL + "/api/auth/permissions", {
+        headers: {
+            "Authorization": `bearer ${token}`
+        },
+        method: 'GET',
+        credentials: 'include'
+    }).then(async (res) => {
+        const data = await res.json()
+
+        if (res.ok) {
+            return data
+        } else {
+            throw new FetchError(res)
+        }
     }))
 }
 

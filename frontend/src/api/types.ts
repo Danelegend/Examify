@@ -50,6 +50,32 @@ export type FetchExamsRequest = {
     sort: "relevance" | "newest" | "oldest" | "most liked" | "least liked" | "recently uploaded"
 }
 
+export type FetchQuestionsRequest = {
+    page: number,
+    page_length: number,
+    filter: {
+        subjects: string[]
+        topics: string[]
+        grades: number[]
+    }
+}
+
+export type PostUserQuestionAnswerRequest = {
+    question_id: number
+    answer: string[]
+}
+
+export type PostQuestionRequest = {
+    title: string
+    subject: string
+    topic: string
+    grade: number
+    difficulty: number
+    question: string
+    answers: string[]
+    image_locations: File[]
+}
+
 // RESPONSES
 
 export type SignUpResponse = {
@@ -181,16 +207,6 @@ export type FetchQuestionTopicsResponse = {
     topics: string[]
 }
 
-export type FetchQuestionsRequest = {
-    page: number,
-    page_length: number,
-    filter: {
-        subjects: string[]
-        topics: string[]
-        grades: number[]
-    }
-}
-
 export type FetchQuestionsResponse = {
     questions: {
         id: number,
@@ -214,18 +230,6 @@ export type FetchQuestionResponse = {
     image_locations: string[]
 }
 
-export type PostUserQuestionAnswerRequest = {
-    question_id: number
-    answer: string[]
-}
-
-export type PostQuestionRequest = {
-    title: string
-    subject: string
-    topic: string
-    grade: number
-    difficulty: number
-    question: string
-    answers: string[]
-    image_locations: File[]
+export type FetchPermissionsResponse = {
+    permissions: string
 }

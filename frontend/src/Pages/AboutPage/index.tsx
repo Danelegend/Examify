@@ -7,8 +7,8 @@ const AboutPage = () => {
     return (
         <div>
             <Helmet>
-                <title>Examify | Comprehensive HSC Study Platform</title>
-                <meta name="description" content="The most comprehensive platform for HSC students to access past papers, study resources, and more! We provide the BIGGEST collection of HSC and Trial papers with features to best assist your HSC studies."/>
+                <title>Examify | Comprehensive Study Tool for the HSC and Trials</title>
+                <meta name="description" content="Examify is the most comprehensive platform for your HSC. We provide the LARGEST collection of Questions, Exams, HSC and Trial papers to assist with your HSC studies."/>
             </Helmet>
             <Hero />
             <Features />

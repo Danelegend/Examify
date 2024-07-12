@@ -5,22 +5,30 @@ const faqs = [
     {
       question: 'What is Examify?',
       answer: [
-        'Examify is your all-in-one HSC solution. We provide the widest range of HSC exams to assist you with your studies.',
-        'We offer many other features to help you strive for success. This includes favouriting exams you may wish to review.'
+        'Examify is your comprehensive HSC solution. We provide the widest range of HSC exams, trial papers, and practice exams to assist you with your studies.',
+        'We also offer features like favoriting exams and detailed analytics to help you improve.'
+      ]
+    },
+    {
+      question: 'What does Examify offer?',
+      answer: [
+        'Examify offers the largest collection of HSC and trial papers to aid in your HSC studies.',
+        'Our platform includes features for exam management, such as favoriting exams for later review.',
+        'Additionally, we provide detailed analytics and personalized recommendations to help you improve your study habits and exam results.'
       ]
     },
     {
       question: 'What makes you better than other platforms?',
       answer: [ 
-        'Other platforms offer excellent services, however, they often have clunky interfaces. We strive to offer a user-friendly experience to make your study sessions as efficient as possible.',
-        'We also offer a variety of other features not seen else where. These include analytics on your study, recommendations that we think can help you improve, and our soon to be released tutoring platform.'
+        'OWhile other platforms may offer great services, they often have clunky interfaces. Examify focuses on providing a user-friendly experience to make your study sessions efficient. ',
+        'We offer unique features such as study analytics, personalized recommendations, and an upcoming tutoring platform that sets us apart.'
       ]
     },
     {
       question: 'How can I help out?',
       answer: [
-        'At Examify, we\'re all about community. We believe that the best way to improve is to work together. As such, your feedback and suggestions are invaluable.',
-        'Additionally, we need your help to expand our exam database. Any resources you upload are greatly appreciated and assist both us and other students, both current and future.'
+        'At Examify, community involvement is key. Your feedback and suggestions are invaluable in helping us improve.',
+        'You can also contribute by uploading HSC exams, trial papers, and practice exams, expanding our database and assisting other students.'
       ]
     },
   ]
@@ -38,7 +46,7 @@ const Faqs = () => {
           <div className="absolute top-0 left-1/2 -translate-x-[30%] -translate-y-[25%]">
             <img
               src={backgroundImage}
-              alt=""
+              alt="background"
               width={1558}
               height={946}
             />

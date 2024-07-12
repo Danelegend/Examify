@@ -41,7 +41,7 @@ type SolutionDataType = {
 }
 
 type ViewSolutionProps = {
-    solution: string
+    solution: string[]
 }
 
 const QuestionDisplay = ({ id }: QuestionDisplayProps) => {
@@ -87,7 +87,7 @@ const QuestionDisplay = ({ id }: QuestionDisplayProps) => {
                     <div className="flex justify-center">
                         {
                             QuestionData!.solutions.solutions.length >= 1 ? 
-                            <ViewSolution solution={QuestionData!.solutions.solutions[0]}/>
+                            <ViewSolution solution={QuestionData!.solutions.solutions}/>
                             : null
                         }
                     </div>
@@ -207,10 +207,18 @@ const ViewSolution = ({ solution }: ViewSolutionProps) => {
             {
                 DisplaySolution ?
                 <div className={(size.width > 760) ? "" : ""}>
-                    <div className={((size.width > 760) ? "py-10" : "py-6") + " flex justify-center bg-white"}>
-                        <div className="text-2xl font-medium">
-                            <Latex>{solution}</Latex>
-                        </div>
+                    <div className="flex flex-col space-y-4">
+                        {
+                            solution.map((sol, index) => {
+                                return (
+                                    <div key={index} className={((size.width > 760 && solution.length <= 1) ? "py-10" : "py-6") + " flex flex-col justify-center bg-white"}>
+                                        <div className="text-2xl text-center font-medium">
+                                            <Latex>{sol}</Latex>
+                                        </div>
+                                    </div>
+                                )
+                            })
+                        }
                     </div>
                 </div>
                 : null

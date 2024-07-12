@@ -85,7 +85,11 @@ const QuestionDisplay = ({ id }: QuestionDisplayProps) => {
                 <>
                     <Question question={QuestionData!.question.question}/>
                     <div className="flex justify-center">
-                        <ViewSolution solution={QuestionData!.solutions.solutions[0]}/>
+                        {
+                            QuestionData!.solutions.solutions.length >= 1 ? 
+                            <ViewSolution solution={QuestionData!.solutions.solutions[0]}/>
+                            : null
+                        }
                     </div>
                 </>
             }

@@ -41,7 +41,7 @@ const QuestionForm = ({ onExit }: QuestionFormProps) => {
             (QuestionData.grade < 1 || QuestionData.grade > 12) || 
             (QuestionData.difficulty < 1 || QuestionData.difficulty > 5) || 
             QuestionData.question === "" || 
-            (QuestionData.answers.length === 0 || !QuestionData.answers.every(ans => ans !== ""))
+            (!QuestionData.answers.every(ans => ans !== ""))
             ) return;
 
         PostQuestion({ 

@@ -370,7 +370,7 @@ export const SubjectExamDisplay = ({ subject }: { subject: string }) => {
 
     useOnClickOutside([MobileFilterButtonRef, MobileFilterDisplayRef], () => SetDisplayFilter(false))
 
-    const SortStrategy = useRef<null | string>(null)
+    const SortStrategy = useRef<string>("Relevance")
 
     const SetSortStrategy = (sort: string) => {
         SortStrategy.current = sort

@@ -25,17 +25,17 @@ export const QuestionCard = ({ id, title, subject, topic, grade, difficulty, ind
             <QuestionCardSkeleton
                 col1={
                     <div>
-                        {subject}
+                        {title}
                     </div>
                 }
                 col2={
                     <div>
-                        {topic}
+                        {subject}
                     </div>
                 }
                 col3={
                     <div>
-                        {title}
+                        {topic}
                     </div>
                 }
                 col4={
@@ -117,17 +117,17 @@ export const TitleCard = ({ onDifficultyClick }: TitleCardProps) => {
             className="border-b border-gray-500"
             col1={
                 <div>
-                    Subject
+                    Title
                 </div>
             }
             col2={
                 <div>
-                    Topic
+                    Subject
                 </div>
             }
             col3={
                 <div>
-                    Title
+                    Topic
                 </div>
             }
             col4={

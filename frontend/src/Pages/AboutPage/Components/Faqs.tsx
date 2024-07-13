@@ -20,7 +20,7 @@ const faqs = [
     {
       question: 'What makes you better than other platforms?',
       answer: [ 
-        'OWhile other platforms may offer great services, they often have clunky interfaces. Examify focuses on providing a user-friendly experience to make your study sessions efficient. ',
+        'While other platforms may offer great services, they often have clunky interfaces. Examify focuses on providing a user-friendly experience to make your study sessions efficient. ',
         'We offer unique features such as study analytics, personalized recommendations, and an upcoming tutoring platform that sets us apart.'
       ]
     },

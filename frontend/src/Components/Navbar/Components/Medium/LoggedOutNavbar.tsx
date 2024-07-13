@@ -19,7 +19,6 @@ const LoggedOutNavbar = () => {
                     <NavigationButton link="/exams" title="Exams" />
                     <NavigationButton link="/questions" title="Questions" />
                     <NavigationButton link="/upload" title="Upload" />
-                    <NavigationButton link="/contact" title="Contact" />
                 </div>
 
                 <div className="justify-start items-center inline-flex gap-10">

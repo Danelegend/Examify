@@ -128,6 +128,8 @@ const queryClient = new QueryClient()
 const App = () => {
   const [accessToken, setAccessToken] = useState(readAccessToken())
 
+  const url = window.location.href
+
   return (
     <QueryClientProvider client={queryClient}>
       <GoogleOAuthProvider clientId={"623177653931-inec93uqarv00qs0gvtdd1lrvbekic62.apps.googleusercontent.com"}> 
@@ -135,6 +137,7 @@ const App = () => {
           <HelmetProvider>
             <Helmet>
               <title>Examify | Comprehensive HSC Study Platform</title>
+              <link rel="canonical" href={url} />
             </Helmet>
             <RouterProvider router={router} />
           </HelmetProvider>

@@ -148,6 +148,14 @@ services:
       timeout: 5s
       retries: 5
 
+  pdf-question-script:
+    image: "examify-pdf-question-script:0.0.1"
+    container_name: pdf-question-script
+    build:
+      context: ./backend/functionality/scripts/pipelines/pdf/questions
+      dockerfile: Dockerfile
+    env_file: .env
+
 volumes:
   db-data:
   pgadmin-data:

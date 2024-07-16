@@ -1,5 +1,8 @@
+import json
 import PyPDF2
 import os
+
+import requests
 
 from typing import List
 
@@ -8,7 +11,12 @@ from openai import OpenAI
 GPT_PROMPT = """
 You are tasked with extracting questions and formatting them into a specific JSON structure.
 
-The JSON Structure is:
+The JSON Structure you should return is:
+{
+    questions: Question[]
+}
+
+where Question is
 {
     "topic": "Complex Numbers" | "Proofs" | "Integration" | "Vectors" | "Mechanics",
     "question": List[string],
@@ -41,6 +49,8 @@ Example Solution:
 
 Expected JSON output:
 {
+questions: [
+{
 “topic”: “Proofs”,
 “question”: [
 “Prove that there are no positive integers $x, y$ such that $x^2 - y^2 = 1$.”
@@ -55,25 +65,66 @@ Expected JSON output:
 ]
 "difficulty": 2
 }
+]
+}
 
-Now, apply these steps to generate the JSON output texts that are provided.
+Now, apply these steps to generate the JSON output when the user provides you text.
 """
 
+ACCESS_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjExMDQyMzUsImlhdCI6MTcyMTA5NTIzNSwic2lkIjoyNSwiYWlkIjoiZ1ZqeEVZSk5JUyJ9.TqbtbXpVS8cOs-xx0H1g6rREoVR6L_4YvBiMqziCwtU"
+
+SPECIAL_KEY = ""
+
 class Question:
-    def __init__(self):
-        self.subject = "Maths Extension 2"
-        self.topic = None
-        self.question = []
-        self.title = None
-        self.solution = []
-        self.difficulty = 1
+    def __init__(self, topic=None, questions=None, title=None, solutions=None, difficulty=None, subject="Maths Extension 2"):
+        self.subject = subject
+        self.topic = topic
+        self.question = questions
+        self.title = title
+        self.solution = solutions
+        self.difficulty = difficulty
+        self.grade = 12
+
+    def formatSolution(self) -> str | None:
+        if len(self.solution) == 0: return None
+
+        formatted = ""
+
+        for s in self.solution:
+            formatted += s
+
+        return formatted
+
+    def formatQuestion(self) -> str:
+        formatted = ""
+
+        for s in self.question:
+            formatted += s
+        
+        return formatted
 
     def toJSON(self):
+        if self.question is None or len(self.question) == 0 or self.title is None or len(self.question) == 0:
+            print({
+                    "title": self.title,
+                    "topic": self.topic,
+                    "difficulty": self.difficulty,
+                    "question": self.question,
+                    "soltuions": self.solution
+                })
+            raise ValueError()
+
+        answer = self.formatSolution()
+
         return {
+            "title": self.title,
             "subject": self.subject,
             "topic": self.topic,
-            "question": self.question,
-            "title": self.title
+            "grade": self.grade,
+            "difficulty": self.difficulty,
+            "question": self.formatQuestion(),
+            "answers": [] if answer is None else [answer],
+            "images": []
         }
 
 
@@ -84,8 +135,6 @@ def extract_questions(pdf_path: str, client) -> List[Question]:
     :return: List of questions extracted from the PDF file.
     """
     pdf_text = _extract_text_from_pdf(pdf_path)
-
-    print(pdf_text)
 
     questions = _extract_questions_from_text(pdf_text, client)
 
@@ -113,8 +162,6 @@ def _extract_questions_from_text(text: str, client) -> List[Question]:
     :param text: Text to extract questions from.
     :return: List of questions extracted from the text.
     """
-    questions = []
-
     chat = client.chat.completions.create(
         messages=[
             {
@@ -128,20 +175,78 @@ def _extract_questions_from_text(text: str, client) -> List[Question]:
         ],
         model="gpt-4o",
         response_format={
-            "type": "json_output"
+            "type": "json_object"
         }
     )
 
+    return _gpt_response_to_questions(chat.choices[0].message.content)
+
+def _gpt_response_to_questions(response: str) -> List[Question]:
+    try:
+        json_response = json.loads(response)
+    except json.JSONDecodeError as de:
+        print(f"Error for json: {response}")
+        raise de
+
+    return _parse_json_to_questions(json_response)
+
+def _parse_json_to_questions(json_data) -> List[Question]:
+    questions_list = json_data['questions']
+
+    ret = []
+
+    for question in questions_list:
+        ret.append(
+            Question(topic=question['topic'],
+                     questions=question['question'],
+                     title=question['title'],
+                     solutions=question['solution'],
+                     difficulty=question['difficulty'])
+        )
+
+    return ret
 
 
-    return questions
+def _upload_question(question: Question,):
+    try:
+        jsonData = question.toJSON()
+    except ValueError:
+        return
 
-def _upload_question(question: Question):
+    r = requests.post("https://service.examify.com.au/api/question/", 
+                      json=jsonData,
+                      headers={
+                          "Content-Type": "application/json",
+                          "Authorization": f"bearer {ACCESS_TOKEN}"
+                      }, verify=False)
+    
+    if (r.status_code != 200):
+        print(r.status_code)
+        print(f"Error for json data: {jsonData}")
+    else:
+        print("Successful Upload")
 
+def upload_questions(questions: List[Question]):
+    for question in questions:
+        _upload_question(question)
 
 if __name__ == "__main__":
-    client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
+    #client = OpenAI(api_key=SPECIAL_KEY)
 
-    questions = extract_questions(os.path.join(os.getcwd(), "pdf/test2.pdf"), client)
-    for question in questions:
-        print(question)
+    for file in os.listdir(os.path.join(os.getcwd(), "pdf/json")):
+        print(f"Starting {file}")
+        path = os.path.join(os.getcwd(), f"pdf/json/{file}")
+        try:
+            #questions = extract_questions(path, client)
+            json_file = open(path)
+            json_object = json.load(json_file)
+
+            questions = _parse_json_to_questions(json_object)
+
+            upload_questions(questions)
+            print(f"Finished {file}")
+        except Exception as e:
+            print(f"Error for {file}: {e}")
+
+    print("DONE")
+    

@@ -1,16 +1,18 @@
-import { ReactNode } from "react";
+import { ReactNode, useContext } from "react";
 import SchoolLogoCarousel from "./Schools";
 import { useNavigate } from "react-router-dom";
+import { ModalContext } from "../../../context/modal-context";
 
 const PageButton = ({ children, className, onClick }: { children: ReactNode, className?: string, onClick?: () => void }) => {
     return (
-        <div className={`text-slate-800 font-medium cursor-pointer rounded-2xl border bg-blue-400 hover:bg-blue-300 shadow-lg px-6 py-2 ${className}`} onClick={onClick}>
+        <div className={`text-slate-800 font-medium cursor-pointer rounded-2xl border bg-blue-400 hover:bg-blue-300 shadow-lg px-6 py-4 ${className}`} onClick={onClick}>
             {children}
         </div>
     )
 }
 
 const Hero = () => {
+    const { SetDisplayRegister } = useContext(ModalContext)
     const navigate = useNavigate()
 
     const examsButtonClick = () => {
@@ -19,6 +21,14 @@ const Hero = () => {
 
     const faqButtonClick = () => {
         window.location.replace("/#faq")
+    }
+
+    const featuresButtonClick = () => {
+        window.location.replace("/#features")
+    }
+
+    const signUpButtonClick = () => {
+        SetDisplayRegister(true)
     }
 
     return (
@@ -42,11 +52,11 @@ const Hero = () => {
                 The most comprehensive platform for HSC students to access past papers, study resources, and more!
             </h2>
             <div className="mt-16 flex justify-center space-x-24">
-                <PageButton onClick={examsButtonClick}>
-                    Exams
+                <PageButton onClick={signUpButtonClick}>
+                    Sign Up
                 </PageButton>
-                <PageButton onClick={faqButtonClick}>
-                    FAQ
+                <PageButton onClick={featuresButtonClick}>
+                    Features
                 </PageButton>
             </div>
             <div className="mt-10 lg:mt-20">

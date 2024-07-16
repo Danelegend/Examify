@@ -111,6 +111,30 @@ const QuestionsDisplay = () => {
     }, [questionsData, questionsPending])
 
     useEffect(() => {
+        FetchQuestions({ token: readAccessToken(),
+            request: {
+                page: CurrentPage,
+                page_length: itemsPerPage,
+                filter: {
+                    subjects: Filter.subject,
+                    topics: Filter.topic,
+                    grades: Filter.grade
+                }
+            }}).then((data) => {
+                SetQuestions([...Questions, ...data.questions.map(question => {
+                    return {
+                        id: question.id,
+                        title: question.title,
+                        subject: question.subject,
+                        topic: question.topic,
+                        grade: question.grade,
+                        difficulty: question.difficulty
+                    }
+                })])
+            })
+    }, [CurrentPage])
+
+    useEffect(() => {
         SetCurrentPage(1)
         FetchQuestions({ token: readAccessToken(), 
             request: {

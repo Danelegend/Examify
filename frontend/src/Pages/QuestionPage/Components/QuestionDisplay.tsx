@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import { TiTick } from "react-icons/ti"
 import { ImCross } from "react-icons/im";
 import { useScreen } from "usehooks-ts"
@@ -7,6 +7,7 @@ import { FetchQuestion, PostUserQuestionAnswer } from "../../../api/api";
 import { readAccessToken } from "../../../util/utility";
 import { useQuery } from "@tanstack/react-query";
 import { dotSpinner } from "ldrs"
+import { ModalContext } from "../../../context/modal-context";
 
 type QuestionDisplayProps = {
     id: number
@@ -102,8 +103,8 @@ const Question = ({ question }: QuestionProps) => {
 
     return (
         <div className={(size.width > 760) ? "" : ""}>
-            <div className={((size.width > 760) ? "py-24" : "py-10") + " flex justify-center bg-white"}>
-                <div className="text-2xl font-medium">
+            <div className={((size.width > 760) ? "py-24 px-10" : "py-10 px-5") + " flex justify-center bg-white"}>
+                <div className="text-2xl font-medium text-center">
                     <Latex>{question}</Latex>
                 </div>
             </div>
@@ -193,12 +194,26 @@ const SolutionInput = ({ solution, question_id }: SolutionInputProps) => {
 const ViewSolution = ({ solution }: ViewSolutionProps) => {
     const [DisplaySolution, SetDisplaySolution] = useState<boolean>(false)
     
+    const { SetDisplayLogin } = useContext(ModalContext)
+
     const size = useScreen();
+
+    const onSolutionShownButtonClick = () => {
+        if (DisplaySolution === false) {
+            // Only display solution if the user is logged in
+            if (readAccessToken() === null) {
+                SetDisplayLogin(true)
+                return
+            }
+        }
+
+        SetDisplaySolution(!DisplaySolution)
+    }
 
     return (
         <div className="space-y-4">
-            <div>
-                <button onClick={() => SetDisplaySolution(!DisplaySolution)} className={(DisplaySolution ? "bg-red-300" : "bg-green-300") + " "}>
+            <div className="flex justify-center">
+                <button onClick={onSolutionShownButtonClick} className={(DisplaySolution ? "bg-red-300" : "bg-green-300") + " "}>
                     {
                         DisplaySolution ? "Hide Solution" : "View Solution"
                     }

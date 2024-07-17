@@ -174,6 +174,8 @@ export type FetchFavouriteExamsResponse = {} & TemplateExamsResponse
 
 export type FetchRecentExamsResponse = {} & TemplateExamsResponse
 
+export type FetchRecommendedExamsResponse = {} & TemplateExamsResponse
+
 export type FetchExamResponse = {
     exam_id: number
 }

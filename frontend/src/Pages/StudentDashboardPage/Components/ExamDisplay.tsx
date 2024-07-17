@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query"
 import { TemplateExamsResponse } from "../../../api/types"
 import { waveform } from "ldrs"
 import { MdArrowBackIos } from "react-icons/md"
-import { FetchFavouriteExams, FetchRecentExams } from "../../../api/api"
+import { FetchFavouriteExams, FetchRecentExams, FetchRecommendedExams } from "../../../api/api"
 import { readAccessToken } from "../../../util/utility"
 
 type ExamDisplayTemplateProps = {
@@ -130,7 +130,7 @@ export const RecentExamsDisplay = () => ExamDisplayTemplate({
 })
 
 export const RecommendedExamsDisplay = () => ExamDisplayTemplate({
-    fetchExamsFn: () => FetchFavouriteExams({ token: readAccessToken()! }),
+    fetchExamsFn: () => FetchRecommendedExams({ token: readAccessToken()! }),
     queryKey: ["FavouriteExams"],
     title: "Recommended Exams"
 })

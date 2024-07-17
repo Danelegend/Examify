@@ -154,13 +154,13 @@ def get_exams_completed_by_user(user_id: int) -> List[ExamDetailsResponse]:
         with conn.cursor() as cur:
             cur.execute(
                 """
-                SELECT e.id, s.school, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject, COUNT(fe.exam) AS likes, e.difficulty
+                SELECT e.id, s.name, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject, COUNT(fe.exam) AS likes, e.difficulty
                 FROM exams e
                 LEFT JOIN favourite_exams fe ON e.id = fe.exam
                 LEFT JOIN completed_exams c ON e.id = c.exam
                 LEFT JOIN schools s ON e.school = s.id
                 WHERE c.account = %(account)s
-                GROUP BY e.id, s.school, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject;
+                GROUP BY e.id, s.name, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject;
                 """, {
                     "account": user_id
                     })

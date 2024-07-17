@@ -205,7 +205,7 @@ export type FetchUserSubjectAnalyticsResponse = {
 export type FetchUserActivityAnalyticsResponse = {
     analytics: {
         date: Date
-        completed_exams: ExamsComplete[]
+        exams_complete: number
     }[]
 }
 

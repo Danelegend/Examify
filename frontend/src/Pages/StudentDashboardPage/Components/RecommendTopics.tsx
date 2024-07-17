@@ -44,9 +44,9 @@ const RecommendTopics = () => {
                 </h3>
             </div>
             <div className="flex flex-col space-y-2">
-                {RecommendTopics.map((topic) => {
+                {RecommendTopics.map((topic, index) => {
                     return (
-                        <div className="bg-white px-2 py-1">
+                        <div className="bg-white px-2 py-1" key={index}>
                             <div className="flex flex-col space-y-2 text-sm">
                                 <h3 className="text-center font-medium text-base">
                                     {topic.subject + " " + topic.topic}

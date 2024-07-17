@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react"
 import * as ApexCharts from "apexcharts"
+import { useQuery } from "@tanstack/react-query"
+import { FetchUserActivityAnalytics } from "../../../api/api"
+import { readAccessToken } from "../../../util/utility"
 
 type View = "daily" | "tri-daily" | "weekly" | "fortnightly"
 
@@ -13,27 +16,6 @@ type ViewBucket = {
     endDate: Date,
     numExams: number
 }
-
-const DATA = [
-    {
-        date: new Date(2024, 6, 7),
-        numExams: 5
-    },
-    {
-        date: new Date(2024, 6, 8),
-        numExams: 3
-    },
-    {
-        date: new Date(2024, 6, 16),
-        numExams: 4
-    },
-    {
-        date: new Date(2024, 6, 17),
-        numExams: 2
-    }
-]
-
-const SIZE = 7;
 
 const getViewDays = (view: View) => {
     switch (view) {
@@ -117,12 +99,10 @@ const createViewBuckets = (stats: ExamTimeStats[], view: View, numBuckets: numbe
     // Create numBuckets buckets
     for (var i = 0; i < numBuckets; i++) {
         // Bucket start date is the end date is today - i * view and start date is end date - view
-        var endDate = createDate()
-        endDate.setDate(endDate.getDate() - i * getViewDays(view))
-        var startDate = createDate()
-        startDate.setDate(endDate.getDate() - getViewDays(view) + 1)
+        const tempDate = new Date()
 
-        console.log(startDate)
+        const startDate = new Date(tempDate.getFullYear(), tempDate.getMonth(), tempDate.getDate() - (i + 1) * getViewDays(view) + 1)
+        const endDate = new Date(tempDate.getFullYear(), tempDate.getMonth(), tempDate.getDate() - i * getViewDays(view))
 
         map.set(startDate.getTime(), {
             startDate: startDate,
@@ -134,8 +114,6 @@ const createViewBuckets = (stats: ExamTimeStats[], view: View, numBuckets: numbe
     stats.forEach((stat) => {
         // Get the start date of the view bucket
         const startDate = getStartDateOfBucket(stat.date, view, map)
-        
-        console.log(startDate)
 
         if (map.has(startDate.getTime())) {
             map.get(startDate.getTime())!.numExams += stat.numExams
@@ -186,7 +164,14 @@ const getStartDateOfBucket = (date: Date, view: View, map: Map<number, ViewBucke
 
 const ExamTimeChart = () => {
     const [View, SetView] = useState<View>("daily")
-    const [UserCompletionStats, SetUserCompletionStats] = useState<ExamTimeStats[]>(DATA)
+    const [UserCompletionStats, SetUserCompletionStats] = useState<ExamTimeStats[]>([])
+
+    const num_buckets = 7
+
+    const { data, isPending } = useQuery({
+        queryKey: ["Analytics", "UserCompletionStats"],
+        queryFn: () => FetchUserActivityAnalytics({ token: readAccessToken()! })
+    })
 
     const loadChart = (buckets: ViewBucket[]): ApexCharts | null => {
         if (document.getElementById("line-chart") && typeof ApexCharts !== 'undefined') {
@@ -198,18 +183,29 @@ const ExamTimeChart = () => {
         return null
     }
 
-    const lineChart = loadChart(createViewBuckets(UserCompletionStats, View, SIZE))
+    const lineChart = loadChart(createViewBuckets(UserCompletionStats, View, num_buckets))
 
     useEffect(() => {
-        const buckets = createViewBuckets(UserCompletionStats, View, SIZE)
+        const buckets = createViewBuckets(UserCompletionStats, View, num_buckets)
         
         if (lineChart) {
-            lineChart.updateOptions(getChartOptions(buckets, SIZE), true)
+            lineChart.updateOptions(getChartOptions(buckets, num_buckets), true)
         }
 
     }, [View, UserCompletionStats])
 
-    
+    useEffect(() => {
+        if (!isPending) {
+            SetUserCompletionStats(data!.analytics.map((stat) => {
+                const temp = new Date(stat.date)
+
+                return {
+                    date: new Date(temp.getFullYear(), temp.getMonth(), temp.getDate()),
+                    numExams: stat.exams_complete
+                }
+            }))
+        }
+    }, [isPending, data])
 
     return (
         <div className="border-2 border-black p-2">

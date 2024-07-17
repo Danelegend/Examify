@@ -1,2 +1,2 @@
 ALTER TABLE exams
-ADD difficulty INT NOT NULL DEFAULT 1,
+ADD difficulty INT NOT NULL DEFAULT 1;

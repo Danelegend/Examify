@@ -346,10 +346,10 @@ export const SubjectExamDisplay = ({ subject }: { subject: string }) => {
     const [FilterItems, SetFilteritems] = useState<Map<string, MobileFilterItem>>(new Map())
     const [Filter, SetFilter] = useState<Filter>({
         schools: [],
-        subjects: [subject],
+        subjects: [subject.split(" ").map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(" ")],
         years: []
     })
-    
+
     const [IsDisplayFilter, SetDisplayFilter] = useState<boolean>(false);
     const [IsDisplaySort, SetDisplaySort] = useState<boolean>(false);
 

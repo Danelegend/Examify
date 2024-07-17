@@ -131,6 +131,6 @@ export const RecentExamsDisplay = () => ExamDisplayTemplate({
 
 export const RecommendedExamsDisplay = () => ExamDisplayTemplate({
     fetchExamsFn: () => FetchRecommendedExams({ token: readAccessToken()! }),
-    queryKey: ["FavouriteExams"],
+    queryKey: ["RecommendedExams"],
     title: "Recommended Exams"
 })

@@ -45,6 +45,6 @@ def get_user_activity_analytics(user_id: int) -> List[ExamTimeStat]:
         d[exam_completion_date] += 1
 
     return [ExamTimeStat(
-        date=date.isoformat(),
+        date=date,
         exams_complete=d[date]
     ) for date in d]

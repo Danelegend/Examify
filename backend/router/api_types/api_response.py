@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from typing import Dict, List, Optional, Tuple
-from pydantic import AwareDatetime, BaseModel
+from pydantic import AwareDatetime, BaseModel, PastDate
 
 ################################################################################
 #################################     Admin    #################################
@@ -114,7 +114,7 @@ class UserAnalyticsCompletedSubjectExamsResponse(BaseModel):
     analytics: List[ExamsComplete]
 
 class ExamTimeStat(BaseModel):
-    date: AwareDatetime
+    date: PastDate
     exams_complete: int
 
 class UserAnalyticsActivityResponse(BaseModel):

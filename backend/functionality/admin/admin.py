@@ -91,7 +91,7 @@ def DeleteCurrentExam(exam_id: int) -> None:
     """
     Delets the exam with the given id
     """
-    exam = get_exam(id=exam_id)
+    exam = get_exam(exam_id)
 
     delete_file_from_current(exam.file_location)
 

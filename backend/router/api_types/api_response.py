@@ -63,6 +63,7 @@ class ExamDetails(BaseModel):
     upload_date: str
     likes: int
     subject: str
+    difficulty: int
 
 class ExamsResponse(BaseModel):
     exams: List[ExamDetails]
@@ -71,6 +72,9 @@ class FavouriteExamsResponse(BaseModel):
     exams: List[ExamDetails]
 
 class RecentExamsResponse(BaseModel):
+    exams: List[ExamDetails]
+
+class RecommendedExamsResponse(BaseModel):
     exams: List[ExamDetails]
 
 class ExamSchoolsResponse(BaseModel):

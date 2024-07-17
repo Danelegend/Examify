@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import * as ApexCharts from "apexcharts"
+import ApexCharts from 'apexcharts'
 import { useQuery } from "@tanstack/react-query"
 import { FetchUserActivityAnalytics } from "../../../api/api"
 import { readAccessToken } from "../../../util/utility"

@@ -7,7 +7,8 @@ import questionsImage from '../../../images/screenshots/questions.jpg'
 type Feature = {
     title: string,
     description: string,
-    image: string
+    image: string,
+    alt: string
 }
 
 const Features = () => {
@@ -15,22 +16,26 @@ const Features = () => {
         {
           title: "Past Exams",
           description: "The largest collection of previous HSC exams and past trial papers at your fingertips",
-          image: examsImage
+          image: examsImage,
+          alt: "Practice Trial Exams"
         },
         {
           title: "Practice Questions",
           description: "An extensive collection of HSC questions perfect to help you nail that particular topic",
-          image: questionsImage
+          image: questionsImage,
+          alt: "Practice HSC Questions"
         },
         {
           title: "Analytics",
           description: "Track your progress and see where and how you can improve",
-          image: ""
+          image: "",
+          alt: ""
         },
         {
           title: "Custom Exam Generation",
           description: "Generate custom exams tailored to your needs and wants",
-          image: ""
+          image: "",
+          alt: ""
         }
     ]
 
@@ -127,7 +132,7 @@ const Features = () => {
                   <div className="relative mt-10  w-[45rem] overflow-hidden rounded-xl bg-slate-50 shadow-xl shadow-blue-900/20 sm:w-auto lg:mt-0 lg:w-[67.8125rem]">
                       <img
                         src={features[activeFeatureIndex].image}
-                        alt=""
+                        alt={features[activeFeatureIndex].alt}
                       />
                     </div>
                 </div>

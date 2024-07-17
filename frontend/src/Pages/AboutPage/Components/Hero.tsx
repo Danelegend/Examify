@@ -2,6 +2,7 @@ import { ReactNode, useContext } from "react";
 import SchoolLogoCarousel from "./Schools";
 import { useNavigate } from "react-router-dom";
 import { ModalContext } from "../../../context/modal-context";
+import { readAccessToken } from "../../../util/utility";
 
 const PageButton = ({ children, className, onClick }: { children: ReactNode, className?: string, onClick?: () => void }) => {
     return (
@@ -31,6 +32,22 @@ const Hero = () => {
         SetDisplayRegister(true)
     }
 
+    const dashboardButtonClick = () => {
+        navigate("/dashboard")
+    }
+
+    const SignUpOrDashboardButton = () => {
+        return (
+            readAccessToken() === null ?
+            <PageButton onClick={signUpButtonClick}>
+                Sign Up
+            </PageButton> :
+            <PageButton onClick={dashboardButtonClick}>
+                Dashboard
+            </PageButton>
+        )
+    }
+    
     return (
         <div className="pt-20 pb-16 text-center lg:pt-32 text-slate-700">
             <h1 className="mx-auto max-w-4xl font-display text-5xl font-medium tracking-tight text-slate-900 sm:text-7xl">
@@ -52,9 +69,7 @@ const Hero = () => {
                 The most comprehensive platform for HSC students to access past papers, study resources, and more!
             </h2>
             <div className="mt-16 flex justify-center space-x-24">
-                <PageButton onClick={signUpButtonClick}>
-                    Sign Up
-                </PageButton>
+                <SignUpOrDashboardButton />
                 <PageButton onClick={featuresButtonClick}>
                     Features
                 </PageButton>

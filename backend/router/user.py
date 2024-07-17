@@ -1,5 +1,5 @@
 from typing import Annotated
-from fastapi import APIRouter, Security, status
+from fastapi import APIRouter, Security, status, HTTPException
 
 from functionality.token import get_user_id
 from functionality.notifications.notifications import get_notifications, mark_notifications_seen
@@ -47,19 +47,13 @@ async def get_user_analytics_for_subjects(token: Annotated[str, Security(HTTPBea
 
 @router.get("/analytics/activity", status_code=status.HTTP_200_OK, response_model=UserAnalyticsActivityResponse)
 async def get_user_analytics_for_activity(token: Annotated[str, Security(HTTPBearer401())]) -> UserAnalyticsActivityResponse:
-    user_id = get_user_id(token)
+    try:
+        user_id = get_user_id(token)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid Token")
 
     result = get_user_activity_analytics(user_id)
 
-    # Get map of datetime to list
-    date_to_exams_complete = {}
-
-    for date, exams_complete in result:
-        date_to_exams_complete[date] = [ExamsComplete(
-            subject=subject,
-            number_complete=number
-        ) for subject, number in exams_complete]
-
     return UserAnalyticsActivityResponse(
-        analytics=[(date, date_to_exams_complete[date]) for date in date_to_exams_complete]
+        analytics=result
     )

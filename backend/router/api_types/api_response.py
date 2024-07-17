@@ -113,8 +113,12 @@ class ExamsComplete(BaseModel):
 class UserAnalyticsCompletedSubjectExamsResponse(BaseModel):
     analytics: List[ExamsComplete]
 
+class ExamTimeStat(BaseModel):
+    date: AwareDatetime
+    exams_complete: int
+
 class UserAnalyticsActivityResponse(BaseModel):
-    analytics: List[Tuple[datetime, List[ExamsComplete]]]
+    analytics: List[ExamTimeStat]
 
 ################################################################################
 #################################     Questions     ############################

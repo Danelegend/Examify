@@ -3,6 +3,7 @@ import backgroundImage from '../../../images/background-features.jpg'
 
 import examsImage from '../../../images/screenshots/exams.jpg'
 import questionsImage from '../../../images/screenshots/questions.jpg'
+import analyticsImage from '../../../images/screenshots/analytics.jpg'
 
 type Feature = {
     title: string,
@@ -28,8 +29,8 @@ const Features = () => {
         {
           title: "Analytics",
           description: "Track your progress and see where and how you can improve",
-          image: "",
-          alt: ""
+          image: analyticsImage,
+          alt: "HSC Study Analytics"
         },
         {
           title: "Custom Exam Generation",

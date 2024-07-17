@@ -166,13 +166,13 @@ export type FetchSchoolsResponse = {
     schools: string[]
 }
 
-export type FetchFavouriteExamsResponse = {
+export type TemplateExamsResponse = {
     exams: ExamDetails[]
 }
 
-export type FetchRecentExamsResponse = {
-    exams: ExamDetails[]
-}
+export type FetchFavouriteExamsResponse = {} & TemplateExamsResponse
+
+export type FetchRecentExamsResponse = {} & TemplateExamsResponse
 
 export type FetchExamResponse = {
     exam_id: number

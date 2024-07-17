@@ -2,12 +2,11 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { waveform } from 'ldrs'
 import { FetchError, handle403, readAccessToken } from "../../util/utility";
-import FavouriteExamsDisplay from "./Components/FavouriteExams";
-import RecentExamsDisplay from "./Components/RecentExams";
 import { FetchUserProfile } from "../../api/api";
 import SubjectAnalyticsPieChart from "./Components/UserSubjectAnalyticsPieChart";
-import ActivityAnalyticsDisplay from "./Components/UserActivityAnalytics";
-import Planner from "./Components/Planner";
+import { FavouriteExamsDisplay, RecommendedExamsDisplay } from "./Components/ExamDisplay";
+import ExamTimeChart from "./Components/ExamTimeChart";
+import RecommendTopics from "./Components/RecommendTopics";
 
 
 type UserProfile = {
@@ -70,25 +69,25 @@ const StudentDashboardPage = () => {
      (
         <div>
             <div className="text-black text-center text-xl mt-6 font-bold">
-                Welcome back {UserProfile?.name}
+                Welcome back {UserProfile?.name}!
             </div>
             <div className="grid grid-cols-4 mx-32 gap-x-4 gap-y-12 pt-4">
-                <div className="col-span-3">
-                    <FavouriteExamsDisplay />
+                <div className="col-span-4">
+                    <RecommendedExamsDisplay />
                 </div>
-                <div className="row-span-3">
-                    <RecentExamsDisplay />
-                </div>
-                <div>
+                <div className="my-auto">
                     <SubjectAnalyticsPieChart />
                 </div>
-                {
-                    /*
                 <div className="col-span-2">
-                    <Planner />
+                    <ExamTimeChart />
                 </div>
-                */
-                }
+                <div className="my-auto">
+                    <RecommendTopics />
+                </div>
+                <div className="col-span-4">
+                    <FavouriteExamsDisplay />
+                </div>
+                
             </div>
         </div>
     )

@@ -2,7 +2,7 @@ from typing import List
 
 import psycopg2
 
-from database.db_types.db_response import CompletedExamsResponse
+from database.db_types.db_response import CompletedExamsResponse, ExamDetailsResponse
 
 from logger import Logger
 
@@ -76,6 +76,31 @@ def get_user_completed_exams(user_id: int, size=10) -> List[CompletedExamsRespon
         date_complete=date_complete
     ) for exam_id, date_complete in exams]
 
+def get_exam_ids_completed_by_user(user_id: int) -> List[int]:
+    """
+    Gets the exams completed by a user from the database
+    """
+    try:
+        conn = connect()
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                SELECT DISTINCT exam FROM completed_exams 
+                WHERE account = %(account)s;
+                """, {
+                    "account": user_id
+                    })
+            exams = cur.fetchall()
+
+        log_completed_exams_success("Finished getting Exams Completed by User from Database")
+    except psycopg2.Error as e:
+        log_completed_exams_error(f"Error getting the Exams Completed by User: {e}")
+        raise e
+    finally:
+        disconnect(conn)
+
+    return [exam_id for exam_id in exams]
+
 def remove_user_completed_exam(user_id: int, exam_id: int):
     """
     Given a user id and an exam id for a user, deletes a corresponding
@@ -119,3 +144,43 @@ def check_if_user_complete_exam_exists(user_id: int, exam_id: int) -> bool:
         disconnect(conn)
 
     return exists[0] if exists else False
+
+def get_exams_completed_by_user(user_id: int) -> List[ExamDetailsResponse]:
+    """
+    Gets the exams completed by a user
+    """
+    try:
+        conn = connect()
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                SELECT e.id, s.school, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject, COUNT(fe.exam) AS likes, e.difficulty
+                FROM exams e
+                LEFT JOIN favourite_exams fe ON e.id = fe.exam
+                LEFT JOIN completed_exams c ON e.id = c.exam
+                LEFT JOIN schools s ON e.school = s.id
+                WHERE c.account = %(account)s
+                GROUP BY e.id, s.school, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject;
+                """, {
+                    "account": user_id
+                    })
+            exams = cur.fetchall()
+
+        log_completed_exams_success("Finished getting Exams Completed by User from Database")
+    except psycopg2.Error as e:
+        log_completed_exams_error(f"Error getting the Exams Completed by User: {e}")
+        raise e
+    finally:
+        disconnect(conn)
+
+    return [ExamDetailsResponse(
+        id=exam_id,
+        school=school,
+        exam_type=exam_type,
+        year=year,
+        file_location=file_location,
+        date_uploaded=date_uploaded,
+        subject=subject,
+        difficulty=difficulty,
+        likes=likes
+    ) for exam_id, school, exam_type, year, file_location, date_uploaded, subject, likes, difficulty in exams]

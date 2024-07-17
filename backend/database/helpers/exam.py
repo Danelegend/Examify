@@ -67,15 +67,15 @@ def get_exam(exam_id: int) -> ExamDetailsResponse:
         conn = connect()
         with conn.cursor() as cur:
             cur.execute("""
-                        SELECT e.school, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject, COUNT(fe.exam) AS likes
+                        SELECT e.school, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject, COUNT(fe.exam) AS likes, e.difficulty
                         FROM exams e
                         LEFT JOIN favourite_exams fe ON e.id = fe.exam
                         WHERE e.id = %(id)s
-                        GROUP BY e.school, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject;
+                        GROUP BY e.school, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject, e.difficulty;
                         """, {"id": exam_id})
             exam = cur.fetchone()
 
-            school, exam_type, year, file_location, date_uploaded, subject, likes = exam
+            school, exam_type, year, file_location, date_uploaded, subject, likes, difficulty = exam
 
         log_exam_success("Finished getting the Exam from Database")
     except psycopg2.Error as e:
@@ -91,7 +91,8 @@ def get_exam(exam_id: int) -> ExamDetailsResponse:
                                file_location=file_location, 
                                date_uploaded=date_uploaded, 
                                subject=subject,
-                               likes=likes)
+                               likes=likes,
+                               difficulty=difficulty)
 
 def get_exam_id_from_file_location(file_location: str) -> Optional[int]:
     """
@@ -120,10 +121,10 @@ def get_exams() -> List[ExamDetailsResponse]:
         conn = connect()
         with conn.cursor() as cur:
             cur.execute("""
-                        SELECT e.id, e.school, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject, COUNT(fe.exam) AS likes
+                        SELECT e.id, e.school, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject, COUNT(fe.exam) AS likes, e.difficulty
                         FROM exams e
                         LEFT JOIN favourite_exams fe ON e.id = fe.exam
-                        GROUP BY e.id, e.school, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject;
+                        GROUP BY e.id, e.school, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject, e.difficulty;
                         """)
             exams = cur.fetchall()
 
@@ -141,14 +142,15 @@ def get_exams() -> List[ExamDetailsResponse]:
                                 file_location=file_location, 
                                 date_uploaded=date_uploaded, 
                                 subject=subject,
-                                likes=likes) for id, school, exam_type, year, file_location, date_uploaded, subject, likes in exams]
+                                likes=likes,
+                                difficulty=difficulty) for id, school, exam_type, year, file_location, date_uploaded, subject, likes, difficulty in exams]
 
 def get_exams_with_pagination(start: int, size: int, filter: ExamsFilter, sort: Literal["relevance", "newest", "oldest", "most liked", "least liked", "recently uploaded"]) -> List[ExamDetailsResponse]:
     """
     Gets all exams in the bounds start <= exam < start + size
     """
     s = """
-    SELECT e.id, s.name, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject, COUNT(fe.exam) AS likes
+    SELECT e.id, s.name, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject, COUNT(fe.exam) AS likes, e.difficulty
     FROM exams e
     LEFT JOIN favourite_exams fe ON e.id = fe.exam
     LEFT JOIN schools s ON e.school = s.id
@@ -187,7 +189,7 @@ def get_exams_with_pagination(start: int, size: int, filter: ExamsFilter, sort: 
             s += f" OR e.year = {filter.years[i]}"
 
     s += """
-        GROUP BY e.id, s.name, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject
+        GROUP BY e.id, s.name, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject, e.difficulty
         """
     
     def sql_from_sort_strategy(sort: str):
@@ -239,7 +241,8 @@ def get_exams_with_pagination(start: int, size: int, filter: ExamsFilter, sort: 
                                 file_location=file_location, 
                                 date_uploaded=date_uploaded, 
                                 subject=subject,
-                                likes=likes) for id, school, exam_type, year, file_location, date_uploaded, subject, likes in exams]
+                                likes=likes,
+                                difficulty=difficulty) for id, school, exam_type, year, file_location, date_uploaded, subject, likes, difficulty in exams]
 
 def get_exams_using_filter(exam_filter_request: ExamFilterRequest) -> List[ExamDetailsResponse]:
     """
@@ -250,11 +253,11 @@ def get_exams_using_filter(exam_filter_request: ExamFilterRequest) -> List[ExamD
         with conn.cursor() as cur:
             cur.execute(
                 """
-                SELECT e.school, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject, COUNT(fe.exam) AS likes
+                SELECT e.school, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject, COUNT(fe.exam) AS likes, e.difficulty
                 FROM exams e
                 LEFT JOIN favourite_exams fe ON e.id = fe.exam
                 WHERE school = (SELECT id FROM schools WHERE name = %(school)s) AND exam_type = %(exam_type)s AND year = %(year)s
-                GROUP BY e.school, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject;
+                GROUP BY e.school, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject, e.difficulty;
                 """, {
                     "school": exam_filter_request.school, 
                     "exam_type": exam_filter_request.exam_type, 
@@ -276,7 +279,8 @@ def get_exams_using_filter(exam_filter_request: ExamFilterRequest) -> List[ExamD
                                 file_location=file_location, 
                                 date_uploaded=date_uploaded, 
                                 subject=subject,
-                                likes=likes) for id, school, exam_type, year, file_location, date_uploaded, subject, likes in exams]
+                                likes=likes,
+                                difficulty=difficulty) for id, school, exam_type, year, file_location, date_uploaded, subject, likes, difficulty in exams]
 
 def delete_exam(exam_id: int):
     """
@@ -393,3 +397,43 @@ def insert_exam_flag(exam_id: int) -> None:
         raise e
     finally:
         disconnect(conn)
+
+def get_recommended_exams(user: int, subject: str, difficulty: int, size: int) -> List[ExamDetailsResponse]:
+    """
+    Given a user, subject and difficulty, returns a list of recommended exams of size size
+    """
+    try:
+        conn = connect()
+        with conn.cursor() as cur:
+            cur.execute("""
+                        SELECT e.id, e.school, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject, COUNT(fe.exam) AS likes, e.difficulty
+                        FROM exams e
+                        LEFT JOIN favourite_exams fe ON e.id = fe.exam
+                        WHERE e.subject = %(subject)s
+                        AND e.difficulty = %(difficulty)s
+                        AND e.id NOT IN (SELECT exam FROM completed_exams WHERE account = %(user)s)
+                        GROUP BY e.id, e.school, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject, e.difficulty
+                        LIMIT %(size)s;
+                        """, {
+                            "user": user,
+                            "subject": subject,
+                            "difficulty": difficulty,
+                            "size": size
+                        })
+            exams = cur.fetchall()
+        log_exam_success("Finished getting the Recommended Exams from Database")
+    except psycopg2.Error as e:
+        log_exam_error(f"Error getting the Recommended Exams: {e}")
+        raise e
+    finally:
+        disconnect(conn)
+
+    return [ExamDetailsResponse(id=id,
+                                school=school, 
+                                exam_type=exam_type, 
+                                year=year, 
+                                file_location=file_location, 
+                                date_uploaded=date_uploaded, 
+                                subject=subject,
+                                likes=likes,
+                                difficulty=difficulty) for id, school, exam_type, year, file_location, date_uploaded, subject, likes, difficulty in exams]

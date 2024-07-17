@@ -13,7 +13,6 @@ from functionality.authentication.authentication import GetUserPermissions
 from functionality.types import ExamType
 
 from database.db_types.db_request import ExamCreationRequest, ExamUpdateRequest
-from database.db_types.db_response import ExamDetailsResponse
 from database.helpers.exam import delete_exam, get_exam, get_exam_id_from_file_location, get_exams, insert_exam, insert_exam_flag, update_exam
 from database.helpers.school import get_or_create_school
 

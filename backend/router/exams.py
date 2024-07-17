@@ -3,11 +3,11 @@ from fastapi import APIRouter, Security, status, HTTPException
 
 from errors import AuthenticationError
 
-from functionality.exams.FilterConfig import FilterConfig
-from functionality.exams.exams import GetExams, GetFavouriteExams, GetPopularSchools, GetRecentlyViewedExams
+from functionality.exams.exams import GetExams, GetFavouriteExams, GetPopularSchools, GetRecentlyViewedExams, GetRecommendedExams
+from functionality.token import get_user_id
 
 from router import HTTPBearer401, OptionalHTTPBearer
-from router.api_types.api_response import ExamSchoolsResponse, ExamSubjectsResponse, FavouriteExamsResponse, RecentExamsResponse
+from router.api_types.api_response import ExamSchoolsResponse, ExamSubjectsResponse, FavouriteExamsResponse, RecentExamsResponse, RecommendedExamsResponse
 from router.api_types.api_request import ExamsEndpointRequest
 from router.api_types.api_response import ExamsResponse
 
@@ -50,6 +50,19 @@ async def get_recent_exams(token: Annotated[str, Security(HTTPBearer401())]) -> 
         )
     except AuthenticationError as a:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=a.message) from a
+
+@router.get("/recommended", status_code=status.HTTP_200_OK, response_model=RecommendedExamsResponse)
+async def get_recommended_exams(token: Annotated[str, Security(HTTPBearer401())]) -> RecommendedExamsResponse:
+    try:
+        user_id = get_user_id(token)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Invalid token") from e
+
+    exams = GetRecommendedExams(user_id)
+
+    return RecommendedExamsResponse(
+        exams=exams
+    )
 
 @router.get("/schools", status_code=status.HTTP_200_OK, response_model=ExamSchoolsResponse)
 async def get_schools() -> ExamSchoolsResponse:

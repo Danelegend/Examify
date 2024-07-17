@@ -253,11 +253,12 @@ def get_exams_using_filter(exam_filter_request: ExamFilterRequest) -> List[ExamD
         with conn.cursor() as cur:
             cur.execute(
                 """
-                SELECT e.school, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject, COUNT(fe.exam) AS likes, e.difficulty
+                SELECT s.name, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject, COUNT(fe.exam) AS likes, e.difficulty
                 FROM exams e
                 LEFT JOIN favourite_exams fe ON e.id = fe.exam
-                WHERE school = (SELECT id FROM schools WHERE name = %(school)s) AND exam_type = %(exam_type)s AND year = %(year)s
-                GROUP BY e.school, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject, e.difficulty;
+                LEFT JOIN schools s ON e.school = s.id
+                WHERE s.name = %(school)s AND exam_type = %(exam_type)s AND year = %(year)s
+                GROUP BY s.name, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject, e.difficulty;
                 """, {
                     "school": exam_filter_request.school, 
                     "exam_type": exam_filter_request.exam_type, 
@@ -406,13 +407,14 @@ def get_recommended_exams(user: int, subject: str, difficulty: int, size: int) -
         conn = connect()
         with conn.cursor() as cur:
             cur.execute("""
-                        SELECT e.id, e.school, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject, COUNT(fe.exam) AS likes, e.difficulty
+                        SELECT e.id, s.name, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject, COUNT(fe.exam) AS likes, e.difficulty
                         FROM exams e
                         LEFT JOIN favourite_exams fe ON e.id = fe.exam
+                        LEFT JOIN schools s ON e.school = s.id
                         WHERE e.subject = %(subject)s
                         AND e.difficulty = %(difficulty)s
                         AND e.id NOT IN (SELECT exam FROM completed_exams WHERE account = %(user)s)
-                        GROUP BY e.id, e.school, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject, e.difficulty
+                        GROUP BY e.id, s.name, e.exam_type, e.year, e.file_location, e.date_uploaded, e.subject, e.difficulty
                         LIMIT %(size)s;
                         """, {
                             "user": user,

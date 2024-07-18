@@ -99,7 +99,7 @@ def _get_recommendation_description_and_subtopic(subject: str, topic: str) -> Tu
 
     response = json.loads(send_message(prompt))
 
-    return response['response', 'subtopic']
+    return response['response'], response['subtopic']
 
 def _get_recommended_question(subject: str, topic: str, subtopic: str) -> Tuple[int, str]:
     """

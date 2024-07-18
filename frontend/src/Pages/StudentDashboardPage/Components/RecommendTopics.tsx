@@ -1,5 +1,8 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Latex from "react-latex-next"
+import { FetchTopicRecommendations } from "../../../api/api"
+import { readAccessToken } from "../../../util/utility"
+import { useQuery } from "@tanstack/react-query"
 
 type TopicRecommendation = {
     subject: string,
@@ -9,32 +12,27 @@ type TopicRecommendation = {
     question_title: string
 }
 
-const TEMP_DATA = [
-    {
-        subject: "Mathematics",
-        topic: "Financial Mathematics",
-        description: "You do well in geometric and arithmetic sequences, however application to financial maths can be improved",
-        question_id_link: 1,
-        question_title: "Annuity Future Value"
-    },
-    {
-        subject: "Maths Extension 1",
-        topic: "Integration",
-        description: "You have a good understanding of differentiation, however you struggle with integration",
-        question_id_link: 15,
-        question_title: "Polynomial Integration"
-    },
-    {
-        subject: "Physics",
-        topic: "Waves",
-        description: "You have a good understanding of mechanics, however you struggle with waves",
-        question_id_link: 25,
-        question_title: "Wave Interference"
-    }
-]
-
 const RecommendTopics = () => {
-    const [RecommendTopics, SetRecommendTopics] = useState<TopicRecommendation[]>(TEMP_DATA)
+    const [RecommendTopics, SetRecommendTopics] = useState<TopicRecommendation[]>([])
+
+    const { data, isPending } = useQuery({
+        queryKey: ["Exams", "Recommend"],
+        queryFn: () => FetchTopicRecommendations({ token: readAccessToken()! })
+    }) 
+
+    useEffect(() => {
+        if (!isPending && data) {
+            SetRecommendTopics(data.recommendations.map((recommendation) => {
+                return {
+                    subject: recommendation.subject,
+                    topic: recommendation.topic,
+                    description: recommendation.description,
+                    question_id_link: recommendation.question_id_link,
+                    question_title: recommendation.question_title
+                }
+            }))
+        }
+    }, [data, isPending])
 
     return (
         <div className="border-2 border-black p-2">

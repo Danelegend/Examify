@@ -243,3 +243,13 @@ export type FetchQuestionResponse = {
 export type FetchPermissionsResponse = {
     permissions: string
 }
+
+export type FetchTopicRecommendationsResponse = {
+    recommendations: {
+        subject: string,
+        topic: string,
+        description: string,
+        question_id_link: number,
+        question_title: string
+    }[]
+}

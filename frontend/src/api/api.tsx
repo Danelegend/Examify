@@ -1,6 +1,6 @@
 import Environment from "../../constants"
 import { FetchError, readExpiration, removeAccessToken, storeAccessToken, storeExpiration } from "../util/utility"
-import { AdminExamReviewDeleteRequest, AdminExamReviewSubmitRequest, ExamUpdateRequest, ExamUploadRequest, FetchExamResponse, FetchExamsRequest, FetchExamsResponse, FetchExamSubjectsResponse, FetchFavouriteExamsResponse, FetchLogosResponse, FetchNotificationsResponse, FetchPermissionsResponse, FetchQuestionResponse, FetchQuestionsRequest, FetchQuestionsResponse, FetchQuestionSubjectsResponse, FetchQuestionTopicsResponse, FetchRecentExamsResponse, FetchRecommendedExamsResponse, FetchSchoolsResponse, FetchUserActivityAnalyticsResponse, FetchUserResponse, FetchUserSubjectAnalyticsResponse, PostQuestionRequest, PostUserQuestionAnswerRequest, UserLoginRequest, UserProfileEditRequest, UserRegistrationRequest } from "./types"
+import { AdminExamReviewDeleteRequest, AdminExamReviewSubmitRequest, ExamUpdateRequest, ExamUploadRequest, FetchExamResponse, FetchExamsRequest, FetchExamsResponse, FetchExamSubjectsResponse, FetchFavouriteExamsResponse, FetchLogosResponse, FetchNotificationsResponse, FetchPermissionsResponse, FetchQuestionResponse, FetchQuestionsRequest, FetchQuestionsResponse, FetchQuestionSubjectsResponse, FetchQuestionTopicsResponse, FetchRecentExamsResponse, FetchRecommendedExamsResponse, FetchSchoolsResponse, FetchTopicRecommendationsResponse, FetchUserActivityAnalyticsResponse, FetchUserResponse, FetchUserSubjectAnalyticsResponse, PostQuestionRequest, PostUserQuestionAnswerRequest, UserLoginRequest, UserProfileEditRequest, UserRegistrationRequest } from "./types"
 
 export type UserAuthentication = {
     expiration: Date,
@@ -699,5 +699,24 @@ export const PutExamUpdate = ({ token, request }: { token: string, request: Exam
             exam_type: request.exam_type,
             subject: request.subject
         })
+    }))
+}
+
+export const FetchTopicRecommendations = ({ token }: { token: string }): Promise<FetchTopicRecommendationsResponse> => {
+    return AuthorizationMiddleware<FetchTopicRecommendationsResponse>(() => fetch(`${Environment.BACKEND_URL}/api/user/recommendations/topic`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `bearer ${token}`
+        },
+        method: "GET",
+        credentials: 'include'
+    }).then(async (res) => {
+        const data = await res.json()
+
+        if (res.ok) {
+            return data
+        } else {
+            throw new FetchError(res)
+        }
     }))
 }

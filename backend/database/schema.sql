@@ -16,6 +16,7 @@ DROP TABLE IF EXISTS answers CASCADE;
 DROP TABLE IF EXISTS question_images CASCADE;
 DROP TABLE IF EXISTS user_answers CASCADE;
 DROP TABLE IF EXISTS flagged_exams CASCADE;
+DROP TABLE IF EXISTS user_subjects CASCADE;
 
 -- Types / Domains
 CREATE TYPE EXAM_TYPE AS ENUM ('TRI', 'HSC', 'TOP', 'HAF', 'T_1', 'T_2', 'T_3', 'T_4');
@@ -44,6 +45,13 @@ CREATE TABLE accounts (
     permission              PERMISSIONS NOT NULL DEFAULT 'REG',
     PRIMARY KEY             (id),
     FOREIGN KEY             (school) REFERENCES schools(id)
+);
+
+CREATE TABLE user_subjects (
+    account                 BIGINT NOT NULL,
+    subject                 VARCHAR(128) NOT NULL,
+    PRIMARY KEY             (account, subject),
+    FOREIGN KEY             (account) REFERENCES accounts(id)
 );
 
 CREATE TABLE passwords (

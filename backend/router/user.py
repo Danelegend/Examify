@@ -3,11 +3,11 @@ from fastapi import APIRouter, Security, status, HTTPException
 
 from functionality.token import get_user_id
 from functionality.notifications.notifications import get_notifications, mark_notifications_seen
-from functionality.user.analytics import get_user_activity_analytics, get_user_subject_analytics
+from functionality.user.analytics import GetUserTopicRecommendations, get_user_activity_analytics, get_user_subject_analytics
 from functionality.user.user import get_first_name
 
 from router import HTTPBearer401
-from router.api_types.api_response import ExamsComplete, UserAnalyticsActivityResponse, UserAnalyticsCompletedSubjectExamsResponse, UserNotificationsResponse, UserProfileResponse
+from router.api_types.api_response import ExamsComplete, UserAnalyticsActivityResponse, UserAnalyticsCompletedSubjectExamsResponse, UserNotificationsResponse, UserProfileResponse, UserTopicRecommendationsResponse
 from router.api_types.api_request import NotificationsSeenRequest
 
 router = APIRouter()
@@ -56,4 +56,17 @@ async def get_user_analytics_for_activity(token: Annotated[str, Security(HTTPBea
 
     return UserAnalyticsActivityResponse(
         analytics=result
+    )
+
+@router.get("/recommendations/topic", status_code=status.HTTP_200_OK, response_model=UserTopicRecommendationsResponse)
+async def get_user_topic_recommendations(token: Annotated[str, Security(HTTPBearer401())]) -> UserTopicRecommendationsResponse:
+    try:
+        user_id = get_user_id(token)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid Token")
+    
+    recommendations = GetUserTopicRecommendations(user_id)
+    
+    return UserTopicRecommendationsResponse(
+        recommendations=recommendations
     )

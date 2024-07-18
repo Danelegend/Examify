@@ -120,6 +120,16 @@ class ExamTimeStat(BaseModel):
 class UserAnalyticsActivityResponse(BaseModel):
     analytics: List[ExamTimeStat]
 
+class TopicRecommendation(BaseModel):
+    subject: str
+    topic: str
+    description: str
+    question_id_link: int
+    question_title: str
+
+class UserTopicRecommendationsResponse(BaseModel):
+    recommendations: List[TopicRecommendation]
+
 ################################################################################
 #################################     Questions     ############################
 ################################################################################

@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import List, Optional
 
 import psycopg2
 
@@ -220,3 +220,22 @@ def get_user_by_email_and_registration(email: str, registration_method: Registra
         disconnect(conn)
 
     return user_id[0] if user_id else None
+
+def get_user_subjects(user_id: int) -> List[str]:
+    """
+    Gets the subjects of the user
+    """
+    try:
+        conn = connect()
+        with conn.cursor() as cur:
+            cur.execute("SELECT subject FROM user_subjects WHERE account = %(id)s;", {"id": user_id})
+            subjects = cur.fetchall()
+
+        log_user_success("Finished getting the User Subjects from Database")
+    except psycopg2.Error as e:
+        log_user_error(f"Error getting the User Subjects: {e}")
+        raise e
+    finally:
+        disconnect(conn)
+
+    return [subject for subject in subjects]

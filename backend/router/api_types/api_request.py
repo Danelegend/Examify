@@ -82,9 +82,9 @@ class NotificationsSeenRequest(BaseModel):
 #################################     Questions     ############################
 ################################################################################
 class QuestionsFilter(BaseModel):
-    subjects: List[str]
-    topics: List[str]
-    grades: List[int]
+    subjects: Optional[List[str]] = []
+    topics: Optional[List[str]] = []
+    grades: Optional[List[int]] = []
 
 class QuestionsRequest(BaseModel):
     filter: QuestionsFilter

@@ -63,7 +63,7 @@ def _calculate_number_recommendations_for_subjects(subjects: List[str], num_reco
     subject_to_num_recommendations = {}
 
     if len(subjects) > num_recommendations:
-        for subject in random.choice(subjects, num_recommendations):
+        for subject in random.sample(subjects, num_recommendations):
             subject_to_num_recommendations[subject] = 1
     elif len(subjects) > 0:
         # Assign one to each subject then distribute the rest
@@ -72,7 +72,7 @@ def _calculate_number_recommendations_for_subjects(subjects: List[str], num_reco
 
         recommendations_left = num_recommendations - len(subjects)
 
-        for subject in random.choice(subjects, recommendations_left):
+        for subject in random.sample(subjects, recommendations_left):
             subject_to_num_recommendations[subject] += 1
 
     return subject_to_num_recommendations
@@ -80,7 +80,7 @@ def _calculate_number_recommendations_for_subjects(subjects: List[str], num_reco
 def _get_recommended_topics_for_subject(subject: str, num_recommendations: int) -> List[str]:
     topics = get_topics(subject)
 
-    return random.choice(topics, num_recommendations)
+    return random.sample(topics, num_recommendations)
 
 def _get_recommendation_description_and_subtopic(subject: str, topic: str) -> Tuple[str, str]:
     """

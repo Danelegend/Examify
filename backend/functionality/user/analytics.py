@@ -80,7 +80,7 @@ def _calculate_number_recommendations_for_subjects(subjects: List[str], num_reco
 def _get_recommended_topics_for_subject(subject: str, num_recommendations: int) -> List[str]:
     topics = get_topics(subject)
 
-    return random.sample(topics, num_recommendations)
+    return [] if len(topics) == 0 else random.sample(topics, min(len(topics), num_recommendations))
 
 def _get_recommendation_description_and_subtopic(subject: str, topic: str) -> Tuple[str, str]:
     """

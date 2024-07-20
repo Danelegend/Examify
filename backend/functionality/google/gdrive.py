@@ -9,6 +9,8 @@ from googleapiclient.discovery import build, MediaFileUpload
 from googleapiclient.http import MediaIoBaseDownload
 from google.oauth2 import service_account
 
+from functionality.bucket.bucket import upload_file
+
 SCOPES = ['https://www.googleapis.com/auth/drive']
 
 REVIEW_FILES_TO_ID = {}
@@ -122,5 +124,9 @@ def _download_file(file_id: str, file_name: str):
     with open(file_loc, "wb") as f:
         f.write(fh.read())
         f.close()
+
+    upload_file(file_loc, file_name)
+
+    os.remove(file_loc)
 
     Logger.log_backend("Google Drive", f"Successfully downloaded file: file_location={file_loc}")

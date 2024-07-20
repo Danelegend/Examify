@@ -17,11 +17,11 @@ def transfer_files():
         file_name = exam.file_location
         file_path = _get_exam_file_path(file_name)
         
-        res = _upload_file(file_path, client, file_name)
+        #res = _upload_file(file_path, client, file_name)
 
-        if res:
-            # Delete the file locally
-            _delete_file_locally(file_path)
+        #if res:
+        # Delete the file locally
+        _delete_file_locally(file_path)
 
     print("Files transferred")
 
@@ -69,6 +69,7 @@ def _create_client() -> boto3.client:
 
 def _delete_file_locally(file_path: str):
     if not os.path.exists(file_path):
+        print(f"File {file_path} does not exist")
         return
 
     # Delete the file locally

@@ -10,6 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from database.linker import DatabaseSetup
 
 from functionality.scripts.reinsert_exams import reinsert_exams
+from functionality.scripts.file_transfer.local_to_idrive import transfer_files
 
 from logger import Logger
 
@@ -94,3 +95,10 @@ async def db_schema_update(migration: int = 0, password: str = ""):
 
     db_setup = DatabaseSetup()
     db_setup.run_migration(migration)
+
+@app.get("/db/transfer/exams", status_code=status.HTTP_200_OK)
+async def db_transfer_exams(password: str = ""):
+    if password != "@JudyMansell13!": return
+
+    # Transfer files from local to idrive
+    transfer_files()

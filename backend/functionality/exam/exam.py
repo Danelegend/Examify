@@ -1,12 +1,10 @@
-import os
-
 from errors import DuplicationError, ValidationError
 
 from logger import Logger
 
+from functionality.bucket.bucket import get_file
 from functionality.token import get_user_id
 from functionality.types import ExamType
-from functionality.security import FileLocationAccessible
 
 from database.helpers.completed import check_if_user_complete_exam_exists, insert_user_completed_exam, remove_user_completed_exam
 from database.helpers.exam import check_exam_exists, get_exam, get_exam_id_from_subject_school_year_type, insert_exam_flag
@@ -29,12 +27,7 @@ def GetExamId(subject: str, school: str, year: int, type: str) -> int:
 def GetExamPdf(exam_id: int):
     file_name = get_exam(exam_id).file_location
 
-    location = os.path.join(os.environ.get("CURRENT_EXAMS_DIRECTORY"), file_name)
-
-    if not FileLocationAccessible(location):
-        raise ValueError("Unaccessible location")
-    
-    return open(location, "rb")
+    return get_file(file_name)
 
 def GetExamLikes(exam_id: int):
     """

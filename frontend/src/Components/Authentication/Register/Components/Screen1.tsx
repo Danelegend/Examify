@@ -48,6 +48,7 @@ const RegistrationScreen1 = ({ changeScreen } :
 
     const handleGoogleRegistrationSuccess = () => {
         SetDisplayRegister(false)
+        changeScreen()
     }
 
     const handleFacebookRegistrationSuccess = () => {

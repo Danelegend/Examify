@@ -206,7 +206,6 @@ def get_all_users() -> List[RegisteredUserData]:
     for user in get_users():
         users.append(
             RegisteredUserData(
-                id=user.id,
                 first_name=user.first_name,
                 last_name=user.last_name,
                 email=user.email,

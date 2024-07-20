@@ -209,8 +209,8 @@ def get_all_users() -> List[RegisteredUserData]:
                 first_name=user.first_name,
                 last_name=user.last_name,
                 email=user.email,
-                school=user.school,
-                school_year=user.grade
+                school="" if user.school is None else user.school,
+                school_year=0 if user.grade is None else user.grade
             ))
 
     return users

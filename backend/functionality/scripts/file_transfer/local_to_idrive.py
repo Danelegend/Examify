@@ -68,6 +68,9 @@ def _create_client() -> boto3.client:
     return client
 
 def _delete_file_locally(file_path: str):
+    if not os.path.exists(file_path):
+        return
+
     # Delete the file locally
     os.remove(file_path)
 

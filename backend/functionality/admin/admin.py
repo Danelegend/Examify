@@ -7,6 +7,7 @@ from errors import AuthenticationError
 
 from logger import Logger
 
+from functionality.bucket.bucket import delete_file, exam_exists, rename_file
 from functionality.exam.exam import FlagExam
 from functionality.google.gdrive import delete_file_from_review, get_files_in_review, move_file_from_review_to_current, upload_file_to_drive
 from functionality.authentication.authentication import GetUserPermissions
@@ -79,10 +80,10 @@ def InsertExam(school: str, exam_type: str, year: int, subject: str, file_locati
     ))
 
 def delete_file_from_current(file_name: str) -> None:
-    delete_file(os.path.join(CURRENT_EXAMS_DIRECTORY, file_name))
+    _delete_file(file_name)
 
-def delete_file(file_location: str) -> None:
-    os.remove(file_location)
+def _delete_file(file_name: str) -> None:
+    delete_file(file_name)
 
 def DeleteReviewExam(file_location: str) -> None:
     delete_file_from_review(file_location)
@@ -124,7 +125,7 @@ def _create_temporary_file_name(file_name: str) -> str:
     
     adder = 0
 
-    while os.path.exists(os.path.join(CURRENT_EXAMS_DIRECTORY, f"{file_name_without_extension}_{adder}.pdf")):
+    while exam_exists(f"{file_name_without_extension}_{adder}.pdf"):
         adder += 1
 
     return f"{file_name_without_extension}_{adder}.pdf"
@@ -141,7 +142,7 @@ def _update_exam_file_location(exam_id: int, original_file_name: str, new_file_n
     Logger.log_backend("Admin", f"Renaming file: {original_file_name} -> {new_file_name}")
     
     # Check if there exists a file with the new name
-    if os.path.exists(os.path.join(CURRENT_EXAMS_DIRECTORY, new_file_name)):
+    if exam_exists(new_file_name):
         Logger.log_backend("Admin", f"File with new name already exists: {new_file_name}")
 
         flagged_exam_id = get_exam_id_from_file_location(new_file_name)
@@ -154,14 +155,11 @@ def _update_exam_file_location(exam_id: int, original_file_name: str, new_file_n
         _update_exam_file_location(flagged_exam_id, new_file_name, temp_name)
 
     # Rename the file
-    old_path = os.path.join(CURRENT_EXAMS_DIRECTORY, original_file_name)
-    new_path = os.path.join(CURRENT_EXAMS_DIRECTORY, new_file_name)
-
-    os.rename(old_path, new_path)
+    rename_file(original_file_name, new_file_name)
 
     UpdateExamFileLocation(exam_id, new_file_name)
 
-    Logger.log_backend("Admin", f"Successfully renamed file: {old_path} -> {new_path}")
+    Logger.log_backend("Admin", f"Successfully renamed file: {original_file_name} -> {new_file_name}")
 
 def UpdateExam(exam_id: int, school: Optional[str] = None, year: Optional[int] = None, exam_type: Optional[str] = None, subject: Optional[str] = None) -> Tuple[bool, str]:
     Logger.log_backend("Admin", f"Updating exam: {exam_id}")

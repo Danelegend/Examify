@@ -3,6 +3,43 @@ import { readAccessToken } from "../../../../util/utility"
 import { useMutation } from "@tanstack/react-query"
 import { EditUserProfileData } from "../../../../api/api"
 
+const SUBJECTS = [
+    "Maths Extension 2",
+    "Maths Extension 1",
+    "Maths Advanced",
+    "Maths Standard 2",
+    "Maths Standard 1",
+    "English Extension 2",
+    "English Extension 1",
+    "English Advanced",
+    "English Standard",
+    "Science Extension",
+    "Physics",
+    "Chemistry",
+    "Biology",
+    "Economics",
+    "Business Studies",
+    "Legal Studies",
+    "Modern History",
+    "Ancient History",
+    "Geography",
+    "PDHPE",
+    "Software Design and Development",
+    "Information Processes and Technology",
+    "Engineering Studies",
+    "Visual Arts",
+    "Music Extension",
+    "Music 2",
+    "Music 1",
+    "Drama",
+    "Design and Technology",
+    "Textiles and Design",
+    "Hospitality",
+    "Food Technology",
+    "Agriculture",
+    "Industrial Technology"
+] as const
+ 
 const RegistrationScreen2 = ({ changeScreen } : 
     {
         changeScreen: () => void
@@ -11,8 +48,11 @@ const RegistrationScreen2 = ({ changeScreen } :
 
     const [SchoolYear, SetSchoolYear] = useState<number>(-1)
     const [SchoolName, SetSchoolName] = useState<string>("")
+    const [Subjects, SetSubjects] = useState<string[]>([])
 
     const [ResponseMessage, SetResponseMessage] = useState<string | null>(null)
+
+    const [SelectedSubject, SetSelectedSubject] = useState<typeof SUBJECTS[number]>(SUBJECTS[0])
 
     const { mutateAsync: postData } = useMutation({
         mutationFn: EditUserProfileData,
@@ -57,7 +97,8 @@ const RegistrationScreen2 = ({ changeScreen } :
             request: {
                 dob: DOB,
                 school_year: SchoolYear,
-                school: SchoolName
+                school: SchoolName,
+                subjects: Subjects
             }
         })
     }
@@ -78,6 +119,38 @@ const RegistrationScreen2 = ({ changeScreen } :
                         <label className="block mb-2 text-sm font-medium text-gray-900">School Name</label>
                         <input type="text" onChange={HandleSchoolNameChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="School Name" />
                     </div>
+                    <div className="col-span-2 flex gap-x-4">
+                        <div>
+                            <label className="block mb-2 text-sm font-medium text-gray-900">Subjects</label>
+                            <div className="grid grid-cols-3 gap-x-4">
+                                <select className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 col-span-2" onChange={(e) => SetSelectedSubject(e.target.value)}>
+                                    {
+                                        SUBJECTS.map((subject) => {
+                                            return (
+                                                <option key={subject} value={subject}>{subject}</option>
+                                            )
+                                        })
+                                    }
+                                </select>
+                                <div className="rounded-lg bg-blue-600 flex cursor-pointer" onClick={() => {
+                                    if (!Subjects.includes(SelectedSubject)) {SetSubjects([...Subjects, SelectedSubject])}}}>
+                                    <div className="text-center text-white text-sm px-3 py-1 m-auto">
+                                        Add Subject
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div className="flex flex-wrap col-span-2">
+                        {
+                            Subjects.map((subject) => {
+                                return (
+                                    <SubjectBubble subject={subject} removeSubject={() => SetSubjects(Subjects.filter((s) => s !== subject))}/>
+                                )
+                            })
+                        }
+                    </div>
                 </div>
                 <div className="flex justify-center pb-2">
                     <div onClick={handleSubmission} className="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center cursor-pointer">
@@ -92,6 +165,14 @@ const RegistrationScreen2 = ({ changeScreen } :
                         </div>
                     }
             </form>
+        </div>
+    )
+}
+
+const SubjectBubble = ({ subject, removeSubject } : { subject: string, removeSubject: () => void }) => {
+    return (
+        <div key={subject} className="bg-blue-700 text-white rounded-lg px-2.5 py-1.5 text-xs me-2 mb-2 cursor-pointer" onClick={removeSubject}>
+            {subject}
         </div>
     )
 }

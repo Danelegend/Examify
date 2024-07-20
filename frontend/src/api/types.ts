@@ -45,6 +45,7 @@ export type UserProfileEditRequest = {
     dob: Date,
     school: string,
     school_year: number
+    subjects: string[]
 }
 
 export type FetchExamsRequest = {

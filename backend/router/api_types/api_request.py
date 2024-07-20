@@ -42,7 +42,8 @@ class RegistrationRequest(BaseModel):
 class EditUserInformationRequest(BaseModel):
     dob: AwareDatetime
     school: str
-    school_year: int
+    school_year: Optional[int] = 12
+    subjects: Optional[List[str]] = []
 
 class GoogleLoginRequest(BaseModel):
     google_token: str

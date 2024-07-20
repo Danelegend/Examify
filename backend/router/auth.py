@@ -150,6 +150,7 @@ async def edit_profile(edit_profile: EditUserInformationRequest, token: Annotate
         EditUserInformation(token, 
                             edit_profile.dob, 
                             edit_profile.school, 
-                            edit_profile.school_year)
+                            edit_profile.school_year,
+                            edit_profile.subjects)
     except AuthenticationError as e:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=e.message) from e

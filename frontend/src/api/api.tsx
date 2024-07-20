@@ -99,7 +99,8 @@ export const EditUserProfileData = ({ token, request }: { token: string, request
         body: JSON.stringify({
             dob: request.dob.toISOString(),
             school_year: request.school_year,
-            school: request.school
+            school: request.school,
+            subjects: request.subjects
         })
     }))
 }

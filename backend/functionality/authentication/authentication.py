@@ -1,4 +1,5 @@
 from datetime import date
+from typing import List
 
 from functionality.token import access_token_valid, create_access_token, create_refresh_token, get_sid, get_user_id, remove_session
 from functionality.authentication.user_form import UserForm
@@ -7,7 +8,7 @@ from errors import AuthenticationError, DuplicationError
 
 from database.db_types.db_request import PasswordCreationRequest, UserCreationRequest, UserUpdateRequest
 from database.helpers.password import get_user_from_email_and_password, insert_password
-from database.helpers.user import check_user_email_exists, get_user_details, insert_user, update_user
+from database.helpers.user import check_user_email_exists, get_user_details, get_user_subjects, insert_user, insert_user_subject, update_user
 
 def RegisterUser(user_profile: UserForm):
     """
@@ -109,7 +110,7 @@ def GetUserPermissions(access_token: str) -> str:
 
     return user.permissions
 
-def EditUserInformation(access_token: str, dob: date, school: str, school_year: int):
+def EditUserInformation(access_token: str, dob: date, school: str, school_year: int, subjects: List[str]):
     """
     Takes in an access token and edits the user's information
     """
@@ -124,3 +125,9 @@ def EditUserInformation(access_token: str, dob: date, school: str, school_year: 
         school=school,
         school_year=school_year
     ))
+
+    user_subjects = get_user_subjects(uid)
+
+    for subject in subjects:
+        if subject not in user_subjects:
+            insert_user_subject(uid, subject)

@@ -239,3 +239,28 @@ def get_user_subjects(user_id: int) -> List[str]:
         disconnect(conn)
 
     return [subject for subject in subjects]
+
+def insert_user_subject(user_id: int, subject: str):
+    """
+    Inserts a new subject for the user
+    """
+    try:
+        conn = connect()
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                INSERT INTO user_subjects (account, subject) 
+                VALUES (%(account)s, %(subject)s);
+                """, {
+                    'account': user_id,
+                    'subject': subject
+                })
+
+        conn.commit()
+        log_user_success("Finished inserting the User Subject into Database")
+    except psycopg2.Error as e:
+        log_user_error(f"Error inserting the User Subject: {e}")
+        conn.rollback()
+        raise e
+    finally:
+        disconnect(conn)

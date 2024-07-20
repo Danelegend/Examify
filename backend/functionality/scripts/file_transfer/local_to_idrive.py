@@ -17,11 +17,11 @@ def transfer_files():
         file_name = exam.file_location
         file_path = _get_exam_file_path(file_name)
         
-        #res = _upload_file(file_path, client, file_name)
+        res = _upload_file(file_path, client, file_name)
 
-        #if res:
-        # Delete the file locally
-        _delete_file_locally(file_path)
+        if res:
+            # Delete the file locally
+            _delete_file_locally(file_path)
 
     print("Files transferred")
 

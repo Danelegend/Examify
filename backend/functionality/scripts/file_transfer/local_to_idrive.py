@@ -17,9 +17,9 @@ def transfer_files():
         
         res = _upload_file(file_path, client, file_name)
 
-        if res:
+        #if res:
             # Delete the file locally
-            _delete_file_locally(file_path)
+            #_delete_file_locally(file_path)
 
 
 def _get_exam_file_path(exam_file_name: str) -> str:

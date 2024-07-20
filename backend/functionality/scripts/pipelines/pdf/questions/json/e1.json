@@ -1,0 +1,124 @@
+{
+    "questions": [
+        {
+            "title": "",
+            "subject": "Maths Extension 1",
+            "topic": "Further Work with Functions",
+            "grade": 12,
+            "difficulty": 1,
+            "question": "",
+            "answers": [],
+            "images": []
+        },
+        {
+            "title": "",
+            "subject": "Maths Extension 1",
+            "topic": "Polynomials",
+            "grade": 12,
+            "difficulty": 1,
+            "question": "",
+            "answers": [],
+            "images": []
+        },
+        {
+            "title": "",
+            "subject": "Maths Extension 1",
+            "topic": "Working with Combinatronics",
+            "grade": 12,
+            "difficulty": 1,
+            "question": "",
+            "answers": [],
+            "images": []
+        },
+        {
+            "title": "Integration",
+            "subject": "Maths Extension 1",
+            "topic": "Further Calculus",
+            "grade": 12,
+            "difficulty": 2,
+            "question": "Find the exact value of $\\int_{0}^{2} \\frac{1}{\\sqrt{16-x^2}} \\,dx$",
+            "answers": [],
+            "images": []
+        },
+        {
+            "title": "",
+            "subject": "Maths Extension 1",
+            "topic": "Rates of Change",
+            "grade": 12,
+            "difficulty": 1,
+            "question": "",
+            "answers": [],
+            "images": []
+        },
+        {
+            "title": "Domain and Range",
+            "subject": "Maths Extension 1",
+            "topic": "Inverse Trigonometric Functions",
+            "grade": 12,
+            "difficulty": 1,
+            "question": "State the domain and range of $y = \\cos^{-1}{\\frac{x}{4}}$",
+            "answers": [],
+            "images": []
+        },
+        {
+            "title": "",
+            "subject": "Maths Extension 1",
+            "topic": "Trigonometric Identities",
+            "grade": 12,
+            "difficulty": 1,
+            "question": "",
+            "answers": [],
+            "images": []
+        },
+        {
+            "title": "",
+            "subject": "Maths Extension 1",
+            "topic": "Trigonometry",
+            "grade": 12,
+            "difficulty": 1,
+            "question": "",
+            "answers": [],
+            "images": []
+        },
+        {
+            "title": "",
+            "subject": "Maths Extension 1",
+            "topic": "Mathematical Induction",
+            "grade": 12,
+            "difficulty": 1,
+            "question": "",
+            "answers": [],
+            "images": []
+        },
+        {
+            "title": "",
+            "subject": "Maths Extension 1",
+            "topic": "Vectors",
+            "grade": 12,
+            "difficulty": 1,
+            "question": "",
+            "answers": [],
+            "images": []
+        },
+        {
+            "title": "",
+            "subject": "Maths Extension 1",
+            "topic": "Applications of Calculus",
+            "grade": 12,
+            "difficulty": 3,
+            "question": "The mass $M$ of a whale is modelled by $M = 36 - 35.5e^{-kt}$, \n where $M$ is measured in tonnes, $t$ is the age of the whale in years",
+            "answers": [],
+            "images": []
+        },
+        {
+            "title": "",
+            "subject": "Maths Extension 1",
+            "topic": "Binomial Distribution",
+            "grade": 12,
+            "difficulty": 1,
+            "question": "",
+            "answers": [],
+            "images": []
+        }
+    ]
+}

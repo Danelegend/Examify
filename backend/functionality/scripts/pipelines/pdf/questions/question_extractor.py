@@ -7,6 +7,7 @@ import requests
 from typing import List
 
 from openai import OpenAI
+import google.generativeai as genai
 
 GPT_PROMPT = """
 You are tasked with extracting questions and formatting them into a specific JSON structure.
@@ -18,7 +19,7 @@ The JSON Structure you should return is:
 
 where Question is
 {
-    "topic": "Complex Numbers" | "Proofs" | "Integration" | "Vectors" | "Mechanics",
+    "topic": "Polynomials"
     "question": List[string],
     "title": string
     "solution": List[string]
@@ -27,7 +28,7 @@ where Question is
 
 Follow these steps:
 
-Identify the topic of each question from the provided list of topics: “Complex Numbers,” “Proofs,” “Integration,” “Vectors,” or “Mechanics”.
+Identify the topic of each question from the provided list of topics: "Polynomials".
 Extract the question and convert it into a list of strings. Each string should represent one sentence or line from the question. Use LaTeX formatting where necessary, wrapping mathematical expressions in dollar signs ($), and ensure to escape backslashes (\\).
 Create a concise title for each question, not exceeding four words.
 Format the solution as a list of strings, using LaTeX for mathematical expressions and escaping backslashes (\\).
@@ -51,7 +52,7 @@ Expected JSON output:
 {
 questions: [
 {
-“topic”: “Proofs”,
+“topic”: "Polynomials",
 “question”: [
 “Prove that there are no positive integers $x, y$ such that $x^2 - y^2 = 1$.”
 ],
@@ -73,10 +74,11 @@ Now, apply these steps to generate the JSON output when the user provides you te
 
 ACCESS_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjExMDQyMzUsImlhdCI6MTcyMTA5NTIzNSwic2lkIjoyNSwiYWlkIjoiZ1ZqeEVZSk5JUyJ9.TqbtbXpVS8cOs-xx0H1g6rREoVR6L_4YvBiMqziCwtU"
 
-SPECIAL_KEY = ""
+OPEN_AI_KEY = ""
+GEMINI_AI_KEY = "AIzaSyAAxbMlDwfz7M2nGXXhJKubvQke9hRAdIY"
 
 class Question:
-    def __init__(self, topic=None, questions=None, title=None, solutions=None, difficulty=None, subject="Maths Extension 2"):
+    def __init__(self, topic=None, questions=None, title=None, solutions=None, difficulty=None, subject="Maths Extension 1"):
         self.subject = subject
         self.topic = topic
         self.question = questions
@@ -91,7 +93,7 @@ class Question:
         formatted = ""
 
         for s in self.solution:
-            formatted += s
+            formatted += s + '\n'
 
         return formatted
 
@@ -99,7 +101,7 @@ class Question:
         formatted = ""
 
         for s in self.question:
-            formatted += s
+            formatted += s + '\n'
         
         return formatted
 
@@ -162,6 +164,7 @@ def _extract_questions_from_text(text: str, client) -> List[Question]:
     :param text: Text to extract questions from.
     :return: List of questions extracted from the text.
     """
+    """
     chat = client.chat.completions.create(
         messages=[
             {
@@ -178,8 +181,17 @@ def _extract_questions_from_text(text: str, client) -> List[Question]:
             "type": "json_object"
         }
     )
+    """
+    chat_session = client.start_chat(
+        history=[{
+            "role": "model",
+            "parts": GPT_PROMPT
+        }]
+    )
 
-    return _gpt_response_to_questions(chat.choices[0].message.content)
+    response = chat_session.send_message(text)
+
+    return _gpt_response_to_questions(response.text)
 
 def _gpt_response_to_questions(response: str) -> List[Question]:
     try:
@@ -232,18 +244,31 @@ def upload_questions(questions: List[Question]):
 
 if __name__ == "__main__":
     #client = OpenAI(api_key=SPECIAL_KEY)
+    genai.configure(api_key=GEMINI_AI_KEY)
 
-    for file in os.listdir(os.path.join(os.getcwd(), "pdf/json")):
+    generation_config = {
+        "temperature": 1,
+        "top_p": 0.95,
+        "top_k": 64,
+        "max_output_tokens": 8192,
+        "response_mime_type": "application/json"
+    }
+
+    client = genai.GenerativeModel(
+        model_name="gemini-1.5-flash",
+        generation_config=generation_config
+    )
+
+    for file in os.listdir(os.path.join(os.getcwd(), "pdf")):
         print(f"Starting {file}")
-        path = os.path.join(os.getcwd(), f"pdf/json/{file}")
+        path = os.path.join(os.getcwd(), f"pdf/{file}")
         try:
-            #questions = extract_questions(path, client)
-            json_file = open(path)
-            json_object = json.load(json_file)
+            questions = extract_questions(path, client)
 
-            questions = _parse_json_to_questions(json_object)
+            for question in questions:
+                print(question.toJSON())
 
-            upload_questions(questions)
+            #upload_questions(questions)
             print(f"Finished {file}")
         except Exception as e:
             print(f"Error for {file}: {e}")

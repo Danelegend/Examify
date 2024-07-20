@@ -14,10 +14,11 @@ from functionality.authentication.authentication import GetUserPermissions
 from functionality.types import ExamType
 
 from database.db_types.db_request import ExamCreationRequest, ExamUpdateRequest
+from database.helpers.user import get_users
 from database.helpers.exam import delete_exam, get_exam, get_exam_id_from_file_location, get_exams, insert_exam, insert_exam_flag, update_exam
 from database.helpers.school import get_or_create_school
 
-from router.api_types.api_response import CurrentExamResponse, ReviewExamResponse
+from router.api_types.api_response import CurrentExamResponse, RegisteredUserData, ReviewExamResponse
 
 REVIEW_EXAMS_DIRECTORY = os.environ.get("REVIEW_EXAMS_DIRECTORY", "review_exams")
 CURRENT_EXAMS_DIRECTORY = os.environ.get("CURRENT_EXAMS_DIRECTORY", "exams")
@@ -198,3 +199,19 @@ def UpdateExam(exam_id: int, school: Optional[str] = None, year: Optional[int] =
         return True, "Update Successful"
     except Exception as e:
         return False, str(e)
+
+def get_all_users() -> List[RegisteredUserData]:
+    users = []
+
+    for user in get_users():
+        users.append(
+            RegisteredUserData(
+                id=user.id,
+                first_name=user.first_name,
+                last_name=user.last_name,
+                email=user.email,
+                school=user.school,
+                school_year=user.grade
+            ))
+
+    return users

@@ -27,6 +27,17 @@ class UpdateExamResponse(BaseModel):
     success: bool
     message: str
 
+class RegisteredUserData(BaseModel):
+    id: int
+    first_name: str
+    last_name: str
+    email: str
+    school: str
+    school_year: int
+
+class RegisteredUsersResponse(BaseModel):
+    users: List[RegisteredUserData]
+
 ################################################################################
 #################################     Auth     #################################
 ################################################################################

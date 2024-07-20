@@ -1,12 +1,12 @@
 from typing import Annotated
 from fastapi import APIRouter, HTTPException, Response, Security, status, UploadFile, Form, File
 
-from functionality.admin.admin import DeleteCurrentExam, DeleteReviewExam, GetCurrentExams, GetExamsToReview, SubmitReviewExam, UpdateExam, UploadExam, ValidateToken
+from functionality.admin.admin import DeleteCurrentExam, DeleteReviewExam, GetCurrentExams, GetExamsToReview, SubmitReviewExam, UpdateExam, UploadExam, ValidateToken, get_all_users
 from functionality.authentication.authentication import GetUserPermissions
 
 from router import HTTPBearer401
 from router.api_types.api_request import DeleteReviewExamRequest, SubmitReviewExamRequest, UpdateExamRequest, UploadExamRequest
-from router.api_types.api_response import CurrentExamsResponse, ReviewExamsResponse, UpdateExamResponse
+from router.api_types.api_response import CurrentExamsResponse, RegisteredUsersResponse, ReviewExamsResponse, UpdateExamResponse
 
 router = APIRouter()
 
@@ -80,3 +80,11 @@ async def update_exam(request: UpdateExamRequest, exam_id: int, token: Annotated
                                   request.subject)
 
     return UpdateExamResponse(success=success, message=message)
+
+@router.get("/users", status_code=status.HTTP_200_OK, response_model=RegisteredUsersResponse)
+async def get_registered_users(token: Annotated[str, Security(HTTPBearer401())]) -> RegisteredUsersResponse:
+    TokenValidation(token)
+
+    users = get_all_users()
+
+    return RegisteredUsersResponse(users=users)

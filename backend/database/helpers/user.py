@@ -264,3 +264,35 @@ def insert_user_subject(user_id: int, subject: str):
         raise e
     finally:
         disconnect(conn)
+
+def get_users() -> List[UserDetailsResponse]:
+    """
+    Gets all the users in the database
+    """
+    try:
+        conn = connect()
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                SELECT first_name, last_name, email, phone, registeration_method, permission, school, grade 
+                FROM accounts;
+                """)
+            users = cur.fetchall()
+
+        log_user_success("Finished getting all the Users from Database")
+    except psycopg2.Error as e:
+        log_user_error(f"Error getting all the Users: {e}")
+        raise e
+    finally:
+        disconnect(conn)
+
+    return [UserDetailsResponse(
+        first_name=first_name,
+        last_name=last_name,
+        email=email,
+        phone=phone,
+        registration_method=registration,
+        permissions=permissions,
+        school=school,
+        grade=grade
+    ) for first_name, last_name, email, phone, registration, permissions, school, grade in users]

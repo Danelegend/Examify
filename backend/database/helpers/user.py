@@ -274,8 +274,9 @@ def get_users() -> List[UserDetailsResponse]:
         with conn.cursor() as cur:
             cur.execute(
                 """
-                SELECT first_name, last_name, email, phone, registeration_method, permission, school, grade 
-                FROM accounts;
+                SELECT a.first_name, a.last_name, a.email, a.phone, a.registeration_method, a.permission, s.name, a.grade 
+                FROM accounts a
+                LEFT JOIN schools s ON a.school = s.id;
                 """)
             users = cur.fetchall()
 

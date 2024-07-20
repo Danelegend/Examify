@@ -14,6 +14,7 @@ services:
     #   USE_API_FOR_ADDRESS_AUTOCOMPLETE: y
     volumes:
       - ./backend:/app
+      - $HOME/.aws/credentials:/home/app/.aws/credentials:ro
     command: uvicorn main:app --ssl-keyfile ${SSL_KEYFILE} --ssl-certfile ${SSL_CERTFILE} --host 0.0.0.0 --port 443
 
   prod-frontend:

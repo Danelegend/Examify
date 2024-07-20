@@ -254,3 +254,13 @@ export type FetchTopicRecommendationsResponse = {
         question_title: string
     }[]
 }
+
+export type FetchRegisteredUsersResponse = {
+    users: {
+        first_name: string,
+        last_name: string,
+        email: string,
+        school: string,
+        school_year: number
+    }[]
+}

@@ -29,6 +29,7 @@ import { Helmet, HelmetProvider } from 'react-helmet-async';
 import QuestionPage from './Pages/QuestionPage';
 import QuestionsPage from './Pages/QuestionsPage';
 import AdminQuestionsPage from './Pages/Admin/QuestionsPage';
+import RegisteredUsersPage from './Pages/Admin/RegisteredUsersPage';
 
 const router = createBrowserRouter([
   {
@@ -89,6 +90,10 @@ const router = createBrowserRouter([
               {
                 element: <AdminPage />,
                 path: "",
+              },
+              {
+                element: <RegisteredUsersPage />,
+                path: "users",
               },
               {
                 path: "exams",

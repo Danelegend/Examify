@@ -1,6 +1,6 @@
 import Environment from "../../constants"
 import { FetchError, readExpiration, removeAccessToken, storeAccessToken, storeExpiration } from "../util/utility"
-import { AdminExamReviewDeleteRequest, AdminExamReviewSubmitRequest, ExamUpdateRequest, ExamUploadRequest, FetchExamResponse, FetchExamsRequest, FetchExamsResponse, FetchExamSubjectsResponse, FetchFavouriteExamsResponse, FetchLogosResponse, FetchNotificationsResponse, FetchPermissionsResponse, FetchQuestionResponse, FetchQuestionsRequest, FetchQuestionsResponse, FetchQuestionSubjectsResponse, FetchQuestionTopicsResponse, FetchRecentExamsResponse, FetchRecommendedExamsResponse, FetchSchoolsResponse, FetchTopicRecommendationsResponse, FetchUserActivityAnalyticsResponse, FetchUserResponse, FetchUserSubjectAnalyticsResponse, PostQuestionRequest, PostUserQuestionAnswerRequest, UserLoginRequest, UserProfileEditRequest, UserRegistrationRequest } from "./types"
+import { AdminExamReviewDeleteRequest, AdminExamReviewSubmitRequest, ExamUpdateRequest, ExamUploadRequest, FetchExamResponse, FetchExamsRequest, FetchExamsResponse, FetchExamSubjectsResponse, FetchFavouriteExamsResponse, FetchLogosResponse, FetchNotificationsResponse, FetchPermissionsResponse, FetchQuestionResponse, FetchQuestionsRequest, FetchQuestionsResponse, FetchQuestionSubjectsResponse, FetchQuestionTopicsResponse, FetchRecentExamsResponse, FetchRecommendedExamsResponse, FetchRegisteredUsersResponse, FetchSchoolsResponse, FetchTopicRecommendationsResponse, FetchUserActivityAnalyticsResponse, FetchUserResponse, FetchUserSubjectAnalyticsResponse, PostQuestionRequest, PostUserQuestionAnswerRequest, UserLoginRequest, UserProfileEditRequest, UserRegistrationRequest } from "./types"
 
 export type UserAuthentication = {
     expiration: Date,
@@ -176,6 +176,24 @@ export const AdminExamCurrentDelete = ({ token, exam_id }: { token: string, exam
             "Authorization": `bearer ${token}`
         },
         method: "DELETE",
+        credentials: 'include'
+    }).then(async (res) => {
+        const data = await res.json()
+
+        if (res.ok) {
+            return data
+        } else {
+            throw new FetchError(res)
+        }
+    }))
+}
+
+export const AdminFetchRegisteredUsers = ({ token }: { token: string }): Promise<FetchRegisteredUsersResponse> => {
+    return AuthorizationMiddleware<FetchRegisteredUsersResponse>(() => fetch(Environment.BACKEND_URL + "/api/admin/users", {
+        headers: {
+            "Authorization": `bearer ${token}`
+        },
+        method: 'GET',
         credentials: 'include'
     }).then(async (res) => {
         const data = await res.json()

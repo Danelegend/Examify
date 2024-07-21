@@ -19,13 +19,15 @@ const NotificationIcon = ({ className }: { className?: string}) => {
 
     useOnClickOutside(ref, () => SetToggleDropdown(false))
 
-    const { data, isPending } = useQuery({
+    const { data, isPending, isError } = useQuery({
         queryKey: ["Notifications"],
         queryFn: () => FetchUserNotifications({ token: readAccessToken()! })
     })
 
+    console.log("Notifications ", isError)
+
     useEffect(() => {
-        if (!isPending) {
+        if (!isPending && !isError) {
             SetNotifications(data!.notifications.sort((a, b) => 
                 a.date_sent.getTime() - b.date_sent.getTime()
             ).map(notification => {

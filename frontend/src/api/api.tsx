@@ -12,23 +12,7 @@ type AuthorizationMiddlewareType = <T,>(func: () => Promise<T>) => Promise<T>
 const AuthorizationMiddleware: AuthorizationMiddlewareType = (func) => {
     // If the token has expired, refresh it
     if (readExpiration() === null || new Date(readExpiration()!) <= new Date()) {
-        return fetch(Environment.BACKEND_URL + "/api/auth/refresh", {
-            method: "GET",
-            credentials: "include"
-        }).then(async (res) => {
-            const data: UserAuthentication = await res.json()
-
-            if (res.ok && res.status === 200) {
-                storeAccessToken(data.access_token)
-                storeExpiration(data.expiration)
-
-                return func()
-            } else {
-                removeAccessToken()
-                window.open("/", "_self")
-                throw new FetchError(res)
-            }
-        })
+        return GetTokenRefresh().then(() => func())
     }
     
     return func()

@@ -15,7 +15,7 @@ const AuthorizationMiddleware: AuthorizationMiddlewareType = (func) => {
         return GetTokenRefresh().then((data) => {
             storeAccessToken(data.access_token);
             storeExpiration(data.expiration);
-            
+
             return func()
         })
     }
@@ -40,7 +40,7 @@ export const GetTokenRefresh = (): Promise<RefreshTokenResponse> => {
     })
 }
 
-export const PostUserRegistration = ({ request }: { request: UserRegistrationRequest }): Promise<SignUpResponse> => {
+export const PostUserRegistration = ({ request }: { request: UserRegistrationRequest }): Promise<Response> => {
     return fetch(Environment.BACKEND_URL + "/api/auth/register", {
         method: "POST",
         headers: {
@@ -53,18 +53,10 @@ export const PostUserRegistration = ({ request }: { request: UserRegistrationReq
             password: request.password
         }),
         credentials: "include"
-    }).then(async (res) => {
-        const data = await res.json()
-
-        if (res.ok) {
-            return data
-        } else {
-            throw new FetchError(res)
-        }
     })
 }
 
-export const PostUserSignIn = ({ request }: { request: UserLoginRequest }): Promise<SignInResponse> => {
+export const PostUserSignIn = ({ request }: { request: UserLoginRequest }): Promise<Response> => {
     return fetch(Environment.BACKEND_URL + "/api/auth/login", {
         headers: {
             'Content-Type': 'application/json'
@@ -75,18 +67,10 @@ export const PostUserSignIn = ({ request }: { request: UserLoginRequest }): Prom
             password: request.password
         }),
         credentials: 'include'
-    }).then(async (res) => {
-        const data = await res.json()
-
-        if (res.ok) {
-            return data
-        } else {
-            throw new FetchError(res)
-        }
     })
 }
 
-export const UserLogout = ({ token }: { token: string }): Promise<SignOutResponse> => {
+export const UserLogout = ({ token }: { token: string }): Promise<Response> => {
     return fetch(Environment.BACKEND_URL + "/api/auth/logout", {
         headers: {
             'Content-Type': 'application/json',
@@ -94,14 +78,6 @@ export const UserLogout = ({ token }: { token: string }): Promise<SignOutRespons
         },
         method: "DELETE",
         credentials: 'include'
-    }).then(async (res) => {
-        const data = await res.json()
-
-        if (res.ok) {
-            return data
-        } else {
-            throw new FetchError(res)
-        }
     })
 }
 

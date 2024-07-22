@@ -27,7 +27,8 @@ async def login_user(response: Response, login_request: LoginRequest) -> LoginRe
     response.set_cookie(
         key=os.environ.get("REFRESH_TOKEN_COOKIE_KEY", "refresh_token"),
         value=login_resp["refresh_token"],
-        httponly=True,
+        httponly=False,
+        domain="examify.com.au",
         max_age=int(60 * 60 * 24 * float(os.environ.get("REFRESH_TOKEN_EXPIRATION_DAYS", 7))),
         expires=datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(days=float(os.environ.get("REFRESH_TOKEN_EXPIRATION_DAYS", 7)))
     )
@@ -52,7 +53,8 @@ async def register_user(response: Response, register_request: RegistrationReques
         response.set_cookie(
             key=os.environ.get("REFRESH_TOKEN_COOKIE_KEY", "refresh_token"),
             value=registration_result["refresh_token"],
-            httponly=True,
+            httponly=False,
+            domain="examify.com.au",
             max_age=int(60 * 60 * 24 * float(os.environ.get("REFRESH_TOKEN_EXPIRATION_DAYS", 7))),
             expires=datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(days=float(os.environ.get("REFRESH_TOKEN_EXPIRATION_DAYS", 7)))
         )
@@ -107,7 +109,8 @@ async def login_google(response: Response, google_login: GoogleLoginRequest) -> 
         response.set_cookie(
             key=os.environ.get("REFRESH_TOKEN_COOKIE_KEY", "refresh_token"),
             value=login_resp["refresh_token"],
-            httponly=True,
+            httponly=False,
+            domain="examify.com.au",
             max_age=int(60 * 60 * 24 * float(os.environ.get("REFRESH_TOKEN_EXPIRATION_DAYS", 7))),
             expires=datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(days=float(os.environ.get("REFRESH_TOKEN_EXPIRATION_DAYS", 7)))
         )
@@ -130,7 +133,8 @@ async def login_facebook(response: Response, facebook_login: FacebookLoginReques
         response.set_cookie(
             key=os.environ.get("REFRESH_TOKEN_COOKIE_KEY", "refresh_token"),
             value=login_resp["refresh_token"],
-            httponly=True,
+            httponly=False,
+            domain="examify.com.au",
             max_age=int(60 * 60 * 24 * float(os.environ.get("REFRESH_TOKEN_EXPIRATION_DAYS", 7))),
             expires=datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(days=float(os.environ.get("REFRESH_TOKEN_EXPIRATION_DAYS", 7)))
         )

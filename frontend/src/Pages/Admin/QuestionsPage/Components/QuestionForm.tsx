@@ -45,7 +45,6 @@ const QuestionForm = ({ onExit }: QuestionFormProps) => {
             ) return;
 
         PostQuestion({ 
-            token: readAccessToken()!, 
             request: {
                 title: QuestionData.title,
                 subject: QuestionData.subject,

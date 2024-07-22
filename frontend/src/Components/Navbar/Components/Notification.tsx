@@ -23,7 +23,7 @@ const NotificationIcon = ({ className }: { className?: string}) => {
 
     const { data, isPending, isError, error } = useQuery({
         queryKey: ["Notifications"],
-        queryFn: () => FetchUserNotifications({ token: readAccessToken()! })
+        queryFn: () => FetchUserNotifications()
     })
 
     useEffect(() => {
@@ -52,7 +52,6 @@ const NotificationIcon = ({ className }: { className?: string}) => {
 
         if (Notifications.length > 0) {
             UserNotificationsSeen({ 
-                token: readAccessToken()!, 
                 notification_ids: Notifications.map(notification => notification.id)
             })
         }

@@ -134,7 +134,6 @@ const ReviewComponent = ({ file_location, index, onSubmit, onDelete }: ReviewCom
 
     const handleSubmit = () => {
         SubmitExamMutation({
-            token: readAccessToken()!,
             request: {
                 school: ReviewDetails.school_name!,
                 exam_type: ReviewDetails.exam_type!,
@@ -150,7 +149,6 @@ const ReviewComponent = ({ file_location, index, onSubmit, onDelete }: ReviewCom
 
     const handleDelete = () => {
         DeleteExamMutation({
-            token: readAccessToken()!,
             request: {
                 file_location: ReviewDetails.file_location
             }

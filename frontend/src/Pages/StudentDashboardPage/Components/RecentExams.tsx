@@ -48,7 +48,7 @@ const RecentExamsDisplay = () => {
 
     const { data: recentData, isPending: recentIsPending, error: recentError } = useQuery({
         queryKey: ["Exams", "RecentExams"],
-        queryFn: () => FetchRecentExams({ token: readAccessToken()! }),
+        queryFn: () => FetchRecentExams(),
     })
 
     useEffect(() => {

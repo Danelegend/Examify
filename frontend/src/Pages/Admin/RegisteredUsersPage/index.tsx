@@ -5,7 +5,7 @@ import { readAccessToken } from "../../../util/utility";
 const RegisteredUsersPage = () => {
     const { data, isPending } = useQuery({
         queryKey: ["Users"],
-        queryFn: () => AdminFetchRegisteredUsers({ token: readAccessToken()! }),
+        queryFn: () => AdminFetchRegisteredUsers(),
     })
 
     return (

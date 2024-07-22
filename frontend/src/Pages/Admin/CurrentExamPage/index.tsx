@@ -44,7 +44,6 @@ const DisplayExamComponent = ({ exam, key, onDelete }: DisplayExamComponentProps
 
     const handleDelete = () => {
         DeleteExamMutation({
-            token: readAccessToken()!,
             exam_id: exam.id
         })
         onDelete()

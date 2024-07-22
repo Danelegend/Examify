@@ -14,9 +14,7 @@ const LoggedInNavbar = () => {
 
     const handleLogoutClick = () => {
         try {
-            LogoutMutation({
-                token: readAccessToken()!
-            })
+            LogoutMutation()
         } catch (e) {
             console.error(e)
         }

@@ -133,7 +133,6 @@ const SolutionInput = ({ solution, question_id }: SolutionInputProps) => {
 
         if (token !== null) {
             PostUserQuestionAnswer({ 
-                token: token, 
                 request: { question_id: question_id, answer: [Answer] } 
             })
         }

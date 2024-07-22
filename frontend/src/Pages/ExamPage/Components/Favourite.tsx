@@ -9,7 +9,7 @@ const FavouriteIcon = ({ exam_id }: { exam_id: number} ) => {
 
     const { data, isPending, isError } = useQuery({
         queryKey: ['Favourite'],
-        queryFn: () => FetchUserFavouritedExam({ token: readAccessToken()!, exam_id: exam_id}),
+        queryFn: () => FetchUserFavouritedExam({ exam_id: exam_id}),
         retry: 0
     })
 
@@ -20,7 +20,7 @@ const FavouriteIcon = ({ exam_id }: { exam_id: number} ) => {
             return
         }
 
-        Favourite ? DeleteFavourite({ exam_id: exam_id, token: token }) : PostFavourite({ exam_id: exam_id, token: token })
+        Favourite ? DeleteFavourite({ exam_id: exam_id }) : PostFavourite({ exam_id: exam_id })
 
         SetFavourite(!Favourite)
     }

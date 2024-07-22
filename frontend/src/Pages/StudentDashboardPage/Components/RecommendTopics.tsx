@@ -17,7 +17,7 @@ const RecommendTopics = () => {
 
     const { data, isPending } = useQuery({
         queryKey: ["Exams", "Recommend"],
-        queryFn: () => FetchTopicRecommendations({ token: readAccessToken()! })
+        queryFn: () => FetchTopicRecommendations()
     }) 
 
     useEffect(() => {

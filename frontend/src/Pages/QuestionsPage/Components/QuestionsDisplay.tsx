@@ -40,7 +40,7 @@ const QuestionsDisplay = () => {
 
     const { data: questionsData, isPending: questionsPending } = useQuery({
         queryKey: ["Questions"],
-        queryFn: () => FetchQuestions({ token: readAccessToken(), request: {
+        queryFn: () => FetchQuestions({ request: {
             page: CurrentPage,
             page_length: itemsPerPage,
             filter: {
@@ -111,7 +111,7 @@ const QuestionsDisplay = () => {
     }, [questionsData, questionsPending])
 
     useEffect(() => {
-        FetchQuestions({ token: readAccessToken(),
+        FetchQuestions({
             request: {
                 page: CurrentPage,
                 page_length: itemsPerPage,
@@ -136,7 +136,7 @@ const QuestionsDisplay = () => {
 
     useEffect(() => {
         SetCurrentPage(1)
-        FetchQuestions({ token: readAccessToken(), 
+        FetchQuestions({ 
             request: {
                 page: 1,
                 page_length: itemsPerPage,

@@ -2,7 +2,6 @@ import { useEffect, useState } from "react"
 import ApexCharts from 'apexcharts'
 import { useQuery } from "@tanstack/react-query"
 import { FetchUserActivityAnalytics } from "../../../api/api"
-import { readAccessToken } from "../../../util/utility"
 
 type View = "daily" | "tri-daily" | "weekly" | "fortnightly"
 
@@ -170,7 +169,7 @@ const ExamTimeChart = () => {
 
     const { data, isPending } = useQuery({
         queryKey: ["Analytics", "UserCompletionStats"],
-        queryFn: () => FetchUserActivityAnalytics({ token: readAccessToken()! })
+        queryFn: () => FetchUserActivityAnalytics()
     })
 
     const loadChart = (buckets: ViewBucket[]): ApexCharts | null => {

@@ -81,7 +81,7 @@ export const ExamDisplay = () => {
 
     const { data, isPending, error } = useQuery({
         queryKey: ["Exams"],
-        queryFn: () => FetchExams({ token: readAccessToken(), 
+        queryFn: () => FetchExams({ 
                             request: { 
                                 page: 1,
                                 page_length: 20,
@@ -168,7 +168,7 @@ export const ExamDisplay = () => {
 
 
     useEffect(() => {
-        FetchExams({ token: readAccessToken(), 
+        FetchExams({ 
             request: { 
                 page: CurrentPage,
                 page_length: itemsPerPage,
@@ -193,7 +193,7 @@ export const ExamDisplay = () => {
 
     useEffect(() => {
         SetCurrentPage(1)
-        FetchExams({ token: readAccessToken(), 
+        FetchExams({ 
             request: { 
                 page: 1,
                 page_length: itemsPerPage,
@@ -383,7 +383,7 @@ export const SubjectExamDisplay = ({ subject }: { subject: string }) => {
 
     const { data, isPending, error } = useQuery({
         queryKey: ["Exams"],
-        queryFn: () => FetchExams({ token: readAccessToken(), 
+        queryFn: () => FetchExams({ 
                             request: { 
                                 page: 1,
                                 page_length: 20,
@@ -455,7 +455,7 @@ export const SubjectExamDisplay = ({ subject }: { subject: string }) => {
 
 
     useEffect(() => {
-        FetchExams({ token: readAccessToken(), 
+        FetchExams({ 
             request: { 
                 page: CurrentPage,
                 page_length: itemsPerPage,
@@ -480,7 +480,7 @@ export const SubjectExamDisplay = ({ subject }: { subject: string }) => {
 
     useEffect(() => {
         SetCurrentPage(1)
-        FetchExams({ token: readAccessToken(), 
+        FetchExams({ 
             request: { 
                 page: 1,
                 page_length: itemsPerPage,

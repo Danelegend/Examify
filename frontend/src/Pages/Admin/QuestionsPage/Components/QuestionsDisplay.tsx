@@ -45,7 +45,7 @@ const QuestionsDisplay = ({ onAddNewQuestion }: QuestionDisplayProps) => {
 
     const { data: questionsData, isPending: questionsPending } = useQuery({
         queryKey: ["Questions"],
-        queryFn: () => FetchQuestions({ token: readAccessToken(), request: {
+        queryFn: () => FetchQuestions({ request: {
             page: CurrentPage,
             page_length: itemsPerPage,
             filter: {

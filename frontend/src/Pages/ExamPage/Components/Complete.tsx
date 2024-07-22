@@ -9,7 +9,7 @@ const CompleteIcon = ({ exam_id }: { exam_id: number }) => {
 
     const { data, isPending, isError } = useQuery({
         queryKey: ['Complete'],
-        queryFn: () => FetchUserCompletedExam({ token: readAccessToken()!, exam_id: exam_id }),
+        queryFn: () => FetchUserCompletedExam({ exam_id: exam_id }),
         retry: 0
     })
 
@@ -20,7 +20,7 @@ const CompleteIcon = ({ exam_id }: { exam_id: number }) => {
             return
         }
 
-        Complete ? DeleteCompletedExam({ exam_id: exam_id, token: token }) : PostCompletedExam({ exam_id: exam_id, token: token })
+        Complete ? DeleteCompletedExam({ exam_id: exam_id }) : PostCompletedExam({ exam_id: exam_id })
         SetComplete(!Complete)
     }
 

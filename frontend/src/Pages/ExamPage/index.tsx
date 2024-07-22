@@ -40,7 +40,6 @@ const ExamPage = () => {
 
     const RunRecentlyViewed = async () => {
         PostRecentlyViewedExam({
-            token: readAccessToken()!,
             exam_id: data!.exam_id
         })
 
@@ -155,7 +154,7 @@ const ExamControls = ({ exam_id, AdminButtonClicked }: ExamControlsProps) => {
 
     const { isPending: permissionsPending, data: permissionsData} = useQuery({
         queryKey: ["Permissions"],
-        queryFn: () => FetchPermissions({ token: (AccessToken === null ? "" : AccessToken)})
+        queryFn: () => FetchPermissions()
     })
 
     return (

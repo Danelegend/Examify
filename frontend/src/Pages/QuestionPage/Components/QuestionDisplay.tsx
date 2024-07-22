@@ -104,7 +104,7 @@ const Question = ({ question }: QuestionProps) => {
     return (
         <div className={(size.width > 760) ? "" : ""}>
             <div className={((size.width > 760) ? "py-24 px-10" : "py-10 px-5") + " flex justify-center bg-white"}>
-                <div className="text-2xl font-medium text-center">
+                <div className="text-2xl font-medium text-center text-black">
                     <Latex>{question}</Latex>
                 </div>
             </div>
@@ -212,7 +212,7 @@ const ViewSolution = ({ solution }: ViewSolutionProps) => {
     return (
         <div className="space-y-4">
             <div className="flex justify-center">
-                <button onClick={onSolutionShownButtonClick} className={(DisplaySolution ? "bg-red-300" : "bg-green-300") + " "}>
+                <button onClick={onSolutionShownButtonClick} className={(DisplaySolution ? "bg-red-300" : "bg-green-300") + " text-black"}>
                     {
                         DisplaySolution ? "Hide Solution" : "View Solution"
                     }
@@ -226,7 +226,7 @@ const ViewSolution = ({ solution }: ViewSolutionProps) => {
                             solution.map((sol, index) => {
                                 return (
                                     <div key={index} className={((size.width > 760 && solution.length <= 1) ? "py-10" : "py-6") + " flex flex-col justify-center bg-white"}>
-                                        <div className="text-2xl text-center font-medium">
+                                        <div className="text-2xl text-center font-medium text-black">
                                             <Latex>{sol}</Latex>
                                         </div>
                                     </div>

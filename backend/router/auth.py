@@ -77,6 +77,7 @@ async def refresh(request: Request, response: Response) -> RefreshResponse:
     refresh_token = request.cookies.get(os.environ.get("REFRESH_TOKEN_COOKIE_KEY", "refresh_token"))
 
     Logger.log_debug(refresh_token)
+    Logger.log_debug(request.cookies)
 
     try:
         if not refresh_token or not refresh_token_valid(refresh_token):

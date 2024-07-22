@@ -181,16 +181,19 @@ const Navbar = () => {
                     case 200:
                         storeAccessToken(data.access_token)
                         storeExpiration(data.expiration)
+                        console.log("Storing Access tokens", readExpiration())
                         break
                     default:
                         removeAccessToken()
                         setAccessToken(null)
+                        console.log("Removing access tokens")
                 }
             })
         }
     })
 
     if (readExpiration() !== null && new Date(readExpiration()!) < new Date()) {
+        console.log("Checking expiration", readExpiration())
         CheckToken()
     }
 

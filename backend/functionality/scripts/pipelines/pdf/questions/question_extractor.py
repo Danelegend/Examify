@@ -19,19 +19,17 @@ The JSON Structure you should return is:
 
 where Question is
 {
-    "topic": "Polynomials"
+    "topic": "Sequences and Series"
     "question": List[string],
     "title": string
-    "solution": List[string]
     "difficulty": int (1-5)
 }
 
 Follow these steps:
 
-Identify the topic of each question from the provided list of topics: "Polynomials".
+Identify the topic of each question from the provided list of topics: "Sequences and Series".
 Extract the question and convert it into a list of strings. Each string should represent one sentence or line from the question. Use LaTeX formatting where necessary, wrapping mathematical expressions in dollar signs ($), and ensure to escape backslashes (\\).
 Create a concise title for each question, not exceeding four words.
-Format the solution as a list of strings, using LaTeX for mathematical expressions and escaping backslashes (\\).
 Provide a difficulty rating for each question, from 1 to 5, with 1 being the easiest and 5 being the hardest.
 
 Below is an example of the expected JSON format:
@@ -39,31 +37,15 @@ Below is an example of the expected JSON format:
 Example Question:
 “Prove that there are no positive integers $x, y$ such that $x^2 - y^2 = 1$.”
 
-Example Solution:
-[
-“Suppose by contradiction that $x^2 - y^2 = 1$ has solutions $x$, $y$ positive integers ()",
-“$\\therefore (x + y)(x - y) = 1$”,
-“$x + y = 1$ and $x - y = 1$ since $x$ and $y$ are integers #”,
-"This contradicts () since $x + y = 1$ has no positive integral solutions, so there are no”,
-“positive integers $x, y$ such that $x^2 - y^2 = 1$”
-]
-
 Expected JSON output:
 {
 questions: [
 {
-“topic”: "Polynomials",
+“topic”: "Sequences and Series",
 “question”: [
 “Prove that there are no positive integers $x, y$ such that $x^2 - y^2 = 1$.”
 ],
 “title”: “Proof by Contradiction”,
-“solution”: [
-“Suppose by contradiction that $x^2 - y^2 = 1$ has solutions $x$, $y$ positive integers ()",
-“$\therefore (x + y)(x - y) = 1$”,
-“$x + y = 1$ and $x - y = 1$ since $x$ and $y$ are integers #”,
-"This contradicts () since $x + y = 1$ has no positive integral solutions, so there are no”,
-“positive integers $x, y$ such that $x^2 - y^2 = 1$”
-]
 "difficulty": 2
 }
 ]
@@ -142,6 +124,19 @@ def extract_questions(pdf_path: str, client) -> List[Question]:
 
     return questions
 
+def extract_questions_per_page(pdf_path: str, client) -> List[Question]:
+    questions = []
+    
+    time = []
+
+    with open(pdf_path, "rb") as file:
+        reader = PyPDF2.PdfReader(file)
+
+        for page in reader.pages:
+            questions += _extract_questions_from_text(page.extract_text(), client)
+
+    return questions
+
 def _extract_text_from_pdf(pdf_path: str) -> str:
     """
     Extracts text from the given PDF file.
@@ -191,7 +186,9 @@ def _extract_questions_from_text(text: str, client) -> List[Question]:
 
     response = chat_session.send_message(text)
 
-    return _gpt_response_to_questions(response.text)
+    text = response.text.replace("\\", "\\\\")
+
+    return _gpt_response_to_questions(text)
 
 def _gpt_response_to_questions(response: str) -> List[Question]:
     try:
@@ -212,7 +209,7 @@ def _parse_json_to_questions(json_data) -> List[Question]:
             Question(topic=question['topic'],
                      questions=question['question'],
                      title=question['title'],
-                     solutions=question['solution'],
+                     solutions=[],
                      difficulty=question['difficulty'])
         )
 
@@ -263,7 +260,7 @@ if __name__ == "__main__":
         print(f"Starting {file}")
         path = os.path.join(os.getcwd(), f"pdf/{file}")
         try:
-            questions = extract_questions(path, client)
+            questions = extract_questions_per_page(path, client)
 
             for question in questions:
                 print(question.toJSON())

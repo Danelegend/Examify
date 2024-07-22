@@ -4,6 +4,8 @@ import os
 from typing import Annotated
 from fastapi import APIRouter, HTTPException, Request, Response, Security, status
 
+from logger import Logger
+
 from errors import AuthenticationError, DuplicationError, ValidationError
 
 from functionality.authentication.user_form import UserForm
@@ -69,10 +71,12 @@ async def logout(response: Response, token: Annotated[str, Security(HTTPBearer40
         response.delete_cookie(os.environ.get("REFRESH_TOKEN_COOKIE_KEY", "refresh_token"))
     except AuthenticationError as e:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=e.message) from e
-    
+
 @router.get("/refresh", status_code=status.HTTP_200_OK)
 async def refresh(request: Request, response: Response) -> RefreshResponse:
     refresh_token = request.cookies.get(os.environ.get("REFRESH_TOKEN_COOKIE_KEY", "refresh_token"))
+
+    Logger.log_debug(refresh_token)
 
     try:
         if not refresh_token or not refresh_token_valid(refresh_token):

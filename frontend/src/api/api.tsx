@@ -455,6 +455,7 @@ export const FetchExam = ({ school, year, exam_type, subject }: { school: string
 }
 
 export const FetchUserNotifications = ({ token }: { token: string }): Promise<FetchNotificationsResponse> => {
+    console.log("Fetching Notifications")
     return AuthorizationMiddleware<FetchNotificationsResponse>(() => fetch(Environment.BACKEND_URL + "/api/user/notifications", {
         headers: {
             'Content-Type': 'application/json',

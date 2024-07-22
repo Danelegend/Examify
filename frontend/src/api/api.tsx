@@ -1,6 +1,6 @@
 import Environment from "../../constants"
 import { FetchError, readExpiration, removeAccessToken, storeAccessToken, storeExpiration } from "../util/utility"
-import { AdminExamReviewDeleteRequest, AdminExamReviewSubmitRequest, ExamUpdateRequest, ExamUploadRequest, FetchExamResponse, FetchExamsRequest, FetchExamsResponse, FetchExamSubjectsResponse, FetchFavouriteExamsResponse, FetchLogosResponse, FetchNotificationsResponse, FetchPermissionsResponse, FetchQuestionResponse, FetchQuestionsRequest, FetchQuestionsResponse, FetchQuestionSubjectsResponse, FetchQuestionTopicsResponse, FetchRecentExamsResponse, FetchRecommendedExamsResponse, FetchRegisteredUsersResponse, FetchSchoolsResponse, FetchTopicRecommendationsResponse, FetchUserActivityAnalyticsResponse, FetchUserResponse, FetchUserSubjectAnalyticsResponse, PostQuestionRequest, PostUserQuestionAnswerRequest, UserLoginRequest, UserProfileEditRequest, UserRegistrationRequest } from "./types"
+import { AdminExamReviewDeleteRequest, AdminExamReviewSubmitRequest, ExamUpdateRequest, ExamUploadRequest, FetchExamResponse, FetchExamsRequest, FetchExamsResponse, FetchExamSubjectsResponse, FetchFavouriteExamsResponse, FetchLogosResponse, FetchNotificationsResponse, FetchPermissionsResponse, FetchQuestionResponse, FetchQuestionsRequest, FetchQuestionsResponse, FetchQuestionSubjectsResponse, FetchQuestionTopicsResponse, FetchRecentExamsResponse, FetchRecommendedExamsResponse, FetchRegisteredUsersResponse, FetchSchoolsResponse, FetchTopicRecommendationsResponse, FetchUserActivityAnalyticsResponse, FetchUserResponse, FetchUserSubjectAnalyticsResponse, PostQuestionRequest, PostUserQuestionAnswerRequest, RefreshTokenResponse, SignInResponse, SignOutResponse, SignUpResponse, UserLoginRequest, UserProfileEditRequest, UserRegistrationRequest } from "./types"
 
 export type UserAuthentication = {
     expiration: Date,
@@ -12,19 +12,26 @@ type AuthorizationMiddlewareType = <T,>(func: () => Promise<T>) => Promise<T>
 const AuthorizationMiddleware: AuthorizationMiddlewareType = (func) => {
     // If the token has expired, refresh it
     if (readExpiration() === null || new Date(readExpiration()!) <= new Date()) {
-        return GetTokenRefresh().then(() => func())
+        return GetTokenRefresh().then((data) => {
+            storeAccessToken(data.access_token);
+            storeExpiration(data.expiration);
+            
+            return func()
+        })
     }
     
     return func()
 }
 
-export const GetTokenRefresh = (): Promise<Response> => {
+export const GetTokenRefresh = (): Promise<RefreshTokenResponse> => {
     return fetch(Environment.BACKEND_URL + "/api/auth/refresh", {
         method: "GET",
         credentials: "include"
     }).then(async (res) => {
         if (res.ok && res.status === 200) {
-            return res
+            const data = await res.json()
+
+            return data
         } else {
             removeAccessToken()
             window.open("/", "_self")
@@ -33,7 +40,7 @@ export const GetTokenRefresh = (): Promise<Response> => {
     })
 }
 
-export const PostUserRegistration = ({ request }: { request: UserRegistrationRequest }): Promise<Response> => {
+export const PostUserRegistration = ({ request }: { request: UserRegistrationRequest }): Promise<SignUpResponse> => {
     return fetch(Environment.BACKEND_URL + "/api/auth/register", {
         method: "POST",
         headers: {
@@ -46,10 +53,18 @@ export const PostUserRegistration = ({ request }: { request: UserRegistrationReq
             password: request.password
         }),
         credentials: "include"
+    }).then(async (res) => {
+        const data = await res.json()
+
+        if (res.ok) {
+            return data
+        } else {
+            throw new FetchError(res)
+        }
     })
 }
 
-export const PostUserSignIn = ({ request }: { request: UserLoginRequest }): Promise<Response> => {
+export const PostUserSignIn = ({ request }: { request: UserLoginRequest }): Promise<SignInResponse> => {
     return fetch(Environment.BACKEND_URL + "/api/auth/login", {
         headers: {
             'Content-Type': 'application/json'
@@ -60,10 +75,18 @@ export const PostUserSignIn = ({ request }: { request: UserLoginRequest }): Prom
             password: request.password
         }),
         credentials: 'include'
+    }).then(async (res) => {
+        const data = await res.json()
+
+        if (res.ok) {
+            return data
+        } else {
+            throw new FetchError(res)
+        }
     })
 }
 
-export const UserLogout = ({ token }: { token: string }): Promise<Response> => {
+export const UserLogout = ({ token }: { token: string }): Promise<SignOutResponse> => {
     return fetch(Environment.BACKEND_URL + "/api/auth/logout", {
         headers: {
             'Content-Type': 'application/json',
@@ -71,6 +94,14 @@ export const UserLogout = ({ token }: { token: string }): Promise<Response> => {
         },
         method: "DELETE",
         credentials: 'include'
+    }).then(async (res) => {
+        const data = await res.json()
+
+        if (res.ok) {
+            return data
+        } else {
+            throw new FetchError(res)
+        }
     })
 }
 

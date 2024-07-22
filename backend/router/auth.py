@@ -132,7 +132,7 @@ async def login_facebook(response: Response, facebook_login: FacebookLoginReques
             value=login_resp["refresh_token"],
             httponly=True,
             max_age=int(60 * 60 * 24 * float(os.environ.get("REFRESH_TOKEN_EXPIRATION_DAYS", 7))),
-            expires=datetime.datetime.now() + datetime.timedelta(days=float(os.environ.get("REFRESH_TOKEN_EXPIRATION_DAYS", 7)))
+            expires=datetime.datetime.utcnow() + datetime.timedelta(days=float(os.environ.get("REFRESH_TOKEN_EXPIRATION_DAYS", 7)))
         )
 
         return LoginResponse(

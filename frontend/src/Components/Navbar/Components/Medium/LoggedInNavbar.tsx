@@ -31,8 +31,6 @@ const LoggedInNavbar = () => {
         },
     })
 
-    console.log("Logged In Navbar")
-
     return (
         <>
                 <div className="self-stretch justify-start items-center gap-[21px] inline-flex text-base font-['Montserrat']">

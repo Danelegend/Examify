@@ -175,18 +175,9 @@ const Navbar = () => {
 
     const { mutateAsync: CheckToken } = useMutation({
         mutationFn: GetTokenRefresh,
-        onSuccess: (res) => {
-            res.json().then((data) => {
-                switch (res.status) {
-                    case 200:
-                        storeAccessToken(data.access_token)
-                        storeExpiration(data.expiration)
-                        break
-                    default:
-                        removeAccessToken()
-                        setAccessToken(null)
-                }
-            })
+        onError: (e) => {
+            removeAccessToken()
+            setAccessToken(null)
         }
     })
 

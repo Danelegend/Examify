@@ -135,8 +135,6 @@ const App = () => {
 
   const url = window.location.href
 
-  console.log("Testing 1")
-
   return (
     <QueryClientProvider client={queryClient}>
       <GoogleOAuthProvider clientId={"623177653931-inec93uqarv00qs0gvtdd1lrvbekic62.apps.googleusercontent.com"}> 

@@ -4,8 +4,6 @@ import Features from "./Components/Features";
 import Hero from "./Components/Hero";
 
 const AboutPage = () => {
-    console.log("AboutPage");
-
     return (
         <div>
             <Helmet>

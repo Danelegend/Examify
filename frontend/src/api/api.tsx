@@ -25,6 +25,7 @@ const AuthorizationMiddleware: AuthorizationMiddlewareType = (func) => {
                 return func()
             } else {
                 removeAccessToken()
+                window.open("/", "_self")
                 throw new FetchError(res)
             }
         })
@@ -455,7 +456,6 @@ export const FetchExam = ({ school, year, exam_type, subject }: { school: string
 }
 
 export const FetchUserNotifications = ({ token }: { token: string }): Promise<FetchNotificationsResponse> => {
-    console.log("Fetching Notifications")
     return AuthorizationMiddleware<FetchNotificationsResponse>(() => fetch(Environment.BACKEND_URL + "/api/user/notifications", {
         headers: {
             'Content-Type': 'application/json',

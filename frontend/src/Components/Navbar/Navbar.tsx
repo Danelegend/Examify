@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import LoggedOutNavbar from "./Components/Medium/LoggedOutNavbar";
 import { UserContext } from "../../context/user-context";
 import LoggedInNavbar from "./Components/Medium/LoggedInNavbar";
@@ -171,7 +171,7 @@ const MediumNavbar = ({ accessToken }: { accessToken: string | null }) => {
 const Navbar = () => {
     const size = useWindowSize()
     
-    const { setAccessToken } = useContext(UserContext);
+    const { accessToken, setAccessToken } = useContext(UserContext);
 
     const { mutateAsync: CheckToken } = useMutation({
         mutationFn: GetTokenRefresh,
@@ -181,21 +181,19 @@ const Navbar = () => {
                     case 200:
                         storeAccessToken(data.access_token)
                         storeExpiration(data.expiration)
-                        console.log("Storing Access tokens", readExpiration())
                         break
                     default:
                         removeAccessToken()
                         setAccessToken(null)
-                        console.log("Removing access tokens")
                 }
             })
         }
     })
 
-    if (readExpiration() !== null && new Date(readExpiration()!) < new Date()) {
-        console.log("Checking expiration", readExpiration())
-        CheckToken()
-    }
+    useEffect(() => {
+        if (readExpiration() !== null && new Date(readExpiration()!) < new Date()) {
+            CheckToken()
+        }}, [accessToken])
 
     return (size.width >= 720) ? 
         <MediumNavbar accessToken={readAccessToken()} />

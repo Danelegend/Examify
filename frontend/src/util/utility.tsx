@@ -38,8 +38,12 @@ export const haveAccessToken = () => {
 }
 
 export const removeAccessToken = () => {
+    const { setAccessToken } = useContext(UserContext)
+
     localStorage.removeItem("access_token")
     localStorage.removeItem("expiration")
+
+    setAccessToken(null)
 }
 
 export class FetchError extends Error {

@@ -10,6 +10,8 @@ export type UserAuthentication = {
 type AuthorizationMiddlewareType = <T,>(func: () => Promise<T>) => Promise<T>
 
 const AuthorizationMiddleware: AuthorizationMiddlewareType = (func) => {
+    console.log("NOOO")
+    console.log(func)
     // If the token has expired, refresh it
     if (readExpiration() === null || new Date(readExpiration()!) <= new Date()) {
         return GetTokenRefresh().then((data) => {
@@ -34,7 +36,6 @@ export const GetTokenRefresh = (): Promise<RefreshTokenResponse> => {
             return data
         } else {
             removeAccessToken()
-            window.open("/", "_self")
             throw new FetchError(res)
         }
     })

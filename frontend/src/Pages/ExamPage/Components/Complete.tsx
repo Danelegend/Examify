@@ -1,15 +1,26 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { TiTickOutline, TiTick } from "react-icons/ti";
 import { readAccessToken } from "../../../util/utility";
 import { DeleteCompletedExam, FetchUserCompletedExam, PostCompletedExam } from "../../../api/api";
 import { useQuery } from "@tanstack/react-query";
+import { ModalContext } from "../../../context/modal-context";
 
 const CompleteIcon = ({ exam_id }: { exam_id: number }) => {
     const [Complete, SetComplete] = useState<boolean>(false)
+    
+    const { SetDisplayLogin } = useContext(ModalContext)
 
     const { data, isPending, isError } = useQuery({
         queryKey: ['Complete'],
-        queryFn: () => FetchUserCompletedExam({ exam_id: exam_id }),
+        queryFn: () => {
+            if (readAccessToken() === null) {
+                return new Promise<boolean>((resolve, reject) => {
+                    resolve(false)
+                })
+            }
+
+            return FetchUserCompletedExam({ exam_id: exam_id })
+        },
         retry: 0
     })
 
@@ -17,6 +28,7 @@ const CompleteIcon = ({ exam_id }: { exam_id: number }) => {
         const token = readAccessToken()
 
         if (token === null) {
+            SetDisplayLogin(true)
             return
         }
 

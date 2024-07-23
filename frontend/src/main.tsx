@@ -5,7 +5,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import './index.css'
 import 'katex/dist/katex.min.css';
 
-import Layout from './layout';
+import { Layout, ModalLayout } from './layout';
 import { ExamsPage, SubjectExamsPage } from './Pages/ExamsPage';
 import ExamPage from './Pages/ExamPage';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -33,98 +33,103 @@ import RegisteredUsersPage from './Pages/Admin/RegisteredUsersPage';
 
 const router = createBrowserRouter([
   {
-    element: <Layout />,
+    element: <ModalLayout />,
     children: [
       {
-        element: <AboutPage />,
-        path: "",
-      },
-      {
-        element: <ExamsPage />,
-        path: "exams",
-      },
-      {
-        element: <QuestionsPage />,
-        path: "questions/"
-      },
-      {
-        element: <QuestionPage />,
-        path: "question/:id"
-      },
-      {
-        element: <SubjectExamsPage />,
-        path: "exams/:subject"
-      },
-      {
-        element: <UploadPage />,
-        path: "upload",
-      },
-      {
-        element: <ContactPage />,
-        path: "contact",
-      },
-      {
-        element: <PrivacyPage />,
-        path: "privacy",
-      },
-      {
-        element: <TosPage />,
-        path: "tos"
-      },
-      {
-        element: <ProtectedRoute />,
+        element: <Layout />,
         children: [
           {
-            element: <StudentDashboardPage />,
-            path: "dashboard",
+            element: <AboutPage />,
+            path: "",
+          },
+          {
+            element: <ExamsPage />,
+            path: "exams",
+          },
+          {
+            element: <QuestionsPage />,
+            path: "questions/"
+          },
+          {
+            element: <QuestionPage />,
+            path: "question/:id"
+          },
+          {
+            element: <SubjectExamsPage />,
+            path: "exams/:subject"
+          },
+          {
+            element: <UploadPage />,
+            path: "upload",
+          },
+          {
+            element: <ContactPage />,
+            path: "contact",
+          },
+          {
+            element: <PrivacyPage />,
+            path: "privacy",
+          },
+          {
+            element: <TosPage />,
+            path: "tos"
+          },
+          {
+            element: <ProtectedRoute />,
+            children: [
+              {
+                element: <StudentDashboardPage />,
+                path: "dashboard",
+              }
+            ],
+          },
+          {
+            element: <ProtectedRoute />,
+            children: [
+              {
+                path: "admin",
+                element: <AdminProtectedRoute />,
+                children: [
+                  {
+                    element: <AdminPage />,
+                    path: "",
+                  },
+                  {
+                    element: <RegisteredUsersPage />,
+                    path: "users",
+                  },
+                  {
+                    path: "exams",
+                    children: [
+                      {
+                        element: <AdminCurrentExamPage />,
+                        path: "current"
+                      },
+                      {
+                        element: <AdminReviewExamPage />,
+                        path: "review"
+                      }
+                    ]
+                  },
+                  {
+                    element: <AdminQuestionsPage />,
+                    path: "questions"
+                  }
+                ],
+              }
+            ]
           }
         ],
       },
       {
-        element: <ProtectedRoute />,
-        children: [
-          {
-            path: "admin",
-            element: <AdminProtectedRoute />,
-            children: [
-              {
-                element: <AdminPage />,
-                path: "",
-              },
-              {
-                element: <RegisteredUsersPage />,
-                path: "users",
-              },
-              {
-                path: "exams",
-                children: [
-                  {
-                    element: <AdminCurrentExamPage />,
-                    path: "current"
-                  },
-                  {
-                    element: <AdminReviewExamPage />,
-                    path: "review"
-                  }
-                ]
-              },
-              {
-                element: <AdminQuestionsPage />,
-                path: "questions"
-              }
-            ],
-          }
-        ]
+        element: <ExamPage />,
+        path: "/exam/:subject/:school/:year/:exam_type"
+      },
+      {
+        element: <NotFoundPage />,
+        path: "*"
       }
-    ],
-  },
-  {
-    element: <ExamPage />,
-    path: "/exam/:subject/:school/:year/:exam_type"
-  },
-  {
-    element: <NotFoundPage />,
-    path: "*"
+    ]
   }
 ])
 

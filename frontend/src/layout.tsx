@@ -6,7 +6,7 @@ import { ModalContext, ModalDisplayType } from "./context/modal-context";
 import RegisterPopup from "./Components/Authentication/Register";
 import Footer from "./Components/Footer";
 
-const Layout = () => {
+export const ModalLayout = () => {
     const [Modal, SetModal] = useState<ModalDisplayType>({
         login: false,
         register: false,
@@ -28,8 +28,7 @@ const Layout = () => {
 
     return (
         <ModalContext.Provider value={{ Modal, SetDisplayLogin, SetDisplayRegister }}>
-            <div className="bg-[#F3F5F8] min-h-screen min-w-screen flex flex-col justify-between">
-                <Header />
+            <div className="bg-[rgb(243,245,248)] flex flex-col justify-between">
 
                 <Outlet />
                 {
@@ -38,11 +37,18 @@ const Layout = () => {
                 {
                     Modal.register ? <RegisterPopup onExit={() => SetDisplayRegister(false)} /> : null
                 }
-                <Footer />
             </div>
             
         </ModalContext.Provider>
     )
 }
 
-export default Layout;
+export const Layout = () => {
+    return (
+        <div className="bg-[rgb(243,245,248)] min-h-screen min-w-screen flex flex-col justify-between">
+            <Header />
+            <Outlet />
+            <Footer />
+        </div>
+    )
+}

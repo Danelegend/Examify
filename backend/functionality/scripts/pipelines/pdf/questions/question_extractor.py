@@ -19,15 +19,15 @@ The JSON Structure you should return is:
 
 where Question is
 {
-    "topic": "Sequences and Series"
+    "topic": "Applications of Differentiation" | "Trigonometric Calculus" | "Continuous Probability" | "Exponentials & Logarithms" | "Graphing & Equations" | "Integration" | "Series & Sequences" | "Finance",
     "question": List[string],
     "title": string
     "difficulty": int (1-5)
 }
 
 Follow these steps:
-
-Identify the topic of each question from the provided list of topics: "Sequences and Series".
+Identify if there are any questions in the provided text.
+Identify the topic of each question from the provided list of topics: "Applications of Differentiation" | "Trigonometric Calculus" | "Continuous Probability" | "Exponentials & Logarithms" | "Graphing & Equations" | "Integration" | "Series & Sequences" | "Finance".
 Extract the question and convert it into a list of strings. Each string should represent one sentence or line from the question. Use LaTeX formatting where necessary, wrapping mathematical expressions in dollar signs ($), and ensure to escape backslashes (\\).
 Create a concise title for each question, not exceeding four words.
 Provide a difficulty rating for each question, from 1 to 5, with 1 being the easiest and 5 being the hardest.
@@ -41,7 +41,7 @@ Expected JSON output:
 {
 questions: [
 {
-“topic”: "Sequences and Series",
+“topic”: "Graphing & Equations",
 “question”: [
 “Prove that there are no positive integers $x, y$ such that $x^2 - y^2 = 1$.”
 ],
@@ -54,13 +54,13 @@ questions: [
 Now, apply these steps to generate the JSON output when the user provides you text.
 """
 
-ACCESS_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjExMDQyMzUsImlhdCI6MTcyMTA5NTIzNSwic2lkIjoyNSwiYWlkIjoiZ1ZqeEVZSk5JUyJ9.TqbtbXpVS8cOs-xx0H1g6rREoVR6L_4YvBiMqziCwtU"
+ACCESS_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjE3NDA5MTksImlhdCI6MTcyMTczMTkxOSwic2lkIjo2OSwiYWlkIjoiTkpoc1dRRUlpSSJ9.NSPNy0vK54OcuiQ87t-wB9Y4dmSnmEWx2uJzdKtZvJw"
 
-OPEN_AI_KEY = ""
+OPEN_AI_KEY = "sk-proj-O4GeAKnZe7UjJOpmsEnbT3BlbkFJFi9p6V6BVfnFiQc1f5Wt"
 GEMINI_AI_KEY = "AIzaSyAAxbMlDwfz7M2nGXXhJKubvQke9hRAdIY"
 
 class Question:
-    def __init__(self, topic=None, questions=None, title=None, solutions=None, difficulty=None, subject="Maths Extension 1"):
+    def __init__(self, topic=None, questions=None, title=None, solutions=None, difficulty=None, subject="Maths Advanced"):
         self.subject = subject
         self.topic = topic
         self.question = questions
@@ -126,8 +126,6 @@ def extract_questions(pdf_path: str, client) -> List[Question]:
 
 def extract_questions_per_page(pdf_path: str, client) -> List[Question]:
     questions = []
-    
-    time = []
 
     with open(pdf_path, "rb") as file:
         reader = PyPDF2.PdfReader(file)
@@ -159,7 +157,6 @@ def _extract_questions_from_text(text: str, client) -> List[Question]:
     :param text: Text to extract questions from.
     :return: List of questions extracted from the text.
     """
-    """
     chat = client.chat.completions.create(
         messages=[
             {
@@ -171,7 +168,7 @@ def _extract_questions_from_text(text: str, client) -> List[Question]:
                 "content": text
             }
         ],
-        model="gpt-4o",
+        model="gpt-4o-mini",
         response_format={
             "type": "json_object"
         }
@@ -185,10 +182,9 @@ def _extract_questions_from_text(text: str, client) -> List[Question]:
     )
 
     response = chat_session.send_message(text)
-
-    text = response.text.replace("\\", "\\\\")
-
-    return _gpt_response_to_questions(text)
+    """
+    
+    return _gpt_response_to_questions(chat.choices[0].message.content)
 
 def _gpt_response_to_questions(response: str) -> List[Question]:
     try:
@@ -216,9 +212,10 @@ def _parse_json_to_questions(json_data) -> List[Question]:
     return ret
 
 
-def _upload_question(question: Question,):
+def _upload_question(question: Question):
     try:
         jsonData = question.toJSON()
+        print(jsonData)
     except ValueError:
         return
 
@@ -239,8 +236,7 @@ def upload_questions(questions: List[Question]):
     for question in questions:
         _upload_question(question)
 
-if __name__ == "__main__":
-    #client = OpenAI(api_key=SPECIAL_KEY)
+def test():
     genai.configure(api_key=GEMINI_AI_KEY)
 
     generation_config = {
@@ -269,6 +265,27 @@ if __name__ == "__main__":
             print(f"Finished {file}")
         except Exception as e:
             print(f"Error for {file}: {e}")
+
+if __name__ == "__main__":
+    client = OpenAI(api_key=OPEN_AI_KEY)
+
+    file_list = os.listdir(os.path.join(os.getcwd(), "pdf"))
+
+    files_to_extract_questions = []
+
+    for file in file_list:
+        if file.endswith(".pdf"):
+            files_to_extract_questions.append((os.path.join(os.getcwd(), f"pdf/{file}"), file.removesuffix(".pdf").split(",")))
+
+    for data in files_to_extract_questions:
+        path = data[0]
+
+        print("PERFORMING ON FILE: ", path)
+
+        questions = extract_questions_per_page(path, client)
+
+        upload_questions(questions)
+
 
     print("DONE")
     

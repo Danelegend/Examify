@@ -1,7 +1,7 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import ExamCard, { ExamCardProps } from "../../../Components/ExamCards";
 import { useQuery } from "@tanstack/react-query";
-import { FetchError, readAccessToken, removeAccessToken } from "../../../util/utility";
+import { FetchError, removeAccessToken } from "../../../util/utility";
 import { UserContext } from "../../../context/user-context";
 import { DesktopFilter, MobileFilter, MobileFilterDisplay, MobileFilterItem } from "../../../Components/Filter";
 import { FetchExams, FetchExamSubjects, FetchSchools } from "../../../api/api";

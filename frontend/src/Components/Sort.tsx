@@ -27,11 +27,11 @@ const sortExams = (method: string, relevant: Array<ExamCardProps>, exams: Array<
             setExams(relevant)
             break
         case "Newest":
-            temp.sort((a, b) => new Date(b.year).getTime() - new Date(a.year).getTime())
+            temp.sort((a, b) => b.year - a.year)
             setExams(temp)
             break
         case "Oldest":
-            temp.sort((a, b) => new Date(a.year).getTime() - new Date(b.year).getTime())
+            temp.sort((a, b) => a.year - b.year)
             setExams(temp)
             break
         case "Recently Uploaded":

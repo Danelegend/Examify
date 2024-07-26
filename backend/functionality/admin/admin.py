@@ -236,6 +236,6 @@ def submit_feedback(name: Optional[str], email: Optional[str], feedback: str, us
         return
 
     
-    append_values(os.environ.get("FEEDBACK_SHEET_ID"), "'Feedback'!A1:A5", "USER_ENTERED", [[str(id), name, email, feedback, feedback_time]])
+    append_values(os.environ.get("FEEDBACK_SHEET_ID"), "'Feedback'!A1:A5", "USER_ENTERED", [[str(id), name, email, feedback, feedback_time.isoformat()]])
 
     Logger.log_backend("Admin", "Feedback submitted")

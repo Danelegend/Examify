@@ -84,7 +84,7 @@ const TosPage = () => {
                         Contact Us
                             <ul>
                                 <li>
-                                If you have any questions, concerns, or comments about these Terms or the Service, please contact us at danelegend13@gmail.com.
+                                If you have any questions, concerns, or comments about these Terms or the Service, please contact us at contact@examify.com.au.
                                 </li>
                             </ul>
                         </li>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import Latex from "react-latex-next"
-import { FetchTopicRecommendations } from "../../../api/api"
+import { FetchPermissions, FetchTopicRecommendations } from "../../../api/api"
 import { useQuery } from "@tanstack/react-query"
 
 type TopicRecommendation = {
@@ -66,11 +66,9 @@ const RecommendTopicDisplay = () => {
 const RecommendTopics = () => {
     const { data, isPending } = useQuery({
         queryKey: ["User", "Permissions"],
-        queryFn: () => FetchUserPermissions()
+        queryFn: () => FetchPermissions()
     });
     
-    console.log(data)
-
     return (
         <div className="border-2 border-black p-2">
             <div className="text-center">
@@ -92,7 +90,3 @@ const RecommendTopics = () => {
 }
 
 export default RecommendTopics
-
-function FetchUserPermissions(): any {
-    throw new Error("Function not implemented.")
-}

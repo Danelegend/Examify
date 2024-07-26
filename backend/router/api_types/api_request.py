@@ -61,9 +61,9 @@ class ExamFavouriteRequest(BaseModel):
 #################################     Exams     ################################
 ################################################################################
 class ExamsFilter(BaseModel):
-    schools: List[str]
-    subjects: List[str]
-    years: List[int]
+    schools: Optional[List[str]] = []
+    subjects: Optional[List[str]] = []
+    years: Optional[List[int]] = []
 
 class ExamsEndpointRequest(BaseModel):
     filter: ExamsFilter

@@ -229,6 +229,9 @@ def submit_feedback(name: Optional[str], email: Optional[str], feedback: str, us
         name = user.first_name + " " + user.last_name
         email = user.email
 
+    name = "" if name is None else name
+    email = "" if email is None else email
+
     Logger.log_backend("Admin", f"Feedback: {name}, {email}, {feedback}, {id}")
 
     if "FEEDBACK_SHEET_ID" not in os.environ:

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { RxCross1 } from "react-icons/rx";
 import { readAccessToken } from "../util/utility";
+import { PostFeedback } from "../api/api";
 
 type FeedbackPopupProps = {
     onExit: () => void,
@@ -45,7 +46,13 @@ const FeedbackForm = ({ onExit }: { onExit: () => void }) => {
     })
 
     const submit = () => {
-        
+        PostFeedback({
+            request: {
+                name: Feedback.name,
+                email: Feedback.email,
+                feedback: Feedback.feedback
+            }
+        })
     }
 
     return (

@@ -221,8 +221,6 @@ def get_all_users() -> List[RegisteredUserData]:
 
 def submit_feedback(name: Optional[str], email: Optional[str], feedback: str, user_id: Optional[int] = None) -> None:
     id = uuid.uuid4()
-    
-    Logger.log_backend("Admin", f"Feedback: {name}, {email}, {feedback}, {id}")
 
     feedback_time = datetime.datetime.now()
 
@@ -231,11 +229,13 @@ def submit_feedback(name: Optional[str], email: Optional[str], feedback: str, us
         name = user.first_name + " " + user.last_name
         email = user.email
 
+    Logger.log_backend("Admin", f"Feedback: {name}, {email}, {feedback}, {id}")
+
     if "FEEDBACK_SHEET_ID" not in os.environ:
         Logger.log_backend_error("Admin", "Feedback sheet id not found")
         return
 
     
-    append_values(os.environ.get("FEEDBACK_SHEET_ID"), "'Feedback'!A1:A5", "USER_ENTERED", [[id, name, email, feedback, feedback_time]])
+    append_values(os.environ.get("FEEDBACK_SHEET_ID"), "'Feedback'!A1:A5", "USER_ENTERED", [[str(id), name, email, feedback, feedback_time]])
 
     Logger.log_backend("Admin", "Feedback submitted")

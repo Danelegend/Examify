@@ -36,7 +36,7 @@ export const DesktopFilter = ({ title, items, search, update }: DropdownFilterPr
     const [isOpen, setIsOpen] = useState(false)
     const [Search, SetSearch] = useState("")
 
-    const [Items, SetItems] = useState<Item[]>(items.map((item) => {
+    const [Items, SetItems] = useState<Item[]>(items.slice().map((item) => {
        return {
             name: item,
             selected: false

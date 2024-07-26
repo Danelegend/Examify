@@ -29,6 +29,8 @@ const QuestionsDisplay = () => {
    const [Questions, SetQuestions] = useState<Question[]>([])
    const [SortStrategy, SetSortStrategy] = useState<SortStrategy>("ID")
 
+   const [Subjects, SetSubjects] = useState<string[]>([])
+
     const [CurrentPage, SetCurrentPage] = useState<number>(1);
     const itemsPerPage = 50;
 
@@ -111,6 +113,12 @@ const QuestionsDisplay = () => {
     }, [questionsData, questionsPending])
 
     useEffect(() => {
+        if (subjectFilterPending) return
+
+        SetSubjects(subjectFilterData!.subjects)
+    }, [subjectFilterData, subjectFilterPending])
+
+    useEffect(() => {
         FetchQuestions({
             request: {
                 page: CurrentPage,
@@ -181,7 +189,7 @@ const QuestionsDisplay = () => {
             <h1 className="text-3xl font-bold text-black text-center mt-16 mb-4">Questions</h1>
             <div className="grid grid-cols-4">
                 <div className="col-start-2 col-span-2 flex justify-between my-2">
-                    <DesktopFilter title={"Subject"} items={(subjectFilterPending ? [] : subjectFilterData!.subjects)} update={UpdateSubjects} />
+                    <DesktopFilter title={"Subject"} items={subjectFilterPending ? [] : subjectFilterData!.subjects} update={UpdateSubjects} />
                     <DesktopFilter title={"Topic"} items={topicFilterPending ? [] : topicFilterData!.topics} update={UpdateTopics} />
                     <DesktopFilter title={"Grade"} items={Array.from({ length: 5}, (_, i) => (12 - i * 1).toString())} update={UpdateGrades} />
                 </div>

@@ -5,29 +5,29 @@ import { useState } from "react";
 import { ModalContext, ModalDisplayType } from "./context/modal-context";
 import RegisterPopup from "./Components/Authentication/Register";
 import Footer from "./Components/Footer";
+import FeedbackPopup from "./Components/Feedback";
 
 export const ModalLayout = () => {
     const [Modal, SetModal] = useState<ModalDisplayType>({
         login: false,
         register: false,
+        feedback: true,
     })
 
     const SetDisplayLogin = (display: boolean) => {
-        SetModal({
-            login: display,
-            register: Modal.register,
-        })
+        SetModal({...Modal, login: display})
     }
 
     const SetDisplayRegister = (display: boolean) => {
-        SetModal({
-            login: Modal.login,
-            register: display,
-        })
+        SetModal({...Modal, register: display})
+    }
+
+    const SetDisplayFeedback = (display: boolean) => {
+        SetModal({...Modal, feedback: display})
     }
 
     return (
-        <ModalContext.Provider value={{ Modal, SetDisplayLogin, SetDisplayRegister }}>
+        <ModalContext.Provider value={{ Modal, SetDisplayLogin, SetDisplayRegister, SetDisplayFeedback }}>
             <div className="bg-[rgb(243,245,248)] flex flex-col justify-between">
 
                 <Outlet />
@@ -36,6 +36,9 @@ export const ModalLayout = () => {
                 }
                 {
                     Modal.register ? <RegisterPopup onExit={() => SetDisplayRegister(false)} /> : null
+                }
+                {
+                    Modal.feedback ? <FeedbackPopup onExit={() => SetDisplayFeedback(false)}/> : null
                 }
             </div>
             

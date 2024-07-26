@@ -1,6 +1,6 @@
 import Environment from "../../constants"
 import { FetchError, readAccessToken, readExpiration, removeAccessToken, storeAccessToken, storeExpiration } from "../util/utility"
-import { AdminExamReviewDeleteRequest, AdminExamReviewSubmitRequest, ExamUpdateRequest, ExamUploadRequest, FetchExamResponse, FetchExamsRequest, FetchExamsResponse, FetchExamSubjectsResponse, FetchFavouriteExamsResponse, FetchLogosResponse, FetchNotificationsResponse, FetchPermissionsResponse, FetchQuestionResponse, FetchQuestionsRequest, FetchQuestionsResponse, FetchQuestionSubjectsResponse, FetchQuestionTopicsResponse, FetchRecentExamsResponse, FetchRecommendedExamsResponse, FetchRegisteredUsersResponse, FetchSchoolsResponse, FetchTopicRecommendationsResponse, FetchUserActivityAnalyticsResponse, FetchUserResponse, FetchUserSubjectAnalyticsResponse, PostQuestionRequest, PostUserQuestionAnswerRequest, RefreshTokenResponse, SignInResponse, SignOutResponse, SignUpResponse, UserLoginRequest, UserProfileEditRequest, UserRegistrationRequest } from "./types"
+import { AdminExamReviewDeleteRequest, AdminExamReviewSubmitRequest, ExamUpdateRequest, ExamUploadRequest, FeedbackRequest, FetchExamResponse, FetchExamsRequest, FetchExamsResponse, FetchExamSubjectsResponse, FetchFavouriteExamsResponse, FetchLogosResponse, FetchNotificationsResponse, FetchPermissionsResponse, FetchQuestionResponse, FetchQuestionsRequest, FetchQuestionsResponse, FetchQuestionSubjectsResponse, FetchQuestionTopicsResponse, FetchRecentExamsResponse, FetchRecommendedExamsResponse, FetchRegisteredUsersResponse, FetchSchoolsResponse, FetchTopicRecommendationsResponse, FetchUserActivityAnalyticsResponse, FetchUserResponse, FetchUserSubjectAnalyticsResponse, PostQuestionRequest, PostUserQuestionAnswerRequest, RefreshTokenResponse, SignInResponse, SignOutResponse, SignUpResponse, UserLoginRequest, UserProfileEditRequest, UserRegistrationRequest } from "./types"
 
 export type UserAuthentication = {
     expiration: Date,
@@ -729,4 +729,20 @@ export const FetchTopicRecommendations = (): Promise<FetchTopicRecommendationsRe
             throw new FetchError(res)
         }
     }))
+}
+
+export const PostFeedback = ({ request }: { request: FeedbackRequest }): Promise<Response> => {
+    return fetch(`${Environment.BACKEND_URL}/api/admin/feedback`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `bearer ${readAccessToken()}`
+        },
+        method: "POST",
+        credentials: 'include',
+        body: JSON.stringify({
+            name: request.name,
+            email: request.email,
+            feedback: request.feedback
+        })
+    })
 }

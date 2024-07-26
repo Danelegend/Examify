@@ -264,3 +264,9 @@ export type FetchRegisteredUsersResponse = {
         school_year: number
     }[]
 }
+
+export type FeedbackRequest = {
+    name?: string,
+    email?: string,
+    feedback: string
+}

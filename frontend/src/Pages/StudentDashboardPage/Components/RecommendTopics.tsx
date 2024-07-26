@@ -79,8 +79,8 @@ const RecommendTopics = () => {
         {
             isPending || data === undefined ? <div className="flex justify-center">Loading...</div> : 
             data.permissions === "ADM" || data.permissions === "PRE" ? <RecommendTopicDisplay /> : 
-            <div className="w-24 h-24 bg-gray-400">
-                <div className="flex justify-center">
+            <div className="aspect-square h-full bg-gray-400 flex">
+                <div className="text-xl font-semibold flex justify-center my-auto text-center">
                     Get Examify+ to access this feature
                 </div>
             </div>

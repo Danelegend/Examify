@@ -53,6 +53,8 @@ const FeedbackForm = ({ onExit }: { onExit: () => void }) => {
                 feedback: Feedback.feedback
             }
         })
+
+        onExit();
     }
 
     return (

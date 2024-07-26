@@ -26,6 +26,11 @@ class UpdateExamRequest(BaseModel):
     exam_type: Optional[str] = None
     subject: Optional[str] = None
 
+class FeedbackRequest(BaseModel):
+    name: Optional[str] = None
+    email: Optional[str] = None
+    feedback: str
+
 ################################################################################
 #################################     Auth     #################################
 ################################################################################

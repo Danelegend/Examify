@@ -1,11 +1,12 @@
 from typing import Annotated
 from fastapi import APIRouter, HTTPException, Response, Security, status, UploadFile, Form, File
 
-from functionality.admin.admin import DeleteCurrentExam, DeleteReviewExam, GetCurrentExams, GetExamsToReview, SubmitReviewExam, UpdateExam, UploadExam, ValidateToken, get_all_users
+from functionality.admin.admin import DeleteCurrentExam, DeleteReviewExam, GetCurrentExams, GetExamsToReview, SubmitReviewExam, UpdateExam, UploadExam, ValidateToken, get_all_users, submit_feedback
 from functionality.authentication.authentication import GetUserPermissions
+from functionality.token import get_user_id
 
-from router import HTTPBearer401
-from router.api_types.api_request import DeleteReviewExamRequest, SubmitReviewExamRequest, UpdateExamRequest, UploadExamRequest
+from router import HTTPBearer401, OptionalHTTPBearer
+from router.api_types.api_request import DeleteReviewExamRequest, FeedbackRequest, SubmitReviewExamRequest, UpdateExamRequest, UploadExamRequest
 from router.api_types.api_response import CurrentExamsResponse, RegisteredUsersResponse, ReviewExamsResponse, UpdateExamResponse
 
 router = APIRouter()
@@ -88,3 +89,12 @@ async def get_registered_users(token: Annotated[str, Security(HTTPBearer401())])
     users = get_all_users()
 
     return RegisteredUsersResponse(users=users)
+
+@router.post("/feedback", status_code=status.HTTP_200_OK)
+async def post_feedback(request: FeedbackRequest, token: Annotated[str | None, Security(OptionalHTTPBearer())]) -> None:
+    try:
+        user_id = None if token is None else get_user_id(token)
+    except Exception as e:
+        user_id = None
+
+    submit_feedback(request.name, request.email, request.feedback, user_id)

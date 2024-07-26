@@ -1,4 +1,7 @@
+import datetime
 import os
+import uuid
+
 from typing import List, Optional, Tuple
 
 from fastapi import UploadFile
@@ -10,11 +13,12 @@ from logger import Logger
 from functionality.bucket.bucket import delete_file, exam_exists, rename_file
 from functionality.exam.exam import FlagExam
 from functionality.google.gdrive import delete_file_from_review, get_files_in_review, move_file_from_review_to_current, upload_file_to_drive
+from functionality.google.sheets import append_values
 from functionality.authentication.authentication import GetUserPermissions
 from functionality.types import ExamType
 
 from database.db_types.db_request import ExamCreationRequest, ExamUpdateRequest
-from database.helpers.user import get_users
+from database.helpers.user import get_user_details, get_users
 from database.helpers.exam import delete_exam, get_exam, get_exam_id_from_file_location, get_exams, insert_exam, insert_exam_flag, update_exam
 from database.helpers.school import get_or_create_school
 
@@ -214,3 +218,24 @@ def get_all_users() -> List[RegisteredUserData]:
             ))
 
     return users
+
+def submit_feedback(name: Optional[str], email: Optional[str], feedback: str, user_id: Optional[int] = None) -> None:
+    id = uuid.uuid4()
+    
+    Logger.log_backend("Admin", f"Feedback: {name}, {email}, {feedback}, {id}")
+
+    feedback_time = datetime.datetime.now()
+
+    if user_id:
+        user = get_user_details(user_id)
+        name = user.first_name + " " + user.last_name
+        email = user.email
+
+    if "FEEDBACK_SHEET_ID" not in os.environ:
+        Logger.log_backend_error("Admin", "Feedback sheet id not found")
+        return
+
+    
+    append_values(os.environ.get("FEEDBACK_SHEET_ID"), "'Feedback'!A1:A5", "USER_ENTERED", [[id, name, email, feedback, feedback_time]])
+
+    Logger.log_backend("Admin", "Feedback submitted")

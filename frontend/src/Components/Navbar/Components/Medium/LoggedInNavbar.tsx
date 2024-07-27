@@ -33,7 +33,31 @@ const LoggedInNavbar = () => {
         <>
                 <div className="self-stretch justify-start items-center gap-[21px] inline-flex text-base font-['Montserrat']">
                     <NavigationButton link="/dashboard" title="Dashboard" />
-                    <NavigationButton link="/exams" title="Exams" />
+                    <NavigationButton link="/exams" title="Exams" dropLinks={
+                        [
+                            {
+                                title: "All",
+                                link: "/exams"
+                            },
+                            {
+                                title: "Maths EX2",
+                                link: "/exams/maths extension 2"
+                            },
+                            {
+                                title: "Maths Advanced",
+                                link: "/exams/maths advanced"
+                            },
+                            {
+                                title: "Chemistry",
+                                link: "/exams/chemistry"
+                            },
+                            {
+                                title: "Economics",
+                                link: "/exams/economics"
+                            }
+                            
+                        ]
+                    }/>
                     <NavigationButton link="/questions" title="Questions" />
                     <NavigationButton link="/upload" title="Upload" />
                 </div>

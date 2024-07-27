@@ -382,7 +382,7 @@ export const SubjectExamDisplay = ({ subject }: { subject: string }) => {
     })
 
     const { data, isPending, error } = useQuery({
-        queryKey: ["Exams"],
+        queryKey: ["Exams", subject],
         queryFn: () => FetchExams({ 
                             request: { 
                                 page: 1,
@@ -518,6 +518,14 @@ export const SubjectExamDisplay = ({ subject }: { subject: string }) => {
           window.removeEventListener('scroll', handleScroll);
         };
       }, [CurrentPage]);
+
+    useEffect(() => {
+        SetFilter({
+            schools: [],
+            subjects: [subject.split(" ").map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(" ")],
+            years: []
+        })
+    }, [subject])
 
     waveform.register();
     dotSpinner.register();

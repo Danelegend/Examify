@@ -178,9 +178,10 @@ def get_user_details(user_id: int) -> UserDetailsResponse:
         with conn.cursor() as cur:
             cur.execute(
                 """
-                SELECT first_name, last_name, email, phone, registeration_method, permission, school, grade 
-                FROM accounts 
-                WHERE id = %(id)s;
+                SELECT a.first_name, a.last_name, a.email, a.phone, a.registeration_method, a.permission, s.name, a.grade 
+                FROM accounts a
+                LEFT JOIN schools s ON a.school = s.id
+                WHERE a.id = %(id)s;
                 """, {"id": user_id})
             first_name, last_name, email, phone, registration, permissions, school, grade = cur.fetchone()
 

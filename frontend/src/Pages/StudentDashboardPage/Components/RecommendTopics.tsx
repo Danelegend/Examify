@@ -64,7 +64,7 @@ const RecommendTopicDisplay = () => {
 }
 
 const RecommendTopics = () => {
-    /*
+    
     const { data, isPending } = useQuery({
         queryKey: ["User", "Permissions"],
         queryFn: () => FetchPermissions()
@@ -78,6 +78,7 @@ const RecommendTopics = () => {
                 </h3>
             </div>
         {
+            /*
             isPending || data === undefined ? <div className="flex justify-center">Loading...</div> : 
             data.permissions === "ADM" || data.permissions === "PRE" ? <RecommendTopicDisplay /> : 
             <div className="aspect-square h-full bg-gray-400 flex">
@@ -85,11 +86,11 @@ const RecommendTopics = () => {
                     Get Examify+ to access this feature
                 </div>
             </div>
+            */
+           <RecommendTopicDisplay />
         }
         </div>
-    )*/
-
-    return <RecommendTopicDisplay />
+    )
 }
 
 export default RecommendTopics

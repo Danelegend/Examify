@@ -64,6 +64,7 @@ const RecommendTopicDisplay = () => {
 }
 
 const RecommendTopics = () => {
+    /*
     const { data, isPending } = useQuery({
         queryKey: ["User", "Permissions"],
         queryFn: () => FetchPermissions()
@@ -86,7 +87,9 @@ const RecommendTopics = () => {
             </div>
         }
         </div>
-    )
+    )*/
+
+    return <RecommendTopicDisplay />
 }
 
 export default RecommendTopics

@@ -8,7 +8,7 @@ type NavigationButtonProps = {
 
 export const NavigationButton = ({ link, title, dropLinks }: NavigationButtonProps) => {
     return (
-        <div id="dropdownHoverButton" className="group relative cursor-pointer py-2">
+        <div id="dropdownHoverButton" className="group relative cursor-pointer py-2 font-display">
             <Link to={link}>
                 <div className="text-center text-neutral-700 font-semibold leading-normal tracking-tight cursor-pointer hover:text-neutral-400">
                     {title}

@@ -54,12 +54,12 @@ const QuestionsDisplay = () => {
     })
 
     const { data: subjectFilterData, isPending: subjectFilterPending } = useQuery({
-        queryKey: ["SubjectFilters"],
+        queryKey: ["SubjectFilters", "Questions"],
         queryFn: () => FetchQuestionSubjects()
     })
 
     const { data: topicFilterData, isPending: topicFilterPending } = useQuery({
-        queryKey: ["TopitcFilters"],
+        queryKey: ["TopitcFilters", "Questions", ...Subjects],
         queryFn: () => FetchQuestionTopics()
     })
 
@@ -227,6 +227,7 @@ const QuestionsDisplay = () => {
                                 grade={question.grade}
                                 difficulty={question.difficulty}
                                 index={index}
+                                key={index}
                             />
                         })
                     }

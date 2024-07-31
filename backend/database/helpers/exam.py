@@ -218,6 +218,8 @@ def get_exams_with_pagination(start: int, size: int, filter: ExamsFilter, sort: 
         LIMIT %(size)s OFFSET %(start)s;
         """
 
+    Logger.log_debug(s)
+
     try:
         conn = connect()
         with conn.cursor() as cur:

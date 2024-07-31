@@ -42,7 +42,7 @@ const LoggedOutNavbar = () => {
                         ]
                     }/>
                     <NavigationButton link="/questions" title="Questions" />
-                    <NavigationButton link="/blogs" title="Blog" />
+                    <NavigationButton link="/blogs" title="Articles" />
                     <NavigationButton link="/upload" title="Upload" />
                 </div>
 

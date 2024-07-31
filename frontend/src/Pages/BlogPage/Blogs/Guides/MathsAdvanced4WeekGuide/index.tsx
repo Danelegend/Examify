@@ -34,37 +34,39 @@ const Banner = ({ link }: BannerProps) => {
 const Navigator = ({ navigations, idInView }: NavigatorProps) => {
     return (
         <nav className="toc sticky top-0 overflow-y-auto h-screen scrollbar-hide min-w-40 order-2 hidden py-8 max-h-full lg:block">
-            <h5 className="pl-4 text-xl font-semibold">
-                On this page
-            </h5>
-            <ul className="flex list-none flex-col gap-2 p-4 text-gray-600 xl:text-lg"> 
-                <li> 
-                    <a href="#_top" className={"group " + ((idInView === "_top") ? "text-blue-600" : "text-gray-500")}> 
-                        <span className="absolute -left-1.5 hidden group-data-[toc-active=true]:block">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-chevron-right size-5 mt-1">
-                                <path d="m9 18 6-6-6-6" />
-                            </svg>
-                        </span> 
-                        Overview 
-                    </a>  
-                </li>
-                {
-                    navigations.map((navigation, index) => {
-                        return (
-                            <li key={index}> 
-                                <a href={navigation.sectionPath} className={"group " + ((idInView === navigation.sectionPath.slice(1)) ? "text-blue-600" : "text-gray-500")}> 
-                                    <span className="absolute -left-1.5 hidden group-data-[toc-active=true]:block">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-chevron-right size-5 mt-1">
-                                            <path d="m9 18 6-6-6-6" />
-                                        </svg>
-                                    </span> 
-                                    {(index + 1).toString() + "."} {navigation.sectionName}
-                                </a>  
-                            </li>
-                        )
-                    })
-                }
-            </ul> 
+            <div className="border-2 rounded-xl shadow-md">
+                <h5 className="pl-4 text-xl font-semibold">
+                    On this page
+                </h5>
+                <ul className="flex list-none flex-col gap-2 p-4 text-gray-600 xl:text-lg"> 
+                    <li> 
+                        <a href="#_top" className={"group " + ((idInView === "_top") ? "text-blue-600" : "text-gray-500")}> 
+                            <span className="absolute -left-1.5 hidden group-data-[toc-active=true]:block">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-chevron-right size-5 mt-1">
+                                    <path d="m9 18 6-6-6-6" />
+                                </svg>
+                            </span> 
+                            Overview 
+                        </a>  
+                    </li>
+                    {
+                        navigations.map((navigation, index) => {
+                            return (
+                                <li key={index}> 
+                                    <a href={navigation.sectionPath} className={"group " + ((idInView === navigation.sectionPath.slice(1)) ? "text-blue-600" : "text-gray-500")}> 
+                                        <span className="absolute -left-1.5 hidden group-data-[toc-active=true]:block">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-chevron-right size-5 mt-1">
+                                                <path d="m9 18 6-6-6-6" />
+                                            </svg>
+                                        </span> 
+                                        {(index + 1).toString() + "."} {navigation.sectionName}
+                                    </a>  
+                                </li>
+                            )
+                        })
+                    }
+                </ul> 
+            </div>
         </nav>
     )
 }

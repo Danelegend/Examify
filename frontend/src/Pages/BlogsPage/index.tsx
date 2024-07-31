@@ -31,7 +31,7 @@ const BlogsPage = () => {
     return (
         <div className="min-h-screen justify-center flex flex-col w-full">
             <Helmet>
-                <title>Examify | Blogs</title>
+                <title>Examify | Articles</title>
                 <meta name="description" content="Examify is the most comprehensive platform for your HSC. We provide the LARGEST collection of Questions, Exams, HSC and Trial papers to assist with your HSC studies."/>
             </Helmet>
             <Banner />
@@ -73,7 +73,7 @@ const SectionDisplay = () => {
     return (
         <div>
             <div className="grid gap-4 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                <SectionTitle title={"Headline Articles"} description={"Project's most popular posts, collated based on quality of content, and practical advice."} link={""}/>
+                <SectionTitle title={"Year 12 Subject Guides"} description={"Read expert guides on how to ace the HSC"} link={""}/>
                 <MainBlogCard blog={blogs[0]} />
             </div>
         </div>
@@ -83,7 +83,7 @@ const SectionDisplay = () => {
 const SectionTitle = ({ title, description, link }: SectionTitleProps) => {
     return (
         <div className="flex flex-col gap-4 sm:col-span-full md:w-1/2">
-            <h2 className="text-2xl font-semibold">
+            <h2 className="text-4xl font-bold">
                 {title}
             </h2>
             <p className="text-pretty">
@@ -103,7 +103,7 @@ const MainBlogCard = ({ blog }: { blog: BlogCardType }) => {
             <div className="flex flex-col justify-between gap-2 p-4">
                 <div className="flex flex-col gap-3">
                     <div className="flex flex-col gap-2">
-                        <p className="text-3xl font-semibold">
+                        <p className="text-3xl font-semibold text-blue-900">
                             {blog.title}
                         </p>
                         <p className="text-lg text-slate-600">

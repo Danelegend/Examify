@@ -29,6 +29,10 @@ const LOGGED_OUT_NAV_OPTIONS: Array<NavigationType> = [
         link: "/exams"
     },
     {
+        title: "Blog",
+        link: "/blogs"
+    },
+    {
         title: "Upload",
         link: "/upload"
     },
@@ -58,6 +62,10 @@ const LOGGED_IN_NAV_OPTIONS: Array<NavigationType> = [
     {
         title: "Exams",
         link: "/exams"
+    },
+    {
+        title: "Blog",
+        link: "/blogs"
     },
     {
         title: "Upload",

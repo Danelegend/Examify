@@ -30,6 +30,9 @@ import QuestionPage from './Pages/QuestionPage';
 import QuestionsPage from './Pages/QuestionsPage';
 import AdminQuestionsPage from './Pages/Admin/QuestionsPage';
 import RegisteredUsersPage from './Pages/Admin/RegisteredUsersPage';
+import BlogsPage from './Pages/BlogsPage';
+import BlogPage from './Pages/BlogPage';
+import MathsAdvanced4WeekGuide from './Pages/BlogPage/Blogs/Guides/MathsAdvanced4WeekGuide';
 
 const router = createBrowserRouter([
   {
@@ -41,6 +44,20 @@ const router = createBrowserRouter([
           {
             element: <AboutPage />,
             path: "",
+          },
+          {
+            element: <BlogsPage />,
+            path: "blogs"
+          },
+          {
+            element: <BlogPage />,
+            path: "blog",
+            children: [
+              {
+                element: <MathsAdvanced4WeekGuide />,
+                path: "maths-advanced-4-week-guide"
+              }
+            ]
           },
           {
             element: <ExamsPage />,

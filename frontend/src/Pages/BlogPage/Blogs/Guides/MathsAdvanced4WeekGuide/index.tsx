@@ -163,7 +163,10 @@ const MathsAdvanced4WeekGuide = () => {
                         Introduction
                     </h2>  
                     <p>
-                        Many students aim for a Band 6 in Maths Advanced, but it's also essential to enjoy your final year of high school. Studies show that effective study methods can yield similar results in half the time. With trials and the HSC around the corner, our 4-week study path helps you ace Maths Advanced while leaving you more time for fun.
+                        It's essential to enjoy your final year of high school, but you probably also have your sights set on a Band 6 in Maths Advanced. We're here to help you achieve both.
+                    </p>
+                    <p>
+                        Studies have shown that effective study methods and techniques can yield incredible results in significantly less time. With trials and the HSC just around the corner, our <b>4-week study path</b> will help you ace Maths Advanced while leaving you more time for fun.
                     </p>
                 </section>
                 <section className="flex flex-col gap-y-4" id="our_approach">

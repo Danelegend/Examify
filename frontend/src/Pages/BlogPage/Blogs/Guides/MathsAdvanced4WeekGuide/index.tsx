@@ -205,7 +205,7 @@ const MathsAdvanced4WeekGuide = () => {
                         <li>Glenwood 2023</li>
                         <li>Penrith 2023</li>
                     </ol>
-                    <div className="grid grid-cols-3 gap-x-4 my-8">
+                    <div className="grid gap-4 my-8 grid-cols-1 sm:grid-cols-3">
                         <div>
                             <BlogExamCard school="Killara" year={2020} type="Trial" subject={"Maths Advanced"} />
                         </div>
@@ -232,7 +232,7 @@ const MathsAdvanced4WeekGuide = () => {
                         <li>Baulkham Hills 2022</li>
                         <li>Moriah College 2021</li>
                     </ol>
-                    <div className="grid grid-cols-3 gap-x-4 my-8">
+                    <div className="grid gap-4 my-8 grid-cols-1 sm:grid-cols-3">
                         <div>
                             <BlogExamCard school="Riverview" year={2023} type="Trial" subject={"Maths Advanced"} />
                         </div>
@@ -259,7 +259,7 @@ const MathsAdvanced4WeekGuide = () => {
                         <li>Knox 2023</li>
                         <li>Abbotsleigh 2021</li>
                     </ol>
-                    <div className="grid grid-cols-3 gap-x-4 my-8">
+                    <div className="grid gap-4 my-8 grid-cols-1 sm:grid-cols-3">
                         <div>
                             <BlogExamCard school="Blacktown Boys" year={2023} type="Trial" subject={"Maths Advanced"} />
                         </div>
@@ -286,7 +286,7 @@ const MathsAdvanced4WeekGuide = () => {
                         <li>North Sydney Boys 2021</li>
                         <li>James Ruse 2023</li>
                     </ol>
-                    <div className="grid grid-cols-3 gap-x-4 my-8">
+                    <div className="grid gap-4 my-8 grid-cols-1 sm:grid-cols-3">
                         <div>
                             <BlogExamCard school="Sydney Grammar" year={2023} type="Trial" subject={"Maths Advanced"} />
                         </div>

@@ -98,7 +98,7 @@ const SubjectAnalyticsPieChart = () => {
 
     const {data, isPending} = useQuery({
         queryKey: ["SubjectAnalytics"],
-        queryFn: () => FetchUserSubjectAnalytics({ token: readAccessToken()! })
+        queryFn: () => FetchUserSubjectAnalytics()
     })
 
     const loadChart = (exams: ExamsComplete[]) => {

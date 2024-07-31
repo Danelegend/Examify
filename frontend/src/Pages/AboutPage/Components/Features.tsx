@@ -4,6 +4,7 @@ import backgroundImage from '../../../images/background-features.jpg'
 import examsImage from '../../../images/screenshots/exams.jpg'
 import questionsImage from '../../../images/screenshots/questions.jpg'
 import analyticsImage from '../../../images/screenshots/analytics.jpg'
+import comingSoonImage from '../../../images/screenshots/coming_soon.jpg'
 
 type Feature = {
     title: string,
@@ -15,28 +16,28 @@ type Feature = {
 const Features = () => {
     const features: Feature[] = [
         {
-          title: "Past Exams",
-          description: "The largest collection of previous HSC exams and past trial papers at your fingertips",
+          title: "Past Exams & Practice Questions",
+          description: "Access the largest collection of previous HSC exams, past trial papers, and question banks designed to help you master every topic.",
           image: examsImage,
           alt: "Practice Trial Exams"
         },
         {
-          title: "Practice Questions",
-          description: "An extensive collection of HSC questions perfect to help you nail that particular topic",
-          image: questionsImage,
-          alt: "Practice HSC Questions"
-        },
-        {
           title: "Analytics",
-          description: "Track your progress and see where and how you can improve",
+          description: "Track your progress and see where and how you can improve with our advanced analytics tools.",
           image: analyticsImage,
           alt: "HSC Study Analytics"
         },
         {
+          title: "Ai Tutor",
+          description: "Get 24/7 feedback or assistance with Ai Tutor technology, trained on custom HSC datasets to provide fast and accurate results.",
+          image: comingSoonImage,
+          alt: "Ai Tutor"
+        },
+        {
           title: "Custom Exam Generation",
-          description: "Generate custom exams tailored to your needs and wants",
-          image: "",
-          alt: ""
+          description: "Generate custom exams tailored to your needs and wants.",
+          image: comingSoonImage,
+          alt: "Custom Exam Generation"
         }
     ]
 

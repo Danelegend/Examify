@@ -1,7 +1,7 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import ExamCard, { ExamCardProps } from "../../../Components/ExamCards";
 import { useQuery } from "@tanstack/react-query";
-import { FetchError, readAccessToken, removeAccessToken } from "../../../util/utility";
+import { FetchError, removeAccessToken } from "../../../util/utility";
 import { UserContext } from "../../../context/user-context";
 import { DesktopFilter, MobileFilter, MobileFilterDisplay, MobileFilterItem } from "../../../Components/Filter";
 import { FetchExams, FetchExamSubjects, FetchSchools } from "../../../api/api";
@@ -81,7 +81,7 @@ export const ExamDisplay = () => {
 
     const { data, isPending, error } = useQuery({
         queryKey: ["Exams"],
-        queryFn: () => FetchExams({ token: readAccessToken(), 
+        queryFn: () => FetchExams({ 
                             request: { 
                                 page: 1,
                                 page_length: 20,
@@ -168,7 +168,7 @@ export const ExamDisplay = () => {
 
 
     useEffect(() => {
-        FetchExams({ token: readAccessToken(), 
+        FetchExams({ 
             request: { 
                 page: CurrentPage,
                 page_length: itemsPerPage,
@@ -193,7 +193,7 @@ export const ExamDisplay = () => {
 
     useEffect(() => {
         SetCurrentPage(1)
-        FetchExams({ token: readAccessToken(), 
+        FetchExams({ 
             request: { 
                 page: 1,
                 page_length: itemsPerPage,
@@ -382,8 +382,8 @@ export const SubjectExamDisplay = ({ subject }: { subject: string }) => {
     })
 
     const { data, isPending, error } = useQuery({
-        queryKey: ["Exams"],
-        queryFn: () => FetchExams({ token: readAccessToken(), 
+        queryKey: ["Exams", subject],
+        queryFn: () => FetchExams({ 
                             request: { 
                                 page: 1,
                                 page_length: 20,
@@ -455,7 +455,7 @@ export const SubjectExamDisplay = ({ subject }: { subject: string }) => {
 
 
     useEffect(() => {
-        FetchExams({ token: readAccessToken(), 
+        FetchExams({ 
             request: { 
                 page: CurrentPage,
                 page_length: itemsPerPage,
@@ -480,7 +480,7 @@ export const SubjectExamDisplay = ({ subject }: { subject: string }) => {
 
     useEffect(() => {
         SetCurrentPage(1)
-        FetchExams({ token: readAccessToken(), 
+        FetchExams({ 
             request: { 
                 page: 1,
                 page_length: itemsPerPage,
@@ -518,6 +518,14 @@ export const SubjectExamDisplay = ({ subject }: { subject: string }) => {
           window.removeEventListener('scroll', handleScroll);
         };
       }, [CurrentPage]);
+
+    useEffect(() => {
+        SetFilter({
+            schools: [],
+            subjects: [subject.split(" ").map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(" ")],
+            years: []
+        })
+    }, [subject])
 
     waveform.register();
     dotSpinner.register();

@@ -70,10 +70,11 @@ def _calculate_number_recommendations_for_subjects(subjects: List[str], num_reco
         for subject in subjects:
             subject_to_num_recommendations[subject] = 1
 
-        recommendations_left = num_recommendations - len(subjects)
+        # TODO: Fix later
+        #recommendations_left = num_recommendations - len(subjects)
 
-        for subject in random.sample(subjects, recommendations_left):
-            subject_to_num_recommendations[subject] += 1
+        #for subject in random.sample(subjects, recommendations_left):
+            #subject_to_num_recommendations[subject] += 1
 
     return subject_to_num_recommendations
 

@@ -118,19 +118,19 @@ const ExamDisplayTemplate = ({ fetchExamsFn, queryKey, title }: ExamDisplayTempl
 }
 
 export const FavouriteExamsDisplay = () => ExamDisplayTemplate({
-    fetchExamsFn: () => FetchFavouriteExams({ token: readAccessToken()! }),
+    fetchExamsFn: () => FetchFavouriteExams(),
     queryKey: ["FavouriteExams"],
     title: "Favourite Exams"
 })
 
 export const RecentExamsDisplay = () => ExamDisplayTemplate({
-    fetchExamsFn: () => FetchRecentExams({ token: readAccessToken()! }),
+    fetchExamsFn: () => FetchRecentExams(),
     queryKey: ["RecentExams"],
     title: "Recent Exams"
 })
 
 export const RecommendedExamsDisplay = () => ExamDisplayTemplate({
-    fetchExamsFn: () => FetchRecommendedExams({ token: readAccessToken()! }),
+    fetchExamsFn: () => FetchRecommendedExams(),
     queryKey: ["RecommendedExams"],
     title: "Recommended Exams"
 })

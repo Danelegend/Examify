@@ -22,7 +22,7 @@ const StudentDashboardPage = () => {
     
     const { data: userProfileData, isPending: userProfileIsPending, error: userProfileError } = useQuery({
         queryKey: ["UserProfile"],
-        queryFn: () => FetchUserProfile({ token: readAccessToken()! }),
+        queryFn: () => FetchUserProfile(),
     })
 
     

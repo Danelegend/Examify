@@ -36,7 +36,7 @@ const FavouriteExamsDisplay = () => {
 
     const { data: favouriteData, isPending: favouriteIsPending, error: favouriteError } = useQuery({
         queryKey: ["Exams", "FavouriteExams"],
-        queryFn: () => FetchFavouriteExams({ token: readAccessToken()! }),
+        queryFn: () => FetchFavouriteExams(),
     })
 
     const handleLeftFavouriteClick = () => {

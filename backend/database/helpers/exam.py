@@ -164,7 +164,7 @@ def get_exams_with_pagination(start: int, size: int, filter: ExamsFilter, sort: 
                 s += f"\nWHERE s.name = \'{filter.schools[i]}\'"
                 where_flag = False
             else:
-                s+= f" OR s.name = \'{filter.schools[i]}\'"
+                s+= f" AND s.name = \'{filter.schools[i]}\'"
         else:
             s += f" OR s.name = \'{filter.schools[i]}\'"
         
@@ -174,7 +174,7 @@ def get_exams_with_pagination(start: int, size: int, filter: ExamsFilter, sort: 
                 s += f"\nWHERE e.subject = \'{filter.subjects[i]}\'"
                 where_flag = False
             else:
-                s += f" OR e.subject = \'{filter.subjects[i]}\'"
+                s += f" AND e.subject = \'{filter.subjects[i]}\'"
         else:
             s += f" OR e.subject = \'{filter.subjects[i]}\'"
         
@@ -184,7 +184,7 @@ def get_exams_with_pagination(start: int, size: int, filter: ExamsFilter, sort: 
                 s += f"\nWHERE e.year = {filter.years[i]}"
                 where_flag = False
             else:
-                s += f" OR e.year = {filter.years[i]}"
+                s += f" AND e.year = {filter.years[i]}"
         else:
             s += f" OR e.year = {filter.years[i]}"
 

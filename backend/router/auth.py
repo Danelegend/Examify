@@ -1,8 +1,11 @@
+import datetime
 import jwt
 import os
 
 from typing import Annotated
 from fastapi import APIRouter, HTTPException, Request, Response, Security, status
+
+from logger import Logger
 
 from errors import AuthenticationError, DuplicationError, ValidationError
 
@@ -24,8 +27,10 @@ async def login_user(response: Response, login_request: LoginRequest) -> LoginRe
     response.set_cookie(
         key=os.environ.get("REFRESH_TOKEN_COOKIE_KEY", "refresh_token"),
         value=login_resp["refresh_token"],
-        httponly=True,
-        max_age=int(60 * 60 * 24 * float(os.environ.get("REFRESH_TOKEN_EXPIRATION_DAYS", 7)))
+        httponly=False,
+        domain="examify.com.au",
+        max_age=int(60 * 60 * 24 * float(os.environ.get("REFRESH_TOKEN_EXPIRATION_DAYS", 7))),
+        expires=datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(days=float(os.environ.get("REFRESH_TOKEN_EXPIRATION_DAYS", 7)))
     )
 
     return LoginResponse(
@@ -48,8 +53,10 @@ async def register_user(response: Response, register_request: RegistrationReques
         response.set_cookie(
             key=os.environ.get("REFRESH_TOKEN_COOKIE_KEY", "refresh_token"),
             value=registration_result["refresh_token"],
-            httponly=True,
-            max_age=int(60 * 60 * 24 * float(os.environ.get("REFRESH_TOKEN_EXPIRATION_DAYS", 7)))
+            httponly=False,
+            domain="examify.com.au",
+            max_age=int(60 * 60 * 24 * float(os.environ.get("REFRESH_TOKEN_EXPIRATION_DAYS", 7))),
+            expires=datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(days=float(os.environ.get("REFRESH_TOKEN_EXPIRATION_DAYS", 7)))
         )
 
         return RegistrationResponse(
@@ -69,10 +76,13 @@ async def logout(response: Response, token: Annotated[str, Security(HTTPBearer40
         response.delete_cookie(os.environ.get("REFRESH_TOKEN_COOKIE_KEY", "refresh_token"))
     except AuthenticationError as e:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=e.message) from e
-    
+
 @router.get("/refresh", status_code=status.HTTP_200_OK)
 async def refresh(request: Request, response: Response) -> RefreshResponse:
     refresh_token = request.cookies.get(os.environ.get("REFRESH_TOKEN_COOKIE_KEY", "refresh_token"))
+
+    Logger.log_debug(refresh_token)
+    Logger.log_debug(request.cookies)
 
     try:
         if not refresh_token or not refresh_token_valid(refresh_token):
@@ -99,8 +109,10 @@ async def login_google(response: Response, google_login: GoogleLoginRequest) -> 
         response.set_cookie(
             key=os.environ.get("REFRESH_TOKEN_COOKIE_KEY", "refresh_token"),
             value=login_resp["refresh_token"],
-            httponly=True,
-            max_age=int(60 * 60 * 24 * float(os.environ.get("REFRESH_TOKEN_EXPIRATION_DAYS", 7)))
+            httponly=False,
+            domain="examify.com.au",
+            max_age=int(60 * 60 * 24 * float(os.environ.get("REFRESH_TOKEN_EXPIRATION_DAYS", 7))),
+            expires=datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(days=float(os.environ.get("REFRESH_TOKEN_EXPIRATION_DAYS", 7)))
         )
 
         return LoginResponse(
@@ -121,8 +133,10 @@ async def login_facebook(response: Response, facebook_login: FacebookLoginReques
         response.set_cookie(
             key=os.environ.get("REFRESH_TOKEN_COOKIE_KEY", "refresh_token"),
             value=login_resp["refresh_token"],
-            httponly=True,
-            max_age=int(60 * 60 * 24 * float(os.environ.get("REFRESH_TOKEN_EXPIRATION_DAYS", 7)))
+            httponly=False,
+            domain="examify.com.au",
+            max_age=int(60 * 60 * 24 * float(os.environ.get("REFRESH_TOKEN_EXPIRATION_DAYS", 7))),
+            expires=datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(days=float(os.environ.get("REFRESH_TOKEN_EXPIRATION_DAYS", 7)))
         )
 
         return LoginResponse(
@@ -150,6 +164,7 @@ async def edit_profile(edit_profile: EditUserInformationRequest, token: Annotate
         EditUserInformation(token, 
                             edit_profile.dob, 
                             edit_profile.school, 
-                            edit_profile.school_year)
+                            edit_profile.school_year,
+                            edit_profile.subjects)
     except AuthenticationError as e:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=e.message) from e

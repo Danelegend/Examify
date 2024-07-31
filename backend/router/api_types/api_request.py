@@ -26,6 +26,11 @@ class UpdateExamRequest(BaseModel):
     exam_type: Optional[str] = None
     subject: Optional[str] = None
 
+class FeedbackRequest(BaseModel):
+    name: Optional[str] = None
+    email: Optional[str] = None
+    feedback: str
+
 ################################################################################
 #################################     Auth     #################################
 ################################################################################
@@ -42,7 +47,8 @@ class RegistrationRequest(BaseModel):
 class EditUserInformationRequest(BaseModel):
     dob: AwareDatetime
     school: str
-    school_year: int
+    school_year: Optional[int] = 12
+    subjects: Optional[List[str]] = []
 
 class GoogleLoginRequest(BaseModel):
     google_token: str
@@ -60,9 +66,9 @@ class ExamFavouriteRequest(BaseModel):
 #################################     Exams     ################################
 ################################################################################
 class ExamsFilter(BaseModel):
-    schools: List[str]
-    subjects: List[str]
-    years: List[int]
+    schools: Optional[List[str]] = []
+    subjects: Optional[List[str]] = []
+    years: Optional[List[int]] = []
 
 class ExamsEndpointRequest(BaseModel):
     filter: ExamsFilter

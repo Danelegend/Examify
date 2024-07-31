@@ -48,6 +48,7 @@ const RegistrationScreen1 = ({ changeScreen } :
 
     const handleGoogleRegistrationSuccess = () => {
         SetDisplayRegister(false)
+        changeScreen()
     }
 
     const handleFacebookRegistrationSuccess = () => {
@@ -122,7 +123,7 @@ const RegistrationScreen1 = ({ changeScreen } :
     return (
         <div>
             <form className="px-4 pt-4 pb-0.5 md:px-5 md:pt-5 md:pb-1">
-                <div className="grid gap-4 mb-4 grid-cols-2">
+                <div className="grid gap-4 mb-4 grid-cols-2 sm:grid-cols-1">
                     <div className="col-span-2 sm:col-span-1">
                         <label className="block mb-2 text-sm font-medium text-gray-900">First Name</label>
                         <input type="text" onChange={handleFirstNameChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="First Name" />

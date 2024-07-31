@@ -15,6 +15,7 @@ import CompleteIcon from "./Components/Complete"
 import FavouriteIcon from "./Components/Favourite"
 import { Helmet } from "react-helmet-async"
 import { AdminButton, AdminPanel } from "./Components/AdminOverlay"
+import { FetchPermissionsResponse } from "../../api/types"
 
 const ExamPage = () => {
     const [Fullscreen, SetFullscreen] = useState(false)
@@ -40,7 +41,6 @@ const ExamPage = () => {
 
     const RunRecentlyViewed = async () => {
         PostRecentlyViewedExam({
-            token: readAccessToken()!,
             exam_id: data!.exam_id
         })
 
@@ -151,11 +151,21 @@ type ExamControlsProps = {
 }
 
 const ExamControls = ({ exam_id, AdminButtonClicked }: ExamControlsProps) => {
-    const AccessToken = readAccessToken()
 
     const { isPending: permissionsPending, data: permissionsData} = useQuery({
         queryKey: ["Permissions"],
-        queryFn: () => FetchPermissions({ token: (AccessToken === null ? "" : AccessToken)})
+        queryFn: () => {
+            if (readAccessToken() === null) {
+                return new Promise<FetchPermissionsResponse>((resolve, reject) => {
+                    resolve({
+                        permissions: "NLU"
+                    })
+                })
+            }
+
+            FetchPermissions()
+        },
+        retry: 0
     })
 
     return (

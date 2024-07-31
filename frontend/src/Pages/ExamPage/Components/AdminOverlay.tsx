@@ -67,7 +67,6 @@ export const AdminPanel = ({ exam_id, exam_data, onExit }: AdminPanelProps) => {
 
     const onSubmit = async () => {
         PutExamUpdate({
-            token: readAccessToken()!,
             request: {
                 exam_id: ExamForm.exam_id,
                 subject: ExamForm.subject,

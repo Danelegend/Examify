@@ -5,31 +5,30 @@ import { useState } from "react";
 import { ModalContext, ModalDisplayType } from "./context/modal-context";
 import RegisterPopup from "./Components/Authentication/Register";
 import Footer from "./Components/Footer";
+import FeedbackPopup from "./Components/Feedback";
 
-const Layout = () => {
+export const ModalLayout = () => {
     const [Modal, SetModal] = useState<ModalDisplayType>({
         login: false,
         register: false,
+        feedback: true,
     })
 
     const SetDisplayLogin = (display: boolean) => {
-        SetModal({
-            login: display,
-            register: Modal.register,
-        })
+        SetModal({...Modal, login: display})
     }
 
     const SetDisplayRegister = (display: boolean) => {
-        SetModal({
-            login: Modal.login,
-            register: display,
-        })
+        SetModal({...Modal, register: display})
+    }
+
+    const SetDisplayFeedback = (display: boolean) => {
+        SetModal({...Modal, feedback: display})
     }
 
     return (
-        <ModalContext.Provider value={{ Modal, SetDisplayLogin, SetDisplayRegister }}>
-            <div className="bg-[#F3F5F8] min-h-screen min-w-screen flex flex-col justify-between">
-                <Header />
+        <ModalContext.Provider value={{ Modal, SetDisplayLogin, SetDisplayRegister, SetDisplayFeedback }}>
+            <div className="bg-[rgb(243,245,248)] flex flex-col justify-between">
 
                 <Outlet />
                 {
@@ -38,11 +37,21 @@ const Layout = () => {
                 {
                     Modal.register ? <RegisterPopup onExit={() => SetDisplayRegister(false)} /> : null
                 }
-                <Footer />
+                {
+                    Modal.feedback ? <FeedbackPopup onExit={() => SetDisplayFeedback(false)}/> : null
+                }
             </div>
             
         </ModalContext.Provider>
     )
 }
 
-export default Layout;
+export const Layout = () => {
+    return (
+        <div className="bg-[rgb(243,245,248)] min-h-screen min-w-screen flex flex-col justify-between">
+            <Header />
+            <Outlet />
+            <Footer />
+        </div>
+    )
+}

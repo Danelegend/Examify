@@ -1,4 +1,7 @@
+import datetime
 import os
+import uuid
+
 from typing import List, Optional, Tuple
 
 from fastapi import UploadFile
@@ -7,16 +10,19 @@ from errors import AuthenticationError
 
 from logger import Logger
 
+from functionality.bucket.bucket import delete_file, exam_exists, rename_file
 from functionality.exam.exam import FlagExam
 from functionality.google.gdrive import delete_file_from_review, get_files_in_review, move_file_from_review_to_current, upload_file_to_drive
+from functionality.google.sheets import append_values
 from functionality.authentication.authentication import GetUserPermissions
 from functionality.types import ExamType
 
 from database.db_types.db_request import ExamCreationRequest, ExamUpdateRequest
+from database.helpers.user import get_user_details, get_users
 from database.helpers.exam import delete_exam, get_exam, get_exam_id_from_file_location, get_exams, insert_exam, insert_exam_flag, update_exam
 from database.helpers.school import get_or_create_school
 
-from router.api_types.api_response import CurrentExamResponse, ReviewExamResponse
+from router.api_types.api_response import CurrentExamResponse, RegisteredUserData, ReviewExamResponse
 
 REVIEW_EXAMS_DIRECTORY = os.environ.get("REVIEW_EXAMS_DIRECTORY", "review_exams")
 CURRENT_EXAMS_DIRECTORY = os.environ.get("CURRENT_EXAMS_DIRECTORY", "exams")
@@ -79,10 +85,10 @@ def InsertExam(school: str, exam_type: str, year: int, subject: str, file_locati
     ))
 
 def delete_file_from_current(file_name: str) -> None:
-    delete_file(os.path.join(CURRENT_EXAMS_DIRECTORY, file_name))
+    _delete_file(file_name)
 
-def delete_file(file_location: str) -> None:
-    os.remove(file_location)
+def _delete_file(file_name: str) -> None:
+    delete_file(file_name)
 
 def DeleteReviewExam(file_location: str) -> None:
     delete_file_from_review(file_location)
@@ -124,7 +130,7 @@ def _create_temporary_file_name(file_name: str) -> str:
     
     adder = 0
 
-    while os.path.exists(os.path.join(CURRENT_EXAMS_DIRECTORY, f"{file_name_without_extension}_{adder}.pdf")):
+    while exam_exists(f"{file_name_without_extension}_{adder}.pdf"):
         adder += 1
 
     return f"{file_name_without_extension}_{adder}.pdf"
@@ -141,7 +147,7 @@ def _update_exam_file_location(exam_id: int, original_file_name: str, new_file_n
     Logger.log_backend("Admin", f"Renaming file: {original_file_name} -> {new_file_name}")
     
     # Check if there exists a file with the new name
-    if os.path.exists(os.path.join(CURRENT_EXAMS_DIRECTORY, new_file_name)):
+    if exam_exists(new_file_name):
         Logger.log_backend("Admin", f"File with new name already exists: {new_file_name}")
 
         flagged_exam_id = get_exam_id_from_file_location(new_file_name)
@@ -154,14 +160,11 @@ def _update_exam_file_location(exam_id: int, original_file_name: str, new_file_n
         _update_exam_file_location(flagged_exam_id, new_file_name, temp_name)
 
     # Rename the file
-    old_path = os.path.join(CURRENT_EXAMS_DIRECTORY, original_file_name)
-    new_path = os.path.join(CURRENT_EXAMS_DIRECTORY, new_file_name)
-
-    os.rename(old_path, new_path)
+    rename_file(original_file_name, new_file_name)
 
     UpdateExamFileLocation(exam_id, new_file_name)
 
-    Logger.log_backend("Admin", f"Successfully renamed file: {old_path} -> {new_path}")
+    Logger.log_backend("Admin", f"Successfully renamed file: {original_file_name} -> {new_file_name}")
 
 def UpdateExam(exam_id: int, school: Optional[str] = None, year: Optional[int] = None, exam_type: Optional[str] = None, subject: Optional[str] = None) -> Tuple[bool, str]:
     Logger.log_backend("Admin", f"Updating exam: {exam_id}")
@@ -200,3 +203,42 @@ def UpdateExam(exam_id: int, school: Optional[str] = None, year: Optional[int] =
         return True, "Update Successful"
     except Exception as e:
         return False, str(e)
+
+def get_all_users() -> List[RegisteredUserData]:
+    users = []
+
+    for user in get_users():
+        users.append(
+            RegisteredUserData(
+                first_name=user.first_name,
+                last_name=user.last_name,
+                email=user.email,
+                school="" if user.school is None else user.school,
+                school_year=0 if user.grade is None else user.grade
+            ))
+
+    return users
+
+def submit_feedback(name: Optional[str], email: Optional[str], feedback: str, user_id: Optional[int] = None) -> None:
+    id = uuid.uuid4()
+
+    feedback_time = datetime.datetime.now()
+
+    if user_id:
+        user = get_user_details(user_id)
+        name = user.first_name + " " + user.last_name
+        email = user.email
+
+    name = "" if name is None else name
+    email = "" if email is None else email
+
+    Logger.log_backend("Admin", f"Feedback: {name}, {email}, {feedback}, {id}")
+
+    if "FEEDBACK_SHEET_ID" not in os.environ:
+        Logger.log_backend_error("Admin", "Feedback sheet id not found")
+        return
+
+    
+    append_values(os.environ.get("FEEDBACK_SHEET_ID"), "'Feedback'!A1:A5", "USER_ENTERED", [[str(id), name, email, feedback, feedback_time.isoformat()]])
+
+    Logger.log_backend("Admin", "Feedback submitted")

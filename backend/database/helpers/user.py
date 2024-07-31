@@ -178,9 +178,10 @@ def get_user_details(user_id: int) -> UserDetailsResponse:
         with conn.cursor() as cur:
             cur.execute(
                 """
-                SELECT first_name, last_name, email, phone, registeration_method, permission, school, grade 
-                FROM accounts 
-                WHERE id = %(id)s;
+                SELECT a.first_name, a.last_name, a.email, a.phone, a.registeration_method, a.permission, s.name, a.grade 
+                FROM accounts a
+                LEFT JOIN schools s ON a.school = s.id
+                WHERE a.id = %(id)s;
                 """, {"id": user_id})
             first_name, last_name, email, phone, registration, permissions, school, grade = cur.fetchone()
 
@@ -239,3 +240,61 @@ def get_user_subjects(user_id: int) -> List[str]:
         disconnect(conn)
 
     return [subject for subject in subjects]
+
+def insert_user_subject(user_id: int, subject: str):
+    """
+    Inserts a new subject for the user
+    """
+    try:
+        conn = connect()
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                INSERT INTO user_subjects (account, subject) 
+                VALUES (%(account)s, %(subject)s);
+                """, {
+                    'account': user_id,
+                    'subject': subject
+                })
+
+        conn.commit()
+        log_user_success("Finished inserting the User Subject into Database")
+    except psycopg2.Error as e:
+        log_user_error(f"Error inserting the User Subject: {e}")
+        conn.rollback()
+        raise e
+    finally:
+        disconnect(conn)
+
+def get_users() -> List[UserDetailsResponse]:
+    """
+    Gets all the users in the database
+    """
+    try:
+        conn = connect()
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                SELECT a.first_name, a.last_name, a.email, a.phone, a.registeration_method, a.permission, s.name, a.grade 
+                FROM accounts a
+                LEFT JOIN schools s ON a.school = s.id;
+                """)
+            users = cur.fetchall()
+
+        log_user_success("Finished getting all the Users from Database")
+    except psycopg2.Error as e:
+        log_user_error(f"Error getting all the Users: {e}")
+        raise e
+    finally:
+        disconnect(conn)
+
+    return [UserDetailsResponse(
+        first_name=first_name,
+        last_name=last_name,
+        email=email,
+        phone=phone,
+        registration_method=registration,
+        permissions=permissions,
+        school=school,
+        grade=grade
+    ) for first_name, last_name, email, phone, registration, permissions, school, grade in users]

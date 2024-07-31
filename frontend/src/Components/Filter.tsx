@@ -36,12 +36,10 @@ export const DesktopFilter = ({ title, items, search, update }: DropdownFilterPr
     const [isOpen, setIsOpen] = useState(false)
     const [Search, SetSearch] = useState("")
 
-    const [Items, SetItems] = useState<Item[]>(items.map((item) => {
-       return {
-            name: item,
-            selected: false
-       }}
-    ));
+    // A flag to trigger update event of items
+    const [Update, SetUpdate] = useState(false);
+
+    const [Items, SetItems] = useState<Item[]>([]);
 
     const dropdownRef = useRef(null)
 
@@ -69,10 +67,12 @@ export const DesktopFilter = ({ title, items, search, update }: DropdownFilterPr
                 },
                 ...Items.slice(index + 1)
             ])
-            return
+        } else {
+            SetItems([...Items.filter((item) => item.name !== Search), {name: Search, selected: true}])
+    
         }
-
-        SetItems([...Items.filter((item) => item.name !== Search), {name: Search, selected: true}])
+        
+        SetUpdate(true)
     }
 
     const ChangeItemSelected = (item: Item) => {
@@ -87,11 +87,25 @@ export const DesktopFilter = ({ title, items, search, update }: DropdownFilterPr
             },
             ...Items.slice(itemPos + 1)
         ])
+
+        SetUpdate(true)
     }
 
     useEffect(() => {
+        if (!Update) return;
+
         update(Items.filter((item) => item.selected).map((item) => item.name))
-    }, [Items])
+        SetUpdate(false)
+    }, [Update])
+
+    useEffect(() => {
+        SetItems(items.slice().map((item) => {
+            return {
+                name: item,
+                selected: false
+            }
+        }))
+    }, [items])
 
     return (
         <div ref={dropdownRef}>

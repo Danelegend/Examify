@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import LoggedOutNavbar from "./Components/Medium/LoggedOutNavbar";
 import { UserContext } from "../../context/user-context";
 import LoggedInNavbar from "./Components/Medium/LoggedInNavbar";
@@ -27,6 +27,10 @@ const LOGGED_OUT_NAV_OPTIONS: Array<NavigationType> = [
     {
         title: "Exams",
         link: "/exams"
+    },
+    {
+        title: "Blog",
+        link: "/blogs"
     },
     {
         title: "Upload",
@@ -58,6 +62,10 @@ const LOGGED_IN_NAV_OPTIONS: Array<NavigationType> = [
     {
         title: "Exams",
         link: "/exams"
+    },
+    {
+        title: "Blog",
+        link: "/blogs"
     },
     {
         title: "Upload",
@@ -99,9 +107,7 @@ const SmallNavbar = ({ accessToken }: { accessToken: string | null }) => {
 
     const handleLogoutClick = () => {
         try {
-            LogoutMutation({
-                token: readAccessToken()!
-            })
+            LogoutMutation()
         } catch (e) {
             console.error(e)
         }
@@ -171,28 +177,20 @@ const MediumNavbar = ({ accessToken }: { accessToken: string | null }) => {
 const Navbar = () => {
     const size = useWindowSize()
     
-    const { setAccessToken } = useContext(UserContext);
+    const { accessToken, setAccessToken } = useContext(UserContext);
 
     const { mutateAsync: CheckToken } = useMutation({
         mutationFn: GetTokenRefresh,
-        onSuccess: (res) => {
-            res.json().then((data) => {
-                switch (res.status) {
-                    case 200:
-                        storeAccessToken(data.access_token)
-                        storeExpiration(data.expiration)
-                        break
-                    default:
-                        removeAccessToken()
-                        setAccessToken(null)
-                }
-            })
+        onError: (e) => {
+            removeAccessToken()
+            setAccessToken(null)
         }
     })
 
-    if (readExpiration() !== null && new Date(readExpiration()!) < new Date()) {
-        CheckToken()
-    }
+    useEffect(() => {
+        if (readExpiration() !== null && new Date(readExpiration()!) < new Date()) {
+            CheckToken()
+        }}, [accessToken])
 
     return (size.width >= 720) ? 
         <MediumNavbar accessToken={readAccessToken()} />

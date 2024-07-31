@@ -87,12 +87,10 @@ const ExamCard = ({ school, year, type, difficulty, id, favourite, likes, upload
 
         if (isFavourite) {
             UnfavouriteMutation({
-                token: readAccessToken()!,
                 exam_id: id
             })
         } else {
             FavouriteMutation({
-                token: readAccessToken()!,
                 exam_id: id
             })
         }

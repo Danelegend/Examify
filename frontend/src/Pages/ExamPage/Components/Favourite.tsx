@@ -1,15 +1,26 @@
 import { RiHeartFill, RiHeartLine } from 'react-icons/ri';
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { readAccessToken } from '../../../util/utility';
 import { DeleteFavourite, FetchUserFavouritedExam, PostFavourite } from '../../../api/api';
 import { useQuery } from '@tanstack/react-query';
+import { ModalContext } from '../../../context/modal-context';
 
 const FavouriteIcon = ({ exam_id }: { exam_id: number} ) => {
     const [Favourite, SetFavourite] = useState<boolean>(false)
 
+    const { SetDisplayLogin } = useContext(ModalContext)
+
     const { data, isPending, isError } = useQuery({
         queryKey: ['Favourite'],
-        queryFn: () => FetchUserFavouritedExam({ token: readAccessToken()!, exam_id: exam_id}),
+        queryFn: () => {
+            if (readAccessToken() === null) {
+                return new Promise<boolean>((resolve, reject) => {
+                    resolve(false)
+                })
+            }
+
+            return FetchUserFavouritedExam({ exam_id: exam_id })
+        },
         retry: 0
     })
 
@@ -17,10 +28,11 @@ const FavouriteIcon = ({ exam_id }: { exam_id: number} ) => {
         const token = readAccessToken()
 
         if (token === null) {
+            SetDisplayLogin(true)
             return
         }
 
-        Favourite ? DeleteFavourite({ exam_id: exam_id, token: token }) : PostFavourite({ exam_id: exam_id, token: token })
+        Favourite ? DeleteFavourite({ exam_id: exam_id }) : PostFavourite({ exam_id: exam_id })
 
         SetFavourite(!Favourite)
     }

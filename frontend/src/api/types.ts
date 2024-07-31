@@ -45,6 +45,7 @@ export type UserProfileEditRequest = {
     dob: Date,
     school: string,
     school_year: number
+    subjects: string[]
 }
 
 export type FetchExamsRequest = {
@@ -150,8 +151,8 @@ export type ExamDetails = {
     favourite: boolean,
     upload_date: string,
     likes: number,
-    subject: string
-
+    subject: string,
+    difficulty: number
 }
 
 export type FetchExamsResponse = {
@@ -252,4 +253,20 @@ export type FetchTopicRecommendationsResponse = {
         question_id_link: number,
         question_title: string
     }[]
+}
+
+export type FetchRegisteredUsersResponse = {
+    users: {
+        first_name: string,
+        last_name: string,
+        email: string,
+        school: string,
+        school_year: number
+    }[]
+}
+
+export type FeedbackRequest = {
+    name?: string,
+    email?: string,
+    feedback: string
 }

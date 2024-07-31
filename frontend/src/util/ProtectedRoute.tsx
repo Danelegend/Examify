@@ -13,13 +13,11 @@ export const ProtectedRoute = () => {
 }
 
 export const AdminProtectedRoute = () => {
-    const AccessToken = readAccessToken()
-    
     const navigate = useNavigate()
 
     const { data, isPending, error } = useQuery({
         queryKey: ['Permissions'],
-        queryFn: () => FetchPermissions({ token: (AccessToken === null ? "" : AccessToken) })
+        queryFn: () => FetchPermissions()
     })
 
     useEffect(() => {

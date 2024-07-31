@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query"
 import { useEffect, useRef, useState } from "react"
 import { IoIosNotifications } from "react-icons/io"
-import { readAccessToken } from "../../../util/utility"
+import { FetchError, handle403, readAccessToken } from "../../../util/utility"
 import { FetchUserNotifications, UserNotificationsSeen } from "../../../api/api"
 import { useOnClickOutside } from "usehooks-ts"
 
@@ -17,15 +17,24 @@ const NotificationIcon = ({ className }: { className?: string}) => {
 
     const ref = useRef(null);
 
+    const AuthenticationError = handle403()
+
     useOnClickOutside(ref, () => SetToggleDropdown(false))
 
-    const { data, isPending } = useQuery({
+    const { data, isPending, isError, error } = useQuery({
         queryKey: ["Notifications"],
-        queryFn: () => FetchUserNotifications({ token: readAccessToken()! })
+        queryFn: () => FetchUserNotifications()
     })
 
     useEffect(() => {
-        if (!isPending) {
+        if (error instanceof FetchError) {
+            if ((error as FetchError).status === 401) {
+                AuthenticationError()
+                return
+            }
+        }
+
+        if (!isPending && !isError) {
             SetNotifications(data!.notifications.sort((a, b) => 
                 a.date_sent.getTime() - b.date_sent.getTime()
             ).map(notification => {
@@ -36,14 +45,13 @@ const NotificationIcon = ({ className }: { className?: string}) => {
                 }
             }))
         }
-    }, [isPending])
+    }, [isPending, error])
 
     const onNotificationButtonClick = () => {
         SetToggleDropdown(!toggleDropDown)
 
         if (Notifications.length > 0) {
             UserNotificationsSeen({ 
-                token: readAccessToken()!, 
                 notification_ids: Notifications.map(notification => notification.id)
             })
         }

@@ -1,22 +1,19 @@
-import { Link } from "react-router-dom";
-import FavouriteIcon from "../Pages/ExamsPage/Components/FavouriteIcon";
-import { useContext, useState } from "react";
-import { readAccessToken } from "../util/utility";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { ModalContext } from "../context/modal-context";
-import { DeleteFavourite, PostFavourite } from "../api/api";
+import { Link } from "react-router-dom"
+import FavouriteIcon from "../../../ExamsPage/Components/FavouriteIcon"
+import { useContext, useEffect, useState } from "react"
+import { DeleteFavourite, FetchExam, FetchExams, FetchUserFavouritedExam, PostFavourite } from "../../../../api/api"
+import { useMutation, useQuery } from "@tanstack/react-query"
+import { ExamTypes } from "../../../../api/types"
+import { readAccessToken } from "../../../../util/utility"
+import { ModalContext } from "../../../../context/modal-context"
 
-export type ExamCardProps = {
+type BlogExamCardProps = {
     school: string,
     year: number,
     type: string,
+    className?: string,
     subject: string,
-    difficulty: number,
-    id: number,
-    favourite: boolean,
-    likes: number,
-    uploadDate: string,
-    className?: string
+    displaySubject?: boolean,
 }
 
 const SUBJECT_COLOR = {
@@ -30,12 +27,35 @@ const GetColor: (subject: string) => string = (subject: string) => {
     return (Object.keys(SUBJECT_COLOR).includes(subject)) ? SUBJECT_COLOR[subject] : "bg-orange-500"
 }   
 
-const ExamCard = ({ school, year, type, difficulty, id, favourite, likes, uploadDate, className, subject }: ExamCardProps) => {
-    const [isFavourite, setIsFavourite] = useState(favourite)
+const MapTypeToLink: (type: string) => string = (type: string) => {
+    switch (type) {
+        case "Trial":
+            return "Trial Exam"
+        default:
+            return type
+    }
+}
+
+const BlogExamCard = ({ school, year, type, className, subject, displaySubject }: BlogExamCardProps) => {
+    const [isFavourite, setIsFavourite] = useState(false)
 
     const { SetDisplayLogin } = useContext(ModalContext)
 
-    const queryClient = useQueryClient()
+    const { data, isPending } = useQuery({
+        queryKey: [school, subject, year, type],
+        queryFn: () => FetchExams({
+            request: {
+                page: 1,
+                page_length: 1,
+                filter: {
+                    schools: [school],
+                    subjects: [subject],
+                    years: [year]
+                },
+                sort: "relevance"
+            } 
+        })
+    })
 
     const { mutateAsync: FavouriteMutation } = useMutation({
         mutationFn: PostFavourite,
@@ -87,44 +107,43 @@ const ExamCard = ({ school, year, type, difficulty, id, favourite, likes, upload
 
         if (isFavourite) {
             UnfavouriteMutation({
-                exam_id: id
+                exam_id: data!.exams[0].id
             })
         } else {
             FavouriteMutation({
-                exam_id: id
+                exam_id: data!.exams[0].id
             })
         }
         
         setIsFavourite(!isFavourite)
-        queryClient.invalidateQueries({
-            queryKey: ["Exams"]
-        })
     }
 
+    useEffect(() => {
+        if (isPending) return
+
+        setIsFavourite(data!.exams[0].favourite)
+    }, [data, isPending])
+
     return (
-        <div className={"flex justify-center " + className}> 
-            <div className="w-4/5">
-                <Link to={"/exam/" + subject + "/" + school + "/" + year + "/" + type}>
-                    <div className={GetColor(subject) + " h-full relative rounded-2xl pl-12 pr-7 py-10 shadow-md text-zinc-200"}>
-                        <FavouriteIcon isFavourite={isFavourite} onClick={FavouriteClick} className="absolute bottom-3 right-2 md:right-5"/>
+        <div className={"flex justify-center h-full " + className}>
+            <div className="w-full">
+                <Link to={"/exam/" + subject + "/" + school + "/" + year + "/" + MapTypeToLink(type)}>
+                    <div className={GetColor(subject) + " h-full relative rounded-2xl pl-12 pr-7 py-10 shadow-lg text-zinc-200"}>
+                        <FavouriteIcon isFavourite={isFavourite} className="absolute bottom-3 right-2 md:right-5" onClick={FavouriteClick}/>
                         <div className="flex flex-col break-words">
                             <div className="flex flex-col font-semibold text-xl break-words">
-                                {school} {subject} {year} 
-                            </div>
-                            <div className="ml-2 font-semibold text-l">
-                                {type} 
+                                {school} {displaySubject ? subject : ""} {type} {year}
                             </div>
                             <div className="ml-2">
-                                Uploaded: {uploadDate}
+                                Uploaded: {data ? data.exams[0].upload_date : ""}
                             </div>
                             <div className="ml-2">
-                                Difficulty: {difficulty}
+                                Difficulty: {data ? data.exams[0].difficulty : ""}
                             </div>
                             <div className="ml-2">
-                                Likes: {likes}
+                                Likes: {data ? data.exams[0].likes : 0}
                             </div>
                         </div>
-                        
                     </div>
                 </Link>
             </div>
@@ -132,4 +151,4 @@ const ExamCard = ({ school, year, type, difficulty, id, favourite, likes, upload
     )
 }
 
-export default ExamCard;
+export default BlogExamCard

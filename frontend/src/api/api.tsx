@@ -233,6 +233,7 @@ export const FetchUserProfile = (): Promise<FetchUserResponse> => {
 }
 
 export const FetchExams = ({ request }: { request: FetchExamsRequest }): Promise<FetchExamsResponse> => {
+    console.log(request.filter.schools)
     return fetch(`${Environment.BACKEND_URL}/api/exams/?page=${request.page}&page_length=${request.page_length}`, {
         headers: (readAccessToken() === null) ?
         {  
@@ -255,6 +256,8 @@ export const FetchExams = ({ request }: { request: FetchExamsRequest }): Promise
     }).then(async (res) => {
         const data = await res.json()
         
+        console.log(request.filter.schools, data.exams[0])
+
         if (res.ok) {
             return data
         } else {

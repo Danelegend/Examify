@@ -15,7 +15,7 @@ const LoggedOutNavbar = () => {
 
     return (
         <>
-                <div className="self-stretch justify-start items-center gap-10 inline-flex text-base font-['Montserrat']">
+                <div className="self-stretch justify-start items-center gap-7 inline-flex text-base font-['Montserrat']">
                     <NavigationButton link="/exams" title="Exams" dropLinks={
                         [
                             {
@@ -42,6 +42,7 @@ const LoggedOutNavbar = () => {
                         ]
                     }/>
                     <NavigationButton link="/questions" title="Questions" />
+                    <NavigationButton link="/blogs" title="Articles" />
                     <NavigationButton link="/upload" title="Upload" />
                 </div>
 

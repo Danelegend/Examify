@@ -151,8 +151,8 @@ export type ExamDetails = {
     favourite: boolean,
     upload_date: string,
     likes: number,
-    subject: string
-
+    subject: string,
+    difficulty: number
 }
 
 export type FetchExamsResponse = {

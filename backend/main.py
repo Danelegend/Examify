@@ -14,7 +14,7 @@ from functionality.scripts.file_transfer.local_to_idrive import transfer_files
 
 from logger import Logger
 
-from router import admin, auth, exam, exams, logo, question, questions, user
+from router import admin, ai, auth, exam, exams, logo, question, questions, user
 
 @asynccontextmanager
 async def lifespan(app: FastAPI): # pylint: disable=W0621
@@ -67,6 +67,7 @@ app.add_middleware(
 
 
 app.include_router(admin.router, prefix="/api/admin", tags=["admin"])
+app.include_router(ai.router, prefix="/api/ai", tags=["ai"])
 app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
 app.include_router(exam.router, prefix="/api/exam", tags=["exam"])
 app.include_router(exams.router, prefix="/api/exams", tags=["exams"])

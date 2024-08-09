@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List, Optional
+from typing import List, Literal, Optional
 
 from pydantic import BaseModel
 
@@ -63,3 +63,17 @@ class QuestionsDetailsResponse(BaseModel):
     question: str
     answers: List[str]
     image_locations: List[str]
+
+class AiTutorConversationResponse(BaseModel):
+    id: int
+    time_created: datetime
+    subject: str
+    topic: str
+    title: str
+
+class AiTutorMessageResponse(BaseModel):
+    id: int
+    supporting_image_location: Optional[str] = None
+    message: str
+    sender: Literal["STU", "TUT"]
+    time_created: datetime

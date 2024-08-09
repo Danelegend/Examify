@@ -1,6 +1,6 @@
 from datetime import datetime, date
 
-from typing import List, Optional
+from typing import List, Literal, Optional
 from pydantic import AwareDatetime, BaseModel
 
 ################################################################################
@@ -36,6 +36,35 @@ class RegisteredUserData(BaseModel):
 
 class RegisteredUsersResponse(BaseModel):
     users: List[RegisteredUserData]
+
+################################################################################
+###################################     Ai    ##################################
+################################################################################
+class AiConversationMessage(BaseModel):
+    id: int
+    sequence_number: int
+    author: Literal["tutor", "user"]
+    contents: List[str]
+    timestamp: AwareDatetime
+
+class GetConversationResponse(BaseModel):
+    messages: List[AiConversationMessage]
+
+class PostConversationMessageResponse(BaseModel):
+    message: AiConversationMessage
+
+class PostNewConversationResponse(BaseModel):
+    conversation_id: int
+    message: AiConversationMessage
+
+class ConversationBrief(BaseModel):
+    conversation_id: int
+    title: str
+    subject: str
+    timestamp: AwareDatetime
+
+class GetConversationsResponse(BaseModel):
+    conversations: List[ConversationBrief]
 
 ################################################################################
 #################################     Auth     #################################

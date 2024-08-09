@@ -1,6 +1,7 @@
 DROP TYPE IF EXISTS EXAM_TYPE CASCADE;
 DROP TYPE IF EXISTS REGISTERATION_METHOD CASCADE;
 DROP TYPE IF EXISTS PERMISSIONS CASCADE;
+DROP TYPE IF EXISTS AI_TUTOR_MESSAGE_SENDER CASCADE;
 
 DROP TABLE IF EXISTS schools CASCADE;
 DROP TABLE IF EXISTS accounts CASCADE;
@@ -17,6 +18,8 @@ DROP TABLE IF EXISTS question_images CASCADE;
 DROP TABLE IF EXISTS user_answers CASCADE;
 DROP TABLE IF EXISTS flagged_exams CASCADE;
 DROP TABLE IF EXISTS user_subjects CASCADE;
+DROP TABLE IF EXISTS ai_tutor_conversations CASCADE;
+DROP TABLE IF EXISTS ai_tutor_messages CASCADE;
 
 -- Types / Domains
 CREATE TYPE EXAM_TYPE AS ENUM ('TRI', 'HSC', 'TOP', 'HAF', 'T_1', 'T_2', 'T_3', 'T_4');
@@ -170,4 +173,26 @@ CREATE TABLE flagged_exams (
     timestamp               TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY             (id),
     FOREIGN KEY             (exam) REFERENCES exams(id)
+);
+
+CREATE TABLE ai_tutor_conversations (
+    conversation_id         BIGSERIAL,
+    account                 INT NOT NULL,
+    time_created            TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    subjet                  VARCHAR(255) NOT NULL,
+    topic                   VARCHAR(255) NOT NULL,
+    title                   VARCHAR(255) NOT NULL,
+    PRIMARY KEY             (conversation_id),
+    FOREIGN KEY             (account) REFERENCES accounts(id)  
+);
+
+CREATE TABLE ai_tutor_messages (
+    message_id              BIGSERIAL,
+    conversation_id         INT NOT NULL,
+    supporting_image_loc    VARCHAR(255) DEFAULT NULL,
+    message_contents        TEXT NOT NULL DEFAULT "",
+    time_created            TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    user_sent               BOOLEAN NOT NULL DEFAULT TRUE  ,
+    PRIMARY KEY             (message_id),
+    FOREIGN KEY             (conversation_id) REFERENCES ai_tutor_conversations(conversation_id)                
 );

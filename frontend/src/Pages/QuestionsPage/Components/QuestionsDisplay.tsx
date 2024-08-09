@@ -187,13 +187,13 @@ const QuestionsDisplay = () => {
     return (
         <div>
             <h1 className="text-3xl font-bold text-black text-center mt-16 mb-4">Questions</h1>
-            <div className="grid grid-cols-4">
-                <div className="col-start-2 col-span-2 flex justify-between my-2">
-                    <DesktopFilter title={"Subject"} items={subjectFilterPending ? [] : subjectFilterData!.subjects} update={UpdateSubjects} />
-                    <DesktopFilter title={"Topic"} items={topicFilterPending ? [] : topicFilterData!.topics} update={UpdateTopics} />
-                    <DesktopFilter title={"Grade"} items={Array.from({ length: 5}, (_, i) => (12 - i * 1).toString())} update={UpdateGrades} />
+                <div className="flex justify-center my-2">
+                    <div className="flex space-x-4">
+                        <DesktopFilter title={"Subject"} items={subjectFilterPending ? [] : subjectFilterData!.subjects} update={UpdateSubjects} />
+                        <DesktopFilter title={"Topic"} items={topicFilterPending ? [] : topicFilterData!.topics} update={UpdateTopics} />
+                        <DesktopFilter title={"Grade"} items={Array.from({ length: 5}, (_, i) => (12 - i * 1).toString())} update={UpdateGrades} />
+                    </div>
                 </div>
-            </div>
             <ul>
                 <li id="title-bar">
                     <TitleCard 

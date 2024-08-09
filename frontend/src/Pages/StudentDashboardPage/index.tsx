@@ -71,17 +71,17 @@ const StudentDashboardPage = () => {
             <div className="text-black text-center text-xl mt-6 font-bold">
                 Welcome back {UserProfile?.name}!
             </div>
-            <div className="grid grid-cols-4 mx-32 gap-x-4 gap-y-12 pt-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 mx-4 md:mx-32 gap-x-4 gap-y-12 pt-4">
                 <div className="col-span-4">
                     <RecommendedExamsDisplay />
                 </div>
-                <div className="my-auto">
+                <div className="col-span-1">
                     <SubjectAnalyticsPieChart />
                 </div>
                 <div className="col-span-2">
                     <ExamTimeChart />
                 </div>
-                <div className="my-auto">
+                <div className="col-span-1">
                     <RecommendTopics />
                 </div>
                 <div className="col-span-4">

@@ -82,7 +82,7 @@ const ExamDisplayTemplate = ({ fetchExamsFn, queryKey, title }: ExamDisplayTempl
             <div className="text-black text-center text-xl font-semibold">
                 {title}
             </div>
-            <div className="flex justify-center items-center py-4 mx-4">
+            <div className="flex justify-center items-center py-4 mx-2 md:mx-4">
                 {
                     (isPending) ? 
                     <l-waveform
@@ -93,7 +93,7 @@ const ExamDisplayTemplate = ({ fetchExamsFn, queryKey, title }: ExamDisplayTempl
                     /> :
                 <>  
                     {
-                        Exams.length <= Math.ceil(size.width / sizeFactor) ? null :
+                        Exams.length <= Math.floor(size.width / sizeFactor) ? null :
                         <MdArrowBackIos size={32} color="black" className="cursor-pointer" onClick={handleLeftClick}/>
                     }
                     <div className={("grid-cols-" + Math.ceil(size.width / sizeFactor).toString()) + " grid "}>

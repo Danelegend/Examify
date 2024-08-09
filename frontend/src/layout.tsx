@@ -48,7 +48,7 @@ export const ModalLayout = () => {
 
 export const Layout = () => {
     return (
-        <div className="bg-[rgb(243,245,248)] min-h-screen min-w-screen flex flex-col justify-between">
+        <div className="bg-[rgb(243,245,248)] min-h-screen max-w-screen flex flex-col justify-between">
             <Header />
             <Outlet />
             <Footer />

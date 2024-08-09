@@ -1,6 +1,7 @@
 import { ReactNode } from "react"
 import { FaSort } from "react-icons/fa"
 import { Link } from "react-router-dom"
+import { useScreen, useWindowSize } from "usehooks-ts"
 
 export type QuestionCardProps = {
     id: number,
@@ -72,9 +73,9 @@ export const LoadingQuestionCard = ({ index }: { index: number }) => {
 type QuestionCardSkeletonProps = {
     col1: ReactNode,
     col2: ReactNode,
-    col3: ReactNode,
-    col4: ReactNode,
-    col5: ReactNode,
+    col3?: ReactNode,
+    col4?: ReactNode,
+    col5?: ReactNode,
     className?: string
 }
 
@@ -90,23 +91,39 @@ export const QuestionCardSkeleton = ({ col1, col2, col3, col4, col5, className }
     */
     className = className === undefined ? "" : className
 
+    const window = useWindowSize()
+
     return (
         <div className={className + " flex odd:bg-layer-1 even:bg-overlay-1 py-4 px-4"}>
-            <div className="w-[260px]">
-                {col1}
-            </div>
-            <div className="w-[260px]">
-                {col2}
-            </div>
-            <div className="w-[260px]">
-                {col3}
-            </div>
-            <div className="w-[100px]">
-                {col4}
-            </div>
-            <div className="w-[84px]">
-                {col5}
-            </div>
+            {
+                (window.width > 768) ?
+                <>
+                <div className="w-[260px]">
+                    {col1}
+                </div>
+                <div className="w-[260px]">
+                    {col2}
+                </div>
+                <div className="w-[260px]">
+                    {col3}
+                </div>
+                <div className="w-[100px]">
+                    {col4}
+                </div>
+                <div className="w-[84px]">
+                    {col5}
+                </div> 
+                </>
+                :
+                <>
+                <div className="w-1/2">
+                    {col1}
+                </div>
+                <div className="w-1/2">
+                    {col2}
+                </div>
+                </>
+            }
         </div>
     )
 }

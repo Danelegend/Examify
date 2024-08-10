@@ -238,3 +238,119 @@ def user_can_access_conversation(user_id: int, conversation_id: int) -> bool:
         disconnect(conn)
 
     return exists[0] if exists else False
+
+def get_image_location_for_message(message_id: int, conversation_id: int) -> str:
+    """
+    Given a message id and conversation id, get the image location for the message
+    """
+    try:
+        conn = connect()
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                SELECT supporting_image_loc
+                FROM ai_tutor_messages
+                WHERE message_id = %(message_id)s AND conversation_id = %(conversation_id)s
+                """, {
+                    'message_id': message_id,
+                    'conversation_id': conversation_id
+                }
+            )
+
+            image_loc = cur.fetchone()
+        log_success("Finished getting image location for message")
+    except psycopg2.Error as e:
+        log_error(f"Error getting image location for message: {e}")
+        raise e
+    finally:
+        disconnect(conn)
+
+    return image_loc[0] if image_loc else None
+
+def preallocate_message_id(conversation_id: int, isUser=False) -> int:
+    """
+    Preallocates a message id for the conversation
+    """
+    try:
+        conn = connect()
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                INSERT INTO ai_tutor_messages (conversation_id, user_sent)
+                VALUES (%(conversation_id)s, %(isUser)s)
+                RETURNING message_id;
+                """, {
+                    'conversation_id': conversation_id,
+                    'isUser': isUser
+                }
+            )
+
+            message_id = cur.fetchone()
+        log_success("Finished preallocating message id")
+    except psycopg2.Error as e:
+        log_error(f"Error preallocating message id: {e}")
+        conn.rollback()
+        raise e
+    finally:
+        disconnect(conn)
+
+    return message_id[0] if message_id else None
+
+def edit_message_contents(conversation_id: int, message_id: int, message_contents: str):
+    """
+    Edits the message contents of a message
+    """
+    try:
+        conn = connect()
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                UPDATE ai_tutor_messages
+                SET message_contents = %(message_contents)s
+                WHERE conversation_id = %(conversation_id)s AND message_id = %(message_id)s
+                """, {
+                    'message_contents': message_contents,
+                    'conversation_id': conversation_id,
+                    'message_id': message_id
+                }
+            )
+
+        conn.commit()
+        log_success("Finished editing message contents")
+    except psycopg2.Error as e:
+        log_error(f"Error editing message contents: {e}")
+        conn.rollback()
+        raise e
+    finally:
+        disconnect(conn)
+
+def get_conversations() -> List[AiTutorConversationResponse]:
+    """
+    Gets all the conversations
+    """
+    try:
+        conn = connect()
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                SELECT conversation_id, time_created, subject, topic, title
+                FROM ai_tutor_conversations
+                ORDER BY time_created DESC
+                """
+            )
+
+            conversations = cur.fetchall()
+        log_success("Finished getting all conversations")
+    except psycopg2.Error as e:
+        log_error(f"Error getting all conversations: {e}")
+        raise e
+    finally:
+        disconnect(conn)
+
+    return [AiTutorConversationResponse(
+        id=id,
+        time_created=creation_time,
+        subject=subject,
+        topic=topic,
+        title=title
+    ) for id, creation_time, subject, topic, title in conversations]

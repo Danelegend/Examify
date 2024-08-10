@@ -192,7 +192,7 @@ CREATE TABLE ai_tutor_messages (
     supporting_image_loc    VARCHAR(255) DEFAULT NULL,
     message_contents        TEXT NOT NULL DEFAULT "",
     time_created            TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    user_sent               BOOLEAN NOT NULL DEFAULT TRUE  ,
+    user_sent               BOOLEAN NOT NULL DEFAULT TRUE,
     PRIMARY KEY             (message_id),
     FOREIGN KEY             (conversation_id) REFERENCES ai_tutor_conversations(conversation_id)                
 );

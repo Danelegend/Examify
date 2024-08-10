@@ -46,16 +46,18 @@ class AiConversationMessage(BaseModel):
     author: Literal["tutor", "user"]
     contents: List[str]
     timestamp: AwareDatetime
+    has_image: bool
 
 class GetConversationResponse(BaseModel):
     messages: List[AiConversationMessage]
 
 class PostConversationMessageResponse(BaseModel):
-    message: AiConversationMessage
+    student_message: AiConversationMessage
+    tutor_message_id: int
 
 class PostNewConversationResponse(BaseModel):
     conversation_id: int
-    message: AiConversationMessage
+    tutor_message_id: int
 
 class ConversationBrief(BaseModel):
     conversation_id: int

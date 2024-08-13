@@ -30,21 +30,16 @@ def _database_author_to_api_author(author: Literal['STU', 'TUT']):
     
     raise ValueError("Unexpected value")
 
-
 class AiTutor:
-    """
-    The AI tutor class
-    """
     def __init__(self, conversation_id: int, subject: str, topic: str):
-        # A list of messages in the conversation
-        self.message_context = []
-        self.messages = {}
-        self.generators = {}
-
-        self.subject = subject
-        self.topic = topic
+        self.message_context = [] # This is the full history context of messages. It includes system messages that 
+                                  # should not be viewable by the user
+        self.messages = {}        # This shows all the messages from the student and tutor
+                                  # It is mapped by the message's id
 
         self.conversation_id = conversation_id
+        self.subject = subject
+        self.topic = topic
 
     def add_messages(self, messages: List[MessageResponse]):
         self.messages = messages
@@ -55,90 +50,16 @@ class AiTutor:
                 message=message.message
             ))
 
+    def send_message(self, message: str) -> MessageResponse:
+        message = ""
+        message_id  = 1
 
-    def send_message(self, message: str) -> int:
-        """
-        Returns a stream of the messages being received
-        
-        Returns the id of the message to be sent
-        """
-        message_id = self._preallocate_message_id()
-
-        self._send_message(message, message_id)
-
-        return message_id
-    
-    def send_message(self, message: str, image_location: Optional[str] = None) -> int:
-        """
-        Returns a stream of the messages being received
-        
-        Returns the id of the message to be sent
-        """
-        if image_location is None:
-            return self.send_message(message)
-
-        message_id = self._preallocate_message_id()
-
-        self._send_message(message, message_id, image_location)
-
-        return message_id
-
-    def _send_message(self, message: str, tutor_preallocated_message_id: int):
-        """
-        Sends a message to the AI API
-        """
-        self.message_context.append(MessageContext(
-                user="user", 
-                message=message,
-            ))
-        
-        generator = create_generator(self.message_context)
-        
-        messageResponse = MessageResponse(
+        return MessageResponse(
             user="tutor",
-            message="",
-            message_id=tutor_preallocated_message_id,
-            isComplete=False
+            message=message,
+            message_id=message_id,
+            isComplete=True
         )
-
-        self.messages[tutor_preallocated_message_id] = copy.copy(messageResponse)
-        self.message_context.append(copy.copy(messageResponse))
-
-        self.generators[tutor_preallocated_message_id] = generator
-
-    def get_message_stream(self, message_id: int) -> Generator[str, None, str]:
-        """
-        Returns a stream of the messages being received
-        """
-        if (message_id in self.messages and self.messages[message_id].isComplete):
-            return self.messages[message_id].message
-
-        content = ""
-
-        for event in self.generators[message_id]:
-            if "content" in event:
-                content += event["content"]
-                yield event["content"]
-
-        self._on_message_stream_complete(message_id, content)
-
-        return ""
-    
-    def _on_message_stream_complete(self, message_id: int, message: str):
-        edit_message_contents(self.conversation_id, message_id, message)
-
-        self.messages[message_id].isComplete = True
-        self.messages[message_id].message = message
-
-        self.message_context.append(MessageContext(
-            user="assistant",
-            message=message
-        ))
-
-        self.generators.pop(message_id)
-
-    def _preallocate_message_id(self) -> int:
-        return preallocate_message_id(self.conversation_id, isUser=False)
 
 class AiTutorBuilder:
     def __init__(self, conversation_id: int):
@@ -210,7 +131,7 @@ class AiTutorManager(SingletonClass):
             self.load_ai_tutor(conversation.id)
     
     def get_ai_tutor(self, conversation_id) -> AiTutor:
-        return self.ai_tutors.get(conversation_id, AiTutorFactory.create_ai_tutor())
+        return self.ai_tutors.get(conversation_id, AiTutorFactory.create_ai_tutor(conversation_id, None, None))
 
     def load_ai_tutor(self, conversation_id) -> AiTutor:
         """
@@ -238,7 +159,7 @@ class AiTutorManager(SingletonClass):
         """
         Creates a new AI tutor
         """
-        conversation_id = insert_ai_tutor_conversation(user_id, subject, topic, title)
+        conversation_id = 1 #insert_ai_tutor_conversation(user_id, subject, topic, title)
 
         ai_tutor = AiTutorFactory.create_ai_tutor(conversation_id)
         self.ai_tutors[conversation_id] = ai_tutor

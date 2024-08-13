@@ -52,12 +52,11 @@ class GetConversationResponse(BaseModel):
     messages: List[AiConversationMessage]
 
 class PostConversationMessageResponse(BaseModel):
-    student_message: AiConversationMessage
-    tutor_message_id: int
+    tutor_message: AiConversationMessage
 
 class PostNewConversationResponse(BaseModel):
     conversation_id: int
-    tutor_message_id: int
+    tutor_message: AiConversationMessage
 
 class ConversationBrief(BaseModel):
     conversation_id: int

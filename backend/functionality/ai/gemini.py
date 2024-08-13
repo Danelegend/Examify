@@ -4,7 +4,7 @@ import google.generativeai as genai
 
 from functools import cache
 
-genai.configure(api_key=os.environ["GEMINI_API_KEY"])
+genai.configure(api_key=os.environ.get("GEMINI_API_KEY", ""))
 
 generation_config = {
   "temperature": 1,

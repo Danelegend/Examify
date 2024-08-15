@@ -24,7 +24,7 @@ router = APIRouter()
 def TokenValidation(token: str):
     # Token is valid if user is ADMIN or user has PREMIUM
     
-    if GetUserPermissions(token) != "ADM" and GetUserPermissions(token) != "PRE":
+    if not GetUserPermissions(token):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User is not an admin")
     return
 

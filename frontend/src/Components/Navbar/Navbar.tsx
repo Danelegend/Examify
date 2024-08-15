@@ -29,6 +29,10 @@ const LOGGED_OUT_NAV_OPTIONS: Array<NavigationType> = [
         link: "/exams"
     },
     {
+        title: "Online Tutor",
+        link: "/tutor"
+    },
+    {
         title: "Blog",
         link: "/blogs"
     },
@@ -62,6 +66,10 @@ const LOGGED_IN_NAV_OPTIONS: Array<NavigationType> = [
     {
         title: "Exams",
         link: "/exams"
+    },
+    {
+        title: "Online Tutor",
+        link: "/tutor"
     },
     {
         title: "Blog",

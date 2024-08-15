@@ -1,8 +1,12 @@
-import { useEffect, useRef, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import { MdFileUpload, MdCancel } from "react-icons/md";
 import { BsTriangleFill } from "react-icons/bs";
 import { GetConversationMessageImage, PostConversationMessage, PostNewConversation } from "../../api/api";
 import Latex from "react-latex-next";
+import { readAccessToken } from "../../util/utility";
+import { ModalContext } from "../../context/modal-context";
+import { useMutation } from "@tanstack/react-query";
+import { ring } from "ldrs";
 
 
 const SUBJECTS_LIST = [
@@ -81,84 +85,54 @@ type ConversationData = {
 const TutorAiPage = () => {
     const [ConversationData, SetConversationData] = useState<ConversationData>(DEFAULT_CONVERSATION_DATA)
 
-    console.log(ConversationData)
+    const { SetDisplayRegister } = useContext(ModalContext)
 
-    const CreateNewConversation = (submission: Submission) => {
-        SetConversationData({...ConversationData, messages: [
-            {
-                message: "Hello. What can I help you with today?",
-                sender: "tutor"
-            },
-            {
-                message: submission.ask,
-                sender: "user",
-                image: submission.supporting_image ? URL.createObjectURL(submission.supporting_image) : undefined
-            }
-        ]})
-
-        PostNewConversation({
-            request: {
-                subject: submission.subject,
-                topic: submission.topic,
-                question: submission.ask,
-                supporting_image: submission.supporting_image
-            }}).then((resp) => {
-                console.log(resp)
-
-                SetConversationData({
-                    conversation_id: resp.conversation_id,
-                    messages: [
-                            {
-                                message: "Hello. What can I help you with today?",
-                                sender: "tutor"
-                            },
-                            {
-                                message: submission.ask,
-                                sender: "user",
-                                image: resp.student_message.has_image ? GetConversationMessageImage({
-                                    request: {
-                                        message_id: resp.student_message.id,
-                                        conversation_id: resp.conversation_id
-                                    }
-                                }) : undefined,
-                                id: resp.student_message.id
-                            },
-                            {
-                                message: resp.tutor_message.contents[0],
-                                sender: "tutor",
-                                image: resp.tutor_message.has_image ? GetConversationMessageImage({
-                                    request: {
-                                        message_id: resp.tutor_message.id,
-                                        conversation_id: resp.conversation_id
-                                    }
-                                }) : undefined,
-                                id: resp.tutor_message.id
-                            }
-                        ]
-                    }
-                )
-            }
-        )
-    }
-
-    const CreateNewConversationMessage = (chat: string) => {
-        if (ConversationData.conversation_id === null) {
-            return
+    const { mutateAsync: PostNewConversationRequest, isPending: isPostNewConversationPending } = useMutation({
+        mutationFn: PostNewConversation,
+        onSuccess: (resp) => {
+            SetConversationData({
+                conversation_id: resp.conversation_id,
+                messages: [
+                        {
+                            message: "Hello. What can I help you with today?",
+                            sender: "tutor"
+                        },
+                        {
+                            message: resp.student_message.contents[0],
+                            sender: "user",
+                            image: resp.student_message.has_image ? GetConversationMessageImage({
+                                request: {
+                                    message_id: resp.student_message.id,
+                                    conversation_id: resp.conversation_id
+                                }
+                            }) : undefined,
+                            id: resp.student_message.id
+                        },
+                        {
+                            message: resp.tutor_message.contents[0],
+                            sender: "tutor",
+                            image: resp.tutor_message.has_image ? GetConversationMessageImage({
+                                request: {
+                                    message_id: resp.tutor_message.id,
+                                    conversation_id: resp.conversation_id
+                                }
+                            }) : undefined,
+                            id: resp.tutor_message.id
+                        }
+                    ]
+                }
+            )
         }
+    })
 
-        SetConversationData({...ConversationData, messages: [...ConversationData.messages, {message: chat, sender: "user"}]})
-
-        PostConversationMessage({
-            request: {
-                conversation_id: ConversationData.conversation_id,
-                message: chat
-            }
-        }).then((resp) => {
+    const { mutateAsync: PostConversationMessageRequest, isPending: isPostConversationMessagePending } = useMutation({
+        mutationFn: PostConversationMessage,
+        onSuccess: (resp) => {
             SetConversationData({
                 conversation_id: ConversationData.conversation_id,
-                messages: [...ConversationData.messages,
+                messages: [...ConversationData.messages.slice(0, -1),
                     {
-                        message: chat,
+                        message: resp.student_message.contents[0],
                         sender: "user",
                         image: resp.student_message.has_image && ConversationData.conversation_id !== null ? GetConversationMessageImage({
                             request: {
@@ -181,6 +155,53 @@ const TutorAiPage = () => {
                     }
                 ]
             })
+        }
+    })
+
+    const CreateNewConversation = (submission: Submission) => {
+        if (readAccessToken() === null) {
+            SetDisplayRegister(true)
+            return
+        }
+
+        SetConversationData({...ConversationData, messages: [
+            {
+                message: "Hello. What can I help you with today?",
+                sender: "tutor"
+            },
+            {
+                message: submission.ask,
+                sender: "user",
+                image: submission.supporting_image ? URL.createObjectURL(submission.supporting_image) : undefined
+            }
+        ]})
+
+        PostNewConversationRequest({
+            request: {
+                subject: submission.subject,
+                topic: submission.topic,
+                question: submission.ask,
+                supporting_image: submission.supporting_image
+            }})
+    }
+
+    const CreateNewConversationMessage = (chat: string) => {
+        if (readAccessToken() === null) {
+            SetDisplayRegister(true)
+            return
+        }
+
+        if (ConversationData.conversation_id === null) {
+            return
+        }
+
+        SetConversationData({...ConversationData, messages: [...ConversationData.messages, {message: chat, sender: "user"}]})
+
+        PostConversationMessageRequest({
+            request: {
+                conversation_id: ConversationData.conversation_id,
+                message: chat
+            }
         })
     }
 
@@ -196,7 +217,8 @@ const TutorAiPage = () => {
                 <DisplayPanel className="col-span-2 bg-white border rounded-lg shadow border-slate-300 max-h-screen" conversationData={{
                     conversation_id: ConversationData.conversation_id,
                     messages: ConversationData.messages
-                }} onChatSubmit={CreateNewConversationMessage}/>
+                }} onChatSubmit={CreateNewConversationMessage}
+                awaitingMessage={isPostNewConversationPending || isPostConversationMessagePending}/>
             </div>
         </div>
     )
@@ -302,7 +324,8 @@ const SubmissionPanel = ({ SubmitConversation, className }: SubmissionPanelProps
 type DisplayPanelProps = {
     onChatSubmit: (chat: string) => void,
     conversationData: ConversationData,
-    className?: string
+    className?: string,
+    awaitingMessage: boolean
 }
 
 const DEFAULT_CONVERSATION_DATA: ConversationData = {
@@ -315,7 +338,7 @@ const DEFAULT_CONVERSATION_DATA: ConversationData = {
     ]
 }
 
-const DisplayPanel = ({ onChatSubmit, conversationData, className }: DisplayPanelProps) => { 
+const DisplayPanel = ({ onChatSubmit, conversationData, className, awaitingMessage }: DisplayPanelProps) => { 
     const [ChatInput, SetChatInput] = useState<string>("")
 
     const ref = useRef(null)
@@ -324,6 +347,8 @@ const DisplayPanel = ({ onChatSubmit, conversationData, className }: DisplayPane
         onChatSubmit(ChatInput)
         ref.current.value = ""
     }
+
+    ring.register()
 
     return (
         <div className={className}>
@@ -349,6 +374,17 @@ const DisplayPanel = ({ onChatSubmit, conversationData, className }: DisplayPane
                                 </article>
                             )
                         })
+                    }
+                    {
+                        awaitingMessage && <div className="flex justify-center my-8">
+                            <l-ring
+                                size="40"
+                                stroke="5"
+                                bg-opacity="0"
+                                speed="2" 
+                                color="black" 
+                            />
+                        </div>
                     }
                 </div>
                 <div className="relative">

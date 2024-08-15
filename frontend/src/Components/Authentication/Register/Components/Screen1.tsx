@@ -89,7 +89,6 @@ const RegistrationScreen1 = ({ changeScreen } :
         mutationFn: PostUserRegistration,
         onSuccess: (res) => {
             res.json().then((data: SignUpResponse) => {
-                console.log(data)
                 switch (res.status)  {
                     case 500:
                         SetResponseMessage("Internal Error")

@@ -59,6 +59,7 @@ const LoggedInNavbar = () => {
                         ]
                     }/>
                     <NavigationButton link="/questions" title="Questions" />
+                    <NavigationButton link="/tutor" title="Tutor AI" />
                     <NavigationButton link="/blogs" title="Articles" />
                     <NavigationButton link="/upload" title="Upload" />
                 </div>

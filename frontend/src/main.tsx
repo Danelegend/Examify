@@ -98,12 +98,12 @@ const router = createBrowserRouter([
               {
                 element: <StudentDashboardPage />,
                 path: "dashboard",
-              },
-              {
-                element: <TutorAiPage />,
-                path: "tutor"
               }
             ],
+          },
+          {
+            element: <TutorAiPage />,
+            path: "tutor"
           },
           {
             element: <ProtectedRoute />,

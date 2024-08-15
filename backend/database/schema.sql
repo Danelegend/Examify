@@ -25,6 +25,7 @@ DROP TABLE IF EXISTS ai_tutor_messages CASCADE;
 CREATE TYPE EXAM_TYPE AS ENUM ('TRI', 'HSC', 'TOP', 'HAF', 'T_1', 'T_2', 'T_3', 'T_4');
 CREATE TYPE REGISTERATION_METHOD AS ENUM ('email', 'google', 'facebook');
 CREATE TYPE PERMISSIONS AS ENUM ('REG', 'PRE', 'ADM', 'TUT');
+CREATE TYPE AI_TUTOR_MESSAGE_SENDER AS ENUM ('STU', 'TUT');
 
 -- Tables
 
@@ -191,8 +192,8 @@ CREATE TABLE ai_tutor_messages (
     conversation_id         INT NOT NULL,
     supporting_image_loc    VARCHAR(255) DEFAULT NULL,
     message_contents        TEXT NOT NULL DEFAULT '',
+    sender                  AI_TUTOR_MESSAGE_SENDER NOT NULL,
     time_created            TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    user_sent               BOOLEAN NOT NULL DEFAULT TRUE,
     PRIMARY KEY             (message_id),
     FOREIGN KEY             (conversation_id) REFERENCES ai_tutor_conversations(conversation_id)                
 );

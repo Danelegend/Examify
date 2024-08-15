@@ -5,7 +5,7 @@ from typing import Generator, List, Literal, Optional
 
 from pydantic import BaseModel
 
-API_KEY = os.environ.get("OPENAI_API_KEY", "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")
+API_KEY = os.environ.get("OPENAI_API_KEY", "")
 
 client = AsyncOpenAI(
     api_key=API_KEY

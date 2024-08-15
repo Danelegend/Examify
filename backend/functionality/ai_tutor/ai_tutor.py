@@ -107,6 +107,8 @@ async def _save_image(upload: UploadFile, conversation_id: int) -> str:
 
     directory = os.environ.get("AI_TUTOR_IMAGE_DIRECTORY", "tutor_images")
 
+    os.makedirs(directory, exist_ok=True)
+
     file_path = os.path.join(directory, file_name)
 
     async with aiofiles.open(file_path, 'wb') as f:

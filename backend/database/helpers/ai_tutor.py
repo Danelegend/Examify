@@ -109,25 +109,25 @@ def _insert_ai_tutor_message(conversation_id: int, message: str, sender: Literal
             if supporting_image_loc:
                 cur.execute(
                     """
-                    INSERT INTO ai_tutor_messages (conversation_id, supporting_image_loc, message_contents, sender) 
-                    VALUES (%(conversation_id)s, %(supporting_image_loc)s, %(message_contents)s, %(sender)s)
+                    INSERT INTO ai_tutor_messages (conversation_id, supporting_image_loc, message_contents, user_sent) 
+                    VALUES (%(conversation_id)s, %(supporting_image_loc)s, %(message_contents)s, %(user_sent)s)
                     RETURNING message_id;
                     """, {
                         'conversation_id': conversation_id,
                         'supporting_image_loc': supporting_image_loc,
                         'message_contents': message,
-                        'sender': sender
+                        'user_sent': sender == "STU"
                     })
             else:
                 cur.execute(
                     """
-                    INSERT INTO ai_tutor_messages (conversation_id, message_contents, sender) 
-                    VALUES (%(conversation_id)s, %(message_contents)s, %(sender)s)
+                    INSERT INTO ai_tutor_messages (conversation_id, message_contents, user_sent) 
+                    VALUES (%(conversation_id)s, %(message_contents)s, %(user_sent)s)
                     RETURNING message_id;
                     """, {
                         'conversation_id': conversation_id,
                         'message_contents': message,
-                        'sender': sender
+                        'user_sent': sender == "STU"
                     })
             
             message_id = cur.fetchone()
@@ -152,7 +152,7 @@ def get_ai_tutor_conversation_messages(conversation_id: int) -> List[AiTutorMess
         with conn.cursor() as cur:
             cur.execute(
                 """
-                SELECT m.message_id, m.supporting_image_loc, m.message_contents, m.sender, m.time_created
+                SELECT m.message_id, m.supporting_image_loc, m.message_contents, m.user_sent, m.time_created
                 FROM ai_tutor_messages m
                 WHERE m.conversation_id = %(conversation_id)s
                 ORDER BY m.time_created ASC
@@ -173,7 +173,7 @@ def get_ai_tutor_conversation_messages(conversation_id: int) -> List[AiTutorMess
         id=message_id,
         supporting_image_location=image_loc,
         message=message,
-        sender=sender,
+        sender="STU" if sender else "TUT",
         time_created=time_created
     ) for message_id, image_loc, message, sender, time_created in messages]
 

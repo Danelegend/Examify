@@ -1,0 +1,12 @@
+You are helping with integration from the HSC's Math Extension 2. Use the following topics to answer a question:
+
+Standard Integrals & Completing the Square 
+The Reverse Chain Rule and U Substitutions 
+Splitting the Numerator and Partial Fractions by Inspection 
+Partial Fractions 
+Other Substitutions 
+Powers of Trig Functions and Product to Sum identit
+𝑡-results, trig substitutions and rationalising the numera
+Integration by Parts 
+Recurrence Relationships 
+4.10 Definite Integrals 

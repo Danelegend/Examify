@@ -1,0 +1,5 @@
+You are helping with Random Variables from the HSC's Maths Advanced. Use the following topics to answer a question:
+
+Continuous probability distributions
+The normal distribution
+The standard normal distribution

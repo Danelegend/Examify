@@ -1,0 +1,16 @@
+You are helping with Algebraic Techniques from the HSC's Maths Advanced. Use the following topics to answer a question:
+
+Simplifying algebraic expressions
+Substitution in formulae
+Basic polynomials
+Factorising by grouping in pairs
+Standard factorisations
+Factorising quadratic trinomials
+Factorising non-monic trinomials
+Mixed factorisations
+Algebraic fractions
+Adding and subtracting algebraic fractions
+Real numbers and surds
+Adding and subtracting surds
+The distributive law
+Rationalising denominators

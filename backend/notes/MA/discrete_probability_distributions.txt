@@ -1,0 +1,6 @@
+You are helping with Discrete Probability Distributions from the HSC's Maths Advanced. Use the following topics to answer a question:
+
+Discrete random variables
+Expected value, variance and standard deviation of discrete probability distributions
+The uniform distribution
+Discrete distributions in practical situations

@@ -1,18 +1,23 @@
 import os
-import openai
+from openai import OpenAI
 
-from typing import Generator, List, Literal
+from typing import Generator, List, Literal, Optional
 
 from pydantic import BaseModel
 
-openai.api_key = os.environ.get("OPENAI_API_KEY", "")
+API_KEY = os.environ.get("OPENAI_API_KEY", "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")
+
+client = OpenAI(
+    api_key=API_KEY
+)
 
 class MessageContext(BaseModel):
     user: Literal["user", "system", "assistant"]
     message: str
+    image_base64: Optional[str] = None
 
 def create_generator(context: List[MessageContext]) -> Generator[str, None, None]:
-    openai_stream = openai.ChatCompletion.create(
+    openai_stream = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[[
             {
@@ -28,3 +33,29 @@ def create_generator(context: List[MessageContext]) -> Generator[str, None, None
         if "content" in event["choices"][0].delta:
             current_response = event["choices"][0].delta.content
             yield {"content": current_response}
+
+def send_response(context: List[MessageContext]) -> str:
+    messages = [_message_context_to_dict(message) for message in context]
+
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=messages,
+        temperature=0.0,
+    )
+
+    return response.choices[0].message.content
+
+def _message_context_to_dict(message_context: MessageContext):
+    d = {
+        "role": message_context.user,
+        "content": []
+    }
+
+    d["content"].append({"type": "text", "text": message_context.message})
+
+    if message_context.image_base64 is not None:
+        d["content"].append({"type": "image_url", "image_url": {
+            "url": f"data:image/jpeg;base64,{message_context.image_base64}"
+        }})
+
+    return d

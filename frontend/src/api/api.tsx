@@ -1,6 +1,6 @@
 import Environment from "../../constants"
 import { FetchError, readAccessToken, readExpiration, removeAccessToken, storeAccessToken, storeExpiration } from "../util/utility"
-import { AdminExamReviewDeleteRequest, AdminExamReviewSubmitRequest, ExamUpdateRequest, ExamUploadRequest, FeedbackRequest, FetchExamResponse, FetchExamsRequest, FetchExamsResponse, FetchExamSubjectsResponse, FetchFavouriteExamsResponse, FetchLogosResponse, FetchNotificationsResponse, FetchPermissionsResponse, FetchQuestionResponse, FetchQuestionsRequest, FetchQuestionsResponse, FetchQuestionSubjectsResponse, FetchQuestionTopicsResponse, FetchRecentExamsResponse, FetchRecommendedExamsResponse, FetchRegisteredUsersResponse, FetchSchoolsResponse, FetchTopicRecommendationsResponse, FetchUserActivityAnalyticsResponse, FetchUserResponse, FetchUserSubjectAnalyticsResponse, PostQuestionRequest, PostUserQuestionAnswerRequest, RefreshTokenResponse, SignInResponse, SignOutResponse, SignUpResponse, UserLoginRequest, UserProfileEditRequest, UserRegistrationRequest } from "./types"
+import { AdminExamReviewDeleteRequest, AdminExamReviewSubmitRequest, ExamUpdateRequest, ExamUploadRequest, FeedbackRequest, FetchExamResponse, FetchExamsRequest, FetchExamsResponse, FetchExamSubjectsResponse, FetchFavouriteExamsResponse, FetchLogosResponse, FetchNotificationsResponse, FetchPermissionsResponse, FetchQuestionResponse, FetchQuestionsRequest, FetchQuestionsResponse, FetchQuestionSubjectsResponse, FetchQuestionTopicsResponse, FetchRecentExamsResponse, FetchRecommendedExamsResponse, FetchRegisteredUsersResponse, FetchSchoolsResponse, FetchTopicRecommendationsResponse, FetchUserActivityAnalyticsResponse, FetchUserResponse, FetchUserSubjectAnalyticsResponse, GetConversationMessageImageRequest, GetConversationRequest, GetConversationResponse, GetConversationsResponse, PostConversationMessageRequest, PostConversationMessageResponse, PostConversationRequest, PostNewConversationResponse, PostQuestionRequest, PostUserQuestionAnswerRequest, RefreshTokenResponse, SignInResponse, SignOutResponse, SignUpResponse, UserLoginRequest, UserProfileEditRequest, UserRegistrationRequest } from "./types"
 
 export type UserAuthentication = {
     expiration: Date,
@@ -748,4 +748,98 @@ export const PostFeedback = ({ request }: { request: FeedbackRequest }): Promise
             feedback: request.feedback
         })
     })
+}
+
+export const GetConversationMessageImage = ({ request }: { request: GetConversationMessageImageRequest }): string => {
+    return `${Environment.BACKEND_URL}/api/ai/conversation/${request.conversation_id}/message/${request.message_id}/image`
+}
+
+export const GetConversation = ({ request }: { request: GetConversationRequest }): Promise<GetConversationResponse> => {
+    return AuthorizationMiddleware<GetConversationResponse>(() => fetch(`${Environment.BACKEND_URL}/api/ai/conversation/${request.conversation_id}`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `bearer ${readAccessToken()}`
+        },
+        method: "GET",
+        credentials: 'include'
+    }).then(async (res) => {
+        const data = await res.json()
+
+        if (res.ok) {
+            return data
+        } else {
+            throw new FetchError(res)
+        }
+    }))
+}
+
+export const PostConversationMessage = ({ request }: { request: PostConversationMessageRequest }): Promise<PostConversationMessageResponse> => {
+    return AuthorizationMiddleware<PostConversationMessageResponse>(() => fetch(`${Environment.BACKEND_URL}/api/ai/conversation/${request.conversation_id}`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `bearer ${readAccessToken()}`
+        },
+        method: "POST",
+        credentials: 'include',
+        body: JSON.stringify({
+            message: request.message
+        })
+    }).then(async (res) => {
+        const data = await res.json()
+
+        if (res.ok) {
+            return data
+        } else {
+            throw new FetchError(res)
+        }
+    }))
+}
+
+export const PostNewConversation = ({ request }: { request: PostConversationRequest }): Promise<PostNewConversationResponse> => {
+    const formData = new FormData()
+
+    if (request.supporting_image) {
+        console.log(request.supporting_image)
+        formData.append("supporting_image", request.supporting_image)
+    }
+
+    formData.append("subject", request.subject)
+    formData.append("topic", request.topic)
+    formData.append("question", request.question)
+
+    return AuthorizationMiddleware<PostNewConversationResponse>(() => fetch(`${Environment.BACKEND_URL}/api/ai/conversation`, {
+        headers: {
+            'Authorization': `bearer ${readAccessToken()}`
+        },
+        method: "POST",
+        credentials: 'include',
+        body: formData
+    }).then(async (res) => {
+        const data = await res.json()
+
+        if (res.ok) {
+            return data
+        } else {
+            throw new FetchError(res)
+        }
+    }))
+}
+
+export const GetConversations = (): Promise<GetConversationsResponse> => {
+    return AuthorizationMiddleware<GetConversationsResponse>(() => fetch(`${Environment.BACKEND_URL}/api/ai/conversations`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `bearer ${readAccessToken()}`
+        },
+        method: "GET",
+        credentials: 'include'
+    }).then(async (res) => {
+        const data = await res.json()
+
+        if (res.ok) {
+            return data
+        } else {
+            throw new FetchError(res)
+        }
+    }))
 }

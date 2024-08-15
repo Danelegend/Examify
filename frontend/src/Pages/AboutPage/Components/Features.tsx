@@ -4,6 +4,7 @@ import backgroundImage from '../../../images/background-features.jpg'
 import examsImage from '../../../images/screenshots/exams.jpg'
 import questionsImage from '../../../images/screenshots/questions.jpg'
 import analyticsImage from '../../../images/screenshots/analytics.jpg'
+import tutorImage from '../../../images/screenshots/tutor.jpg'
 import comingSoonImage from '../../../images/screenshots/coming_soon.jpg'
 
 type Feature = {
@@ -30,7 +31,7 @@ const Features = () => {
         {
           title: "Ai Tutor",
           description: "Get 24/7 feedback or assistance with Ai Tutor technology, trained on custom HSC datasets to provide fast and accurate results.",
-          image: comingSoonImage,
+          image: tutorImage,
           alt: "Ai Tutor"
         },
         {
@@ -131,10 +132,11 @@ const Features = () => {
                       </div>
                     </div>
                   ))}
-                  <div className="relative mt-10  w-[45rem] overflow-hidden rounded-xl bg-slate-50 shadow-xl shadow-blue-900/20 sm:w-auto lg:mt-0 lg:w-[67.8125rem]">
+                  <div className="relative mt-10 w-[45rem] overflow-hidden rounded-xl bg-slate-50 shadow-xl shadow-blue-900/20 sm:w-auto lg:mt-0 lg:w-[67.8125rem]">
                       <img
                         src={features[activeFeatureIndex].image}
                         alt={features[activeFeatureIndex].alt}
+                        className="object-fill"
                       />
                     </div>
                 </div>

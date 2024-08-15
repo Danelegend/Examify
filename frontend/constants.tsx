@@ -3,7 +3,7 @@ type Environment_Type = {
 }
 
 const Environment: Environment_Type = {
-    BACKEND_URL: "https://service.examify.com.au"
+    BACKEND_URL: "http://localhost:8000" //"https://service.examify.com.au"
 }
 
 export default Environment

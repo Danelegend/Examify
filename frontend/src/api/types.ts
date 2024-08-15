@@ -85,6 +85,27 @@ export type PostQuestionRequest = {
     image_locations: File[]
 }
 
+export type PostConversationRequest = {
+    subject: string
+    topic: string
+    question: string
+    supporting_image: File | null
+}
+
+export type PostConversationMessageRequest = {
+    conversation_id: number
+    message: string
+}
+
+export type GetConversationMessageImageRequest = {
+    conversation_id: number,
+    message_id: number
+}
+
+export type GetConversationRequest = {
+    conversation_id: number
+}
+
 // RESPONSES
 
 export type SignUpResponse = {
@@ -269,4 +290,39 @@ export type FeedbackRequest = {
     name?: string,
     email?: string,
     feedback: string
+}
+
+type ConversationMessage = {
+    id: number,
+    sequence_number: number,
+    author: "tutor" | "user",
+    contents: string[],
+    timestamp: Date
+    has_image: boolean
+}
+
+export type GetConversationResponse = {
+    messages: ConversationMessage[]
+}
+
+export type PostConversationMessageResponse = {
+    student_message: ConversationMessage,
+    tutor_message: ConversationMessage
+}
+
+export type PostNewConversationResponse = {
+    conversation_id: number,
+    student_message: ConversationMessage,
+    tutor_message: ConversationMessage
+}
+
+type ConversationBrief = {
+    conversation_id: number,
+    title: string,
+    subject: string,
+    timestamp: Date
+}
+
+export type GetConversationsResponse = {
+    conversations: ConversationBrief
 }

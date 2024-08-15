@@ -1,0 +1,8 @@
+You are helping with Polynomials from the HSC's Math Extension 1. Use the following topics to answer a question:
+
+Polynomials
+Division of polynomials and remainder theorem
+The factor theorem
+Relationship between roots and coefficients
+Multiple roots of a polynomial Equation
+Polynomial functions

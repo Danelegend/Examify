@@ -1,0 +1,10 @@
+You are helping with Applications of Calculus from the HSC's Math Extension 1. Use the following topics to answer a question:
+
+Volumes of solides of revolution
+Indefinite integrals and substitutions
+Definite integrals and substitutions
+Integration of sin^2(x) and cos^2(x)
+Intgrals of type \int f(x)(f(x))^ dx
+Integrals involving trigonometric substitution
+Differentiation of inverse trigonometric functions
+Integrations involving inverse trigonometric functions

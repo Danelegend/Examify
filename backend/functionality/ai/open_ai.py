@@ -1,5 +1,5 @@
 import os
-from openai import OpenAI
+from openai import AsyncOpenAI
 
 from typing import Generator, List, Literal, Optional
 
@@ -7,7 +7,7 @@ from pydantic import BaseModel
 
 API_KEY = os.environ.get("OPENAI_API_KEY", "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")
 
-client = OpenAI(
+client = AsyncOpenAI(
     api_key=API_KEY
 )
 
@@ -34,10 +34,10 @@ def create_generator(context: List[MessageContext]) -> Generator[str, None, None
             current_response = event["choices"][0].delta.content
             yield {"content": current_response}
 
-def send_response(context: List[MessageContext]) -> str:
+async def send_response(context: List[MessageContext]) -> str:
     messages = [_message_context_to_dict(message) for message in context]
 
-    response = client.chat.completions.create(
+    response = await client.chat.completions.create(
         model="gpt-4o-mini",
         messages=messages,
         temperature=0.0,

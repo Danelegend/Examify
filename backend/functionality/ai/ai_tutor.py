@@ -53,7 +53,7 @@ class AiTutor:
                 message=message.message
             ))
 
-    def send_message(self, message: str, image_location: Optional[str] = None) -> MessageResponse:
+    async def send_message(self, message: str, image_location: Optional[str] = None) -> MessageResponse:
         if image_location is not None:
             base64_image = base64.b64encode(open(image_location, "rb").read()).decode("utf-8")
 
@@ -70,7 +70,7 @@ class AiTutor:
 
         self.message_context.append(context_user)
 
-        response = send_response(self.message_context)
+        response = await send_response(self.message_context)
 
         context_tutor = MessageContext(
             user="assistant",

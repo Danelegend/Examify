@@ -71,7 +71,7 @@ async def post_student_message(conversation_id: int, user_id: int, message: str,
 
 async def post_tutor_message(conversation_id: int, query: str, image_location: Optional[str] = None) -> AiConversationMessage:
     ai_tutor = AiTutorManager().get_ai_tutor(conversation_id)
-    response = ai_tutor.send_message(query, image_location=image_location)
+    response = await ai_tutor.send_message(query, image_location=image_location)
 
     tutor_message_id = insert_ai_tutor_message_from_tutor(conversation_id, response.message, None)
 

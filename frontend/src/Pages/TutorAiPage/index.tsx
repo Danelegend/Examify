@@ -91,7 +91,8 @@ const TutorAiPage = () => {
             },
             {
                 message: submission.ask,
-                sender: "user"
+                sender: "user",
+                image: submission.supporting_image ? URL.createObjectURL(submission.supporting_image) : undefined
             }
         ]})
 

@@ -74,7 +74,7 @@ async def PostNewConversation(subject: Annotated[str, Form()],
 
     conversation_id = await post_conversation(user_id, subject, topic, question)
     student_message = await post_student_message(conversation_id, user_id, question, supporting_image)
-    tutor_message = await post_tutor_message(conversation_id, question, get_image_location(conversation_id, student_message.id))
+    tutor_message = await post_tutor_message(conversation_id, question, None if supporting_image is None else get_image_location(conversation_id, student_message.id))
 
     return PostNewConversationResponse(
         conversation_id=conversation_id,

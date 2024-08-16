@@ -348,6 +348,15 @@ const DisplayPanel = ({ onChatSubmit, conversationData, className, awaitingMessa
         ref.current.value = ""
     }
 
+    const onKeyDownHandler = (e) => {
+        if (e.key === 'Enter' && e.shiftKey) 
+            return;
+        
+        if (e.key === 'Enter') {
+            submit()
+        }
+    }
+
     ring.register()
 
     return (
@@ -388,7 +397,7 @@ const DisplayPanel = ({ onChatSubmit, conversationData, className, awaitingMessa
                     }
                 </div>
                 <div className="relative">
-                    <textarea rows={2} ref={ref} className="w-full h-full text-gray-900 py-2 pl-4 pr-24 bg-slate-400 placeholder:text-gray-600" placeholder="Chat with Solution" onChange={e => SetChatInput(e.target.value)}/>
+                    <textarea rows={2} ref={ref} className="w-full h-full text-gray-900 py-2 pl-4 pr-24 bg-slate-400 placeholder:text-gray-600" placeholder="Chat with Solution" onChange={e => SetChatInput(e.target.value)} onKeyDown={onKeyDownHandler}/>
                     <BsTriangleFill className="absolute right-2 top-5 cursor-pointer" size={32} color={"#718096"} style={{rotate: '90deg'}} onClick={submit}/>
                 </div>
             </div>

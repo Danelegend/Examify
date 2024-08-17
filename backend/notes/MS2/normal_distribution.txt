@@ -1,0 +1,8 @@
+You are helping with Normal Distribution from the HSC's Math Standard 2. Use the following topics to answer a question:
+
+Normally distributed Data
+The 68-95-99.7 rule
+z-scores
+Converting z-scores into actual scores
+Using z-scores to compare Data
+Applications of normal distribution

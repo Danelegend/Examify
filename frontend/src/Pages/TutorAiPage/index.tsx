@@ -12,7 +12,8 @@ import { ring } from "ldrs";
 const SUBJECTS_LIST = [
                     "Maths Extension 2", 
                     "Maths Extension 1", 
-                    "Maths Advanced"
+                    "Maths Advanced",
+                    "Maths Standard 2"
                 ]
 
 const SUBJECT_TOPIC_MAP = {
@@ -60,6 +61,18 @@ const SUBJECT_TOPIC_MAP = {
         "Financial mathematics",
         "Bivariate data analysis",
         "Random variables"
+    ],
+    "Maths Standard 2": [
+        "Annuities",
+        "Bivariate Data Analysis",
+        "Critical Path Analysis",
+        "Investments and Loans",
+        "Network Concepts",
+        "Non-Linear Relationships",
+        "Non-Right-Angled Trigonometry",
+        "Normal Distribution",
+        "Rates and Ratios",
+        "Simulataneous Linear Equations"
     ]
 }
 

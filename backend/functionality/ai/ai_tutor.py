@@ -125,6 +125,9 @@ class AiTutor:
         
         if lowered_subject == "maths advanced" or lowered_subject == "maths_advanced":
             return "MA"
+        
+        if lowered_subject == "maths standard 2" or lowered_subject == "maths_standard_2":
+            return "MS2"
 
         return subject
     

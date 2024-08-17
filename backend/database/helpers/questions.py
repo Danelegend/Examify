@@ -218,13 +218,17 @@ def get_topics(subject: Optional[str] = None) -> List[str]:
         with conn.cursor() as cur:
             s = """
                 SELECT DISTINCT topic
-                FROM questions 
+                FROM questions  
                 """
             
             if subject is not None:
-                s += f"\nWHERE subject = \'{subject}\'"
-
-            cur.execute(s)
+                s += "WHERE subject = %(subject)s;"
+                cur.execute(s, {
+                    'subject': subject
+                })
+            else:
+                cur.execute(s)
+            
             topics = cur.fetchall()
         
         log_question_success("Finished getting the Topics from Database")

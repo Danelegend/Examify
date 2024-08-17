@@ -276,7 +276,12 @@ const SubmissionPanel = ({ SubmitConversation, className }: SubmissionPanelProps
                     <h2 className="text-cyan-700 font-bold">
                         1. Select a Subject
                     </h2>
-                    <select className="w-full border-2 border-cyan-700/60 text-cyan-700 selection:border-cyan-700/60 font-semibold px-2 py-1 rounded-md shadow" onChange={e => SetSubmissionRequest({...SubmissionRequest, subject: e.target.value.replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase())})}>
+                    <select className="w-full border-2 border-cyan-700/60 text-cyan-700 selection:border-cyan-700/60 font-semibold px-2 py-1 rounded-md shadow" onChange={e => {
+                            const subject = e.target.value.replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase())
+                            const topic = (subject === SubmissionRequest.subject) ? SubmissionRequest.topic : SUBJECT_TOPIC_MAP[subject][0]
+
+                            SetSubmissionRequest({...SubmissionRequest, subject: subject, topic: topic})
+                        }}>
                         {
                             SUBJECTS_LIST.map((subject: string) => {
                                 return (

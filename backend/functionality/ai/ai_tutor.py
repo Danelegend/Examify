@@ -128,6 +128,15 @@ class AiTutor:
         
         if lowered_subject == "maths standard 2" or lowered_subject == "maths_standard_2":
             return "MS2"
+        
+        if lowered_subject == "chem" or lowered_subject == "chemistry":
+            return "CHEM"
+        
+        if lowered_subject == "physics" or lowered_subject == "phys":
+            return "PHYS"
+        
+        if lowered_subject == "biology" or lowered_subject == "bio":
+            return "BIO"
 
         return subject
     

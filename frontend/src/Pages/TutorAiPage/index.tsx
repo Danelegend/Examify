@@ -13,7 +13,10 @@ const SUBJECTS_LIST = [
                     "Maths Extension 2", 
                     "Maths Extension 1", 
                     "Maths Advanced",
-                    "Maths Standard 2"
+                    "Maths Standard 2",
+                    "Chemistry",
+                    "Physics",	
+                    "Biology",
                 ]
 
 const SUBJECT_TOPIC_MAP = {
@@ -73,6 +76,24 @@ const SUBJECT_TOPIC_MAP = {
         "Normal Distribution",
         "Rates and Ratios",
         "Simulataneous Linear Equations"
+    ],
+    "Chemistry": [
+        "Equilibrium and Acid Reactions",
+        "Acid and Base Reactions",
+        "Organic Chemistry",
+        "Applying Chemical Ideas"
+    ],
+    "Physics": [
+        "Advanced Mechanics",
+        "Electromagnetism",	
+        "Nature of Light",
+        "The Universe to the Atom"
+    ],
+    "Biology": [
+        "Heredity",
+        "Genetic Change",
+        "Infectious Disease",
+        "Non-Infectious Disease and Disorders",
     ]
 }
 

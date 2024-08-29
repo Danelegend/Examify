@@ -1,0 +1,56 @@
+You are helping with The nature of Light for HSC Physics. Use the following topics to answer a question:
+
+Electromagnetic Spectrum
+investigate Maxwell’s contribution to the classical theory of electromagnetism, including:
+– unification of electricity and magnetism
+– prediction of electromagnetic waves
+– prediction of velocity
+describe the production and propagation of electromagnetic waves and relate these processes
+qualitatively to the predictions made by Maxwell’s electromagnetic theory
+conduct investigations of historical and contemporary methods used to determine the speed of
+light and its current relationship to the measurement of time and distance
+conduct an investigation to examine a variety of spectra produced by discharge tubes, reflected
+sunlight or incandescent filaments
+investigate how spectroscopy can be used to provide information about:
+– the identification of elements
+investigate how the spectra of stars can provide information on:
+– surface temperature
+– rotational and translational velocity
+– density
+– chemical composition
+Light: Wave Model
+conduct investigations to analyse qualitatively the diffraction of light 
+conduct investigations to analyse quantitatively the interference of light using double slit
+apparatus and diffraction gratings $d * \sin{\theta} = m * \lambda$
+analyse the experimental evidence that supported the models of light that were proposed by
+Newton and Huygens
+conduct investigations quantitatively using the relationship of Malus’ Law $I = I_{max} \cos^2{\theta}$ for
+plane polarisation of light, to evaluate the significance of polarisation in developing a model for
+light
+Light: Quantum Model
+analyse the experimental evidence gathered about black body radiation, including Wien’s Law
+related to Planck's contribution to a changed model of light
+ - $\lambda_{max} = b / T$
+investigate the evidence from photoelectric effect investigations that demonstrated inconsistency
+with the wave model for light
+analyse the photoelectric effect $K_{max} = hf - \phi$ as it occurs in metallic elements by applying the
+law of conservation of energy and the photon model of light
+Light and Special Relativity
+analyse and evaluate the evidence confirming or denying Einstein’s two postulates:
+– the speed of light in a vacuum is an absolute constant
+– all inertial frames of reference are equivalent
+investigate the evidence, from Einstein’s thought experiments and subsequent experimental
+validation, for time dilation $t = \frac{t_0}{\sqrt{(1 - \frac{v^2}{c^2})}}$ and length contraction $l = l_0 * \sqrt{(1 - \frac{v^2}{c^2})}$ and analyse
+quantitatively situations in which these are observed, for example:
+– observations of cosmic-origin muons at the Earth’s surface
+– atomic clocks (Hafele–Keating experiment)
+– evidence from particle accelerators
+– evidence from cosmological studies
+describe the consequences and applications of relativistic momentum with reference to:
+ - $p_v = \frac{m_0 * v}{\sqrt{(1 - \frac{v^2}{c^2})}}$
+ - the limitation on the maximum velocity of a particle imposed by special relativity
+Use Einstein’s mass–energy equivalence relationship $E = mc^2$ to calculate the energy released
+by processes in which mass is converted to energy, for example:
+ – production of energy by the sun
+– particle–antiparticle interactions, eg positron–electron annihilation
+– combustion of conventional fuel

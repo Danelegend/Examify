@@ -1,0 +1,73 @@
+You are helping with the universe to the atom for HSC Physics. Use the following topics to answer a question:
+
+Origins of the Elements
+investigate the processes that led to the transformation of radiation into matter that followed the
+‘Big Bang’
+investigate the evidence that led to the discovery of the expansion of the Universe by Hubble
+analyse and apply Einstein’s description of the equivalence of energy and mass and relate this to
+the nuclear reactions that occur in stars
+account for the production of emission and absorption spectra and compare these with a
+continuous black body spectrum
+investigate the key features of stellar spectra and describe how these are used to classify stars
+investigate the Hertzsprung-Russell diagram and how it can be used to determine the following
+about a star:
+– characteristics and evolutionary stage
+– surface temperature
+– colour
+– luminosity
+investigate the types of nucleosynthesis reactions involved in Main Sequence and Post-Main
+Sequence stars, including but not limited to:
+– proton–proton chain
+– CNO (carbon-nitrogen-oxygen) cycle
+Structure of the Atom
+investigate, assess and model the experimental evidence supporting the existence and properties
+of the electron, including:
+– early experiments examining the nature of cathode rays
+– Thomson’s charge-to-mass experiment
+– Millikan's oil drop experiment
+investigate, assess and model the experimental evidence supporting the nuclear model of the
+atom, including:
+– the Geiger-Marsden experiment
+– Rutherford’s atomic model
+– Chadwick’s discovery of the neutron
+Quantum Mechanical Nature of the Atom
+assess the limitations of the Rutherford and Bohr atomic models
+investigate the line emission spectra to examine the Balmer series in hydrogen
+relate qualitatively and quantitatively the quantised energy levels of the hydrogen
+- $E = hf$
+- $E = \frac{h*c}{\lambda}$
+- $\frac{1}{\lambda} = R [\frac{1}{n_f^2} - \frac{1}{n_t^2}]$
+investigate de Broglie’s matter waves, and the experimental evidence that developed the
+following formula:
+ - $\lambda = \frac{h}{m*v}$
+analyse the contribution of Schrödinger to the current model of the atom
+Properties of the Nucleus
+analyse the spontaneous decay of unstable nuclei, and the properties of the alpha, beta and
+gamma radiation emitted 
+examine the model of half-life in radioactive decay and make quantitative predictions about the
+activity or amount of a radioactive sample using the following relationships:
+ - $N_t = N_0 \exp^{-\lambda * t}$
+ - $\lambda = \frac{\ln{2}}{t_{1/2}}$
+ where $N_t$ = number of particles at time $t$, $N_0$ = number of particles present at $t = 0$, 
+ $\lambda$ = decay constant, $t_{1/2}$ = time for half the radioactive amount to decay
+model and explain the process of nuclear fission, including the concepts of controlled and
+uncontrolled chain reactions, and account for the release of energy in the process
+analyse relationships that represent conservation of mass-energy in spontaneous and artificial
+nuclear transmutations, including alpha decay, beta decay, nuclear fission and nuclear fusion
+account for the release of energy in the process of nuclear fusion 
+predict quantitatively the energy released in nuclear decays or transmutations, including nuclear
+fission and nuclear fusion, by applying:
+– the law of conservation of energy
+– mass defect
+– binding energy
+– Einstein’s mass–energy equivalence relationship
+Deep inside the Atom
+analyse the evidence that suggests:
+– that protons and neutrons are not fundamental particles
+– the existence of subatomic particles other than protons, neutrons and electrons
+investigate the Standard Model of matter, including:
+– quarks, and the quark composition hadrons
+– leptons
+– fundamental forces
+investigate the operation and role of particle accelerators in obtaining evidence that tests and/or
+validates aspects of theories, including the Standard Model of matter

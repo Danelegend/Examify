@@ -1,0 +1,22 @@
+You are helping with Acid and Base Reactions for HSC Chemistry. Use the following topics to answer a question:
+
+Properties of Acids and Bases
+investigate the correct IUPAC nomenclature and properties of common inorganic acids and bases
+predict the products of acid reactions and write balanced equations to represent: acids and bases, acids and carbonates, acids and metals
+investigate applications of neutralisation reactions in everyday life and industrial processes
+conduct a practical investigation to measure the enthalpy of neutralisation
+explore the changes in definitions and models of an acid and a base over time to explain the limitations of each model, including but not limited to: Arrhenius’ theory, Brønsted–Lowry theory
+Using Bronsted Lowry Theory 
+conduct a practical investigation to measure the pH of a range of acids and bases
+conduct an investigation to demonstrate the use of pH to indicate the differences between the strength of acids and bases 
+write ionic equations to represent the dissociation of acids and bases in water, conjugate acid/base pairs in solution and amphiprotic nature of some salts, for example: sodium hydrogen carbonate, potassium dihydrogen phosphate
+construct models and/or animations to communicate the differences between strong, weak, concentrated and dilute acids and bases
+Quantative Analysis
+conduct practical investigations to analyse the concentration of an unknown acid or base by titration
+investigate titration curves and conductivity graphs to analyse data to indicate characteristic reaction profiles, for example: strong acid/strong base, strong acid/weak base, weak acid/strong base
+model neutralisation of strong and weak acids and bases using a variety of media  
+calculate and apply the dissociation constant (Ka) and pKa (pKa = -log10 (Ka)) to determine the difference between strong and weak acids
+explore acid/base analysis techniques that are applied: in industries, by Aboriginal and Torres Strait Islander Peoples , using digital probes and instruments
+conduct a chemical analysis of a common household substance for its acidity or basicity, for example: soft drink, wine, juice, medicine
+conduct a practical investigation to prepare a buffer and demonstrate its properties
+describe the importance of buffers in natural systems

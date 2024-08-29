@@ -1,0 +1,12 @@
+You are helping with Applying Chemical Ideas for HSC Chemistry. Use the following topics to answer a question:
+
+Analysis of Inorganic Substances
+analyse the need for monitoring the environment
+conduct qualitative investigations – using flame tests, precipitation and complexation reactions as appropriate – to test for the presence in aqueous solution of the following ions:    cations: barium (Ba2+), calcium (Ca2+), magnesium (Mg2+), lead(II) (Pb2+), silver ion (Ag+), copper(II) (Cu2+), iron(II) (Fe2+), iron(III) (Fe3+)
+anions: chloride (Cl–), bromide (Br–), iodide (I–), hydroxide (OH–), acetate (CH3COO–), carbonate (CO32–), sulfate (SO42–), phosphate (PO43–)
+conduct investigations and/or process data involving: gravimetric analysis, precipitation titrations
+conduct investigations and/or process data to determine the concentration of coloured species and/or metal ions in aqueous solution, including but not limited to, the use of: colourimetry, ultraviolet visible spectrophotometry, atomic absorption spectroscopy
+Analysis of Organic Substances
+conduct qualitative investigations to test for the presence in organic molecules of the following functional groups: carbon–carbon double bonds, hydroxyl groups, carboxylic acids
+Chemical Synthesis and Design
+evaluate the factors that need to be considered when designing a chemical synthesis process, including but not limited to: availability of reagents, reaction conditions , yield and purity industrial uses (eg pharmaceutical, cosmetics, cleaning products, fuels) , environmental, social and economic issues

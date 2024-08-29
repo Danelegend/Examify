@@ -1,0 +1,32 @@
+You are helping with Organic Chemistry for HSC Chemistry. Use the following topics to answer a question:
+
+Nomenclature
+investigate the nomenclature of organic chemicals, up to C8, using IUPAC conventions, including simple methyl and ethyl branched chains, including: alkanes, alkenes, alcohols (primary, secondary and tertiary), aldehydes and ketones, carboxylic acids, amines and amides, halogenated organic compounds
+explore and distinguish the different types of structural isomers, including saturated and unsaturated hydrocarbons, including: chain isomers, position isomers, functional group isomers
+Hydrocarbons
+construct models, identify the functional group, and write structural and molecular formulae for homologous series of organic chemical compounds, up to C8: alkanes, alkenes, alkynes
+conduct an investigation to compare the properties of organic chemical compounds within a homologous series, and explain these differences in terms of bonding 
+analyse the shape of molecules formed between carbon atoms when a single, double or triple bond is formed between them
+explain the properties within and between the homologous series of alkanes with reference to the intermolecular and intramolecular bonding present
+describe the procedures required to safely handle and dispose of organic substances
+examine the environmental, economic and sociocultural implications of obtaining and using hydrocarbons from the Earth
+Products of Reactions Involving Hydrocarbons
+investigate, write equations and construct models to represent the reactions of unsaturated hydrocarbons when added to a range of chemicals, including but not limited to: hydrogen (H2), halogens (X2), hydrogen halides (HX), water (H2O)
+investigate, write equations and construct models to represent the reactions of saturated hydrocarbons when substituted with halogens
+Alcohols 
+investigate the structural formulae, properties and functional group including: primary, secondary, tertiary alcohols
+explain the properties within and between the homologous series of alcohols with reference to the intermolecular and intramolecular bonding present  
+write equations, state conditions and predict products to represent the reactions of alcohols, including but not limited to: combustion, dehydration, substitution with HX, oxidation
+investigate the production of alcohols, including: substitution reactions of halogenated organic compounds, fermentation
+investigate the products of the oxidation of primary and secondary alcohols
+compare and contrast fuels from organic sources to biofuels, including ethanol
+Reactions of Organic Acids and Bases
+investigate the structural formulae, properties and functional group including: primary, secondary and tertiary alcohols, aldehydes and ketones, amines and amide, carboxylic acids
+explain the properties within and between the homologous series of carboxylic acids amines and amides with reference to the intermolecular and intramolecular bonding present
+investigate the production, in a school laboratory, of simple esters
+investigate the differences between an organic acid and organic base
+investigate the structure and action of soaps and detergents
+draft and construct flow charts to show reaction pathways for chemical synthesis, including those that involve more than one step 
+Polymers
+model and compare the structure, properties and uses of addition polymers of ethylene and related monomers, for example: polyethylene (PE), polyvinyl chloride (PVC), polystyrene (PS), polytetrafluoroethylene (PTFE)
+model and compare the structure, properties and uses of condensation polymers, for example: nylon, polyesters

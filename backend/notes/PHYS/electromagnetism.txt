@@ -1,0 +1,52 @@
+You are helping with Electromagnetism for HSC Physics. Use the following topics to answer a question:
+
+Charged Particles, Conductors and Electric and Magnetic Fields
+investigate and quantitatively derive and analyse the interaction between charged particles and
+uniform electric fields, including:
+ - electric field between parallel charged plates $E = \frac{V}{d}$
+ - acceleration of charged particles by the electric field $F_{net} = ma, F = qE$
+ - work done on the charge $W = qV, W = qEd, K = 1/2 * m * v^^2$
+model qualitatively and quantitatively the trajectories of charged particles in electric fields and
+compare them with the trajectories of projectiles in a gravitational field
+analyse the interaction between charged particles and uniform magnetic fields, including:
+ - acceleration, perpendicular to the field, of charged particles
+ - the force on the charge $F = qvB = qvB * \sin{\theta}$
+compare the interaction of charged particles moving in magnetic fields to:
+ - the interaction of charged particles with electric fields
+ - other examples of uniform circular motion
+The Motor Effect
+investigate qualitatively and quantitatively the interaction between a current-carrying conductor and a uniform magnetic field $F = l*I*B = l*I*B*\sin{\theta}$ to establish
+ - conditions under which the maximum force is produced
+ – the relationship between the directions of the force, magnetic field strength and current
+ – conditions under which no force is produced on the conductor
+conduct a quantitative investigation to demonstrate the interaction between two parallel currentcarrying wires
+analyse the interaction between two parallel current-carrying wires $F / l = \frac{\mu_0}{2 * \pi} * \frac{I_1 * I_2}{r}$ and determine the
+relationship between the International System of Units (SI) definition of an ampere and Newton’s
+Third Law of Motion
+Electromagnetic Induction
+describe how magnetic flux can change, with reference to the relationship $\phi = B * A * \cos{\theta}$
+analyse qualitatively and quantitatively, with reference to energy transfers and transformations,
+examples of Faraday’s Law and Lenz’s Law $\epsilon = -N \frac{\delta \phi}{\delta t}$, including but not limited to: 
+– the generation of an electromotive force (emf) and evidence for Lenz’s Law produced by the
+relative movement between a magnet, straight conductors, metal plates and solenoids
+– the generation of an emf produced by the relative movement or changes in current in one
+solenoid in the vicinity of another solenoid
+analyse quantitatively the operation of ideal transformers through the application of: 
+ - $\frac{V_p}{V_s} = \frac{N_p}{N_s}$
+ - $V_pI_p = V_sI_s$
+ evaluate qualitatively the limitations of the ideal transformer model and the strategies used to
+improve transformer efficiency, including but not limited to:
+– incomplete flux linkage
+– resistive heat production and eddy currents
+analyse applications of step-up and step-down transformers, including but not limited to:
+– the distribution of energy using high-voltage transmission lines
+Applications of the Motor Effect
+investigate the operation of a simple DC motor to analyse:
+– the functions of its components
+– production of a torque $\tau = n * I * A * B * \sin{\theta}$
+- effects of back emf
+analyse the operation of simple DC and AC generators and AC induction motors
+relate Lenz’s Law to the law of conservation of energy and apply the law of conservation of
+energy to:
+– DC motors and
+– magnetic braking

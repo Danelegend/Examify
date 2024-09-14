@@ -4,7 +4,7 @@ from logger import Logger
 
 from functionality.bucket.bucket import get_file
 from functionality.token import get_user_id
-from functionality.types import ExamType
+from functionality.types import ExamType, SubjectType
 
 from database.helpers.completed import check_if_user_complete_exam_exists, insert_user_completed_exam, remove_user_completed_exam
 from database.helpers.exam import check_exam_exists, get_exam, get_exam_id_from_subject_school_year_type, insert_exam_flag
@@ -16,6 +16,7 @@ def GetExamId(subject: str, school: str, year: int, type: str) -> int:
     Gets an exam given school, year and type
     """
     type = ExamType.MapNameToPrefix(type)
+    subject = SubjectType.MapPrefixToName(subject)
 
     exam_id = get_exam_id_from_subject_school_year_type(subject, school, year, type)
 

@@ -301,7 +301,7 @@ def delete_exam(exam_id: int):
     finally:
         disconnect(conn)
 
-def get_exam_id_from_subject_school_year_type(subject: str, school: str, year: int, type: ExamTypes) -> Optional[int]:
+def get_exam_id_from_subject_school_year_type(subject_name: str, subject_prefix: str, school: str, year: int, type: ExamTypes) -> Optional[int]:
     """
     Gets the exam id from school, year and type
     """
@@ -311,8 +311,13 @@ def get_exam_id_from_subject_school_year_type(subject: str, school: str, year: i
             cur.execute("""
                         SELECT id 
                         FROM exams 
-                        WHERE school = (SELECT id FROM schools WHERE name = %(school)s) AND year = %(year)s AND exam_type = %(type)s AND subject = %(subject)s;
-                        """, {"school": school, "year": year, "type": type, "subject": subject})
+                        WHERE school = (SELECT id FROM schools WHERE name = %(school)s) AND year = %(year)s AND exam_type = %(type)s AND 
+                        (subject = %(subject_prefix)s OR subject = %(subject_name)s);
+                        """, {"school": school, 
+                              "year": year, 
+                              "type": type, 
+                              "subject_prefix": subject_prefix,
+                              "subject_name": subject_name})
             exam_id = cur.fetchone()
 
         log_exam_success("Finished getting the Exam ID from School, Year and Type in Database")

@@ -86,3 +86,19 @@ class SubjectType(Enum):
         }
         
         return PREFIX_TO_NAME_MAPPING.get(prefix, prefix)
+    
+    @classmethod
+    def MapNameToPrefix(cls, name: str):
+        NAME_TO_PREFIX_MAPPING = {
+            "Maths Extension 2": "MX2",
+            "Maths Extension 1": "MX1",
+            "Physics": "PHY",
+            "Chemistry": "CHEM",
+            "Biology": "BIO",
+            "Economics": "ECO",
+            "Business": "BUS",
+            "Maths Advanced": "MA",
+            "Maths Standard 2": "MS2"
+        }
+
+        return NAME_TO_PREFIX_MAPPING.get(name, name)

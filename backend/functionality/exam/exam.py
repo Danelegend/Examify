@@ -16,9 +16,11 @@ def GetExamId(subject: str, school: str, year: int, type: str) -> int:
     Gets an exam given school, year and type
     """
     type = ExamType.MapNameToPrefix(type)
-    subject = SubjectType.MapPrefixToName(subject)
 
-    exam_id = get_exam_id_from_subject_school_year_type(subject, school, year, type)
+    subject_prefix = SubjectType.MapNameToPrefix(subject)
+    subject_name = SubjectType.MapPrefixToName(subject)
+
+    exam_id = get_exam_id_from_subject_school_year_type(subject_name, subject_prefix, school, year, type)
 
     if exam_id is None:
         raise ValidationError("Exam not found")
